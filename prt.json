@@ -54,14 +54,14 @@
       "notes": "",
       "passes-tests": false,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-1",
         "foundation"
       ],
       "title": "Initialize shadcn/ui with cn() utility and first component",
       "type": "planning",
-      "updatedAt": "2026-02-11T00:25:38.569Z"
+      "updatedAt": "2026-02-11T03:38:05.931Z"
     },
     {
       "blocks": [],
