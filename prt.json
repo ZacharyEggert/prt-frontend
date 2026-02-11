@@ -70,16 +70,16 @@
       "details": "Install vitest, @testing-library/react, @testing-library/jest-dom, @testing-library/user-event, jsdom. Create vitest.config.ts, add test scripts to package.json, write smoke test.",
       "id": "P-004",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-1",
         "foundation"
       ],
       "title": "Install and configure Vitest and React Testing Library",
       "type": "planning",
-      "updatedAt": "2026-02-11T00:21:37.876Z"
+      "updatedAt": "2026-02-11T04:21:42.734Z"
     },
     {
       "blocks": [],

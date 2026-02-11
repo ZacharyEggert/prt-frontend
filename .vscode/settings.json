@@ -10,5 +10,7 @@
   },
   "prettier.configPath": ".prettierrc.yaml",
   "vs-code-prettier-eslint.prettierLast": true,
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "editor.stickyTabStops": true,
+  "importSorter.importStringConfiguration.tabSize": 2
 }

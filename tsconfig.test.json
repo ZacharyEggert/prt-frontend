@@ -1,0 +1,19 @@
+{
+  "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
+  "include": [
+    "tests/**/*.tsx",
+    "tests/**/*.ts",
+		"src/renderer/**/*.tsx"
+  ],
+  "compilerOptions": {
+		"noEmit": true,
+    "composite": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@renderer/*": [
+        "src/renderer/src/*"
+      ]
+    }
+  }
+}
