@@ -109,16 +109,16 @@
       "details": "Remove electron logo, Versions.tsx, ping IPC handler, demo content from App.tsx. Replace with minimal Tailwind-styled shell. Clean up unused assets (electron.svg, wavy-lines.svg).",
       "id": "I-001",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-1",
         "foundation"
       ],
       "title": "Remove scaffold demo content",
       "type": "improvement",
-      "updatedAt": "2026-02-11T00:25:39.006Z"
+      "updatedAt": "2026-02-11T04:33:21.374Z"
     },
     {
       "blocks": [],

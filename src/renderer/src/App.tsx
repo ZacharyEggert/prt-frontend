@@ -1,38 +1,35 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
 import { Button } from '@renderer/components/ui/button'
 
 function App(): React.JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      {/* Header */}
+      <header className="border-b border-border">
+        <div className="container mx-auto px-4 py-4">
+          <h1 className="text-2xl font-semibold">PRT Frontend</h1>
         </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 container mx-auto px-4 py-8">
+        <div className="max-w-2xl">
+          <h2 className="text-xl font-medium mb-4">Welcome</h2>
+          <p className="text-muted-foreground mb-6">
+            This is a minimal Electron + React + Tailwind shell. Start building your application here.
+          </p>
+          <Button>Get Started</Button>
         </div>
-        <div className="action">
-          <Button onClick={ipcHandle}>Send IPC</Button>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-border">
+        <div className="container mx-auto px-4 py-4">
+          <p className="text-sm text-muted-foreground">
+            Built with Electron + React + Tailwind CSS
+          </p>
         </div>
-      </div>
-      <Versions></Versions>
-    </>
+      </footer>
+    </div>
   )
 }
 
