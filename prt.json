@@ -16,14 +16,14 @@
       "notes": "",
       "passes-tests": false,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-1",
         "foundation"
       ],
       "title": "Install project-roadmap-tracking and TanStack Query",
       "type": "planning",
-      "updatedAt": "2026-02-11T00:21:36.594Z"
+      "updatedAt": "2026-02-11T02:57:46.037Z"
     },
     {
       "blocks": [],
@@ -34,14 +34,14 @@
       "notes": "",
       "passes-tests": false,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-1",
         "foundation"
       ],
       "title": "Install and configure Tailwind CSS v4",
       "type": "planning",
-      "updatedAt": "2026-02-11T00:21:37.023Z"
+      "updatedAt": "2026-02-11T03:12:50.609Z"
     },
     {
       "blocks": [],
