@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ZacharyEggert/project-roadmap-tracking/refs/heads/master/schemas/config/v1.1.json",
+  "cache": {
+    "enabled": true,
+    "maxSize": 10,
+    "watchFiles": true
+  },
+  "metadata": {
+    "description": "A project roadmap frontend built with Electron and Vite.",
+    "name": "Project Roadmap Tracking Frontend"
+  },
+  "path": "./prt.json"
+}
