@@ -90,14 +90,14 @@
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-1",
         "foundation"
       ],
       "title": "Create planned directory skeleton",
       "type": "planning",
-      "updatedAt": "2026-02-11T00:21:38.306Z"
+      "updatedAt": "2026-02-11T04:23:52.903Z"
     },
     {
       "blocks": [],
