@@ -129,9 +129,9 @@
       "details": "Create wrapHandler utility in src/main/ipc/utils.ts that wraps ipcMain.handle callbacks in try/catch. Uses errorHandlerService.formatErrorMessage() to create serializable error objects for IPC boundary.",
       "id": "F-001",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-2",
         "main-process",
@@ -139,7 +139,7 @@
       ],
       "title": "Create IPC error-handling wrapper utility",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:42.295Z"
+      "updatedAt": "2026-02-11T04:56:55.737Z"
     },
     {
       "blocks": [],
