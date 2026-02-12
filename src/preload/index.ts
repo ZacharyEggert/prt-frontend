@@ -1,64 +1,20 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import type {
-  Roadmap,
-  Task,
-  TASK_TYPE,
-  PRIORITY,
-  STATUS
-} from 'project-roadmap-tracking/dist/util/types'
+import type { Roadmap, Task } from 'project-roadmap-tracking/dist/util/types'
 import type {
   DependencyValidationError,
   CircularDependency
 } from 'project-roadmap-tracking/dist/services/task-dependency.service'
-
-interface InitOptions {
-  path: string
-  name: string
-  description: string
-  withSampleTasks?: boolean
-}
-
-interface OpenDialogResult {
-  canceled: boolean
-  roadmap?: Roadmap
-}
-
-interface SaveResult {
-  success: boolean
-  path: string
-}
-
-interface CreateTaskData {
-  title: string
-  details: string
-  type: TASK_TYPE
-  priority?: PRIORITY
-  status?: STATUS
-  'depends-on'?: Array<string>
-  blocks?: Array<string>
-  tags?: Array<string>
-  notes?: string
-  assignedTo?: string | null
-  dueDate?: string | null
-  effort?: number | null
-}
-
-interface DepUpdate {
-  fromTaskId: string
-  toTaskId: string
-  type: 'depends-on' | 'blocks'
-}
-
-interface DepUpdateResult {
-  success: boolean
-  updatedTasks: Task[]
-}
-
-interface SerializableDependencyGraph {
-  blocks: Record<string, string[]>
-  dependsOn: Record<string, string[]>
-}
+import type {
+  InitOptions,
+  OpenDialogResult,
+  SaveResult,
+  CreateTaskData,
+  TaskDeleteResult,
+  DepUpdate,
+  DepUpdateResult,
+  SerializableDependencyGraph
+} from './index.d'
 
 // Custom APIs for renderer
 const api = {
@@ -81,7 +37,7 @@ const api = {
       ipcRenderer.invoke('prt:task:update', taskId, updates),
     complete: (taskId: string): Promise<Task> => ipcRenderer.invoke('prt:task:complete', taskId),
     passTest: (taskId: string): Promise<Task> => ipcRenderer.invoke('prt:task:pass-test', taskId),
-    delete: (taskId: string): Promise<{ success: boolean; deletedTaskId: string }> =>
+    delete: (taskId: string): Promise<TaskDeleteResult> =>
       ipcRenderer.invoke('prt:task:delete', taskId)
   },
   deps: {

@@ -257,9 +257,9 @@
       "details": "Rewrite src/preload/index.ts to build PrtAPI object using ipcRenderer.invoke() for each channel. Namespace as window.api.project.*, task.*, deps.*. Implement onFileChanged with cleanup function. Expose via contextBridge.",
       "id": "F-007",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-3",
         "preload",
@@ -267,7 +267,7 @@
       ],
       "title": "Implement preload context bridge with full PrtAPI surface",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:46.678Z"
+      "updatedAt": "2026-02-12T20:42:25.949Z"
     },
     {
       "blocks": [],
