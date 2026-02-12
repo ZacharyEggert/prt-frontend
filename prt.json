@@ -235,9 +235,9 @@
       "details": "Rewrite src/preload/index.d.ts with full PrtAPI interface (project, task, deps, onFileChanged namespaces). Import PRT types. Define helper types: InitOptions, ListOptions, CreateTaskData, DepUpdate, DependencyInfo. Augment Window interface.",
       "id": "F-006",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-3",
         "preload",
@@ -245,7 +245,7 @@
       ],
       "title": "Define PrtAPI types and Window augmentation",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:22:00.306Z"
+      "updatedAt": "2026-02-12T20:31:13.446Z"
     },
     {
       "blocks": [],

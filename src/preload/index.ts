@@ -29,7 +29,7 @@ interface SaveResult {
   path: string
 }
 
-interface TaskCreateData {
+interface CreateTaskData {
   title: string
   details: string
   type: TASK_TYPE
@@ -44,13 +44,13 @@ interface TaskCreateData {
   effort?: number | null
 }
 
-interface DependencyMutationParams {
+interface DepUpdate {
   fromTaskId: string
   toTaskId: string
   type: 'depends-on' | 'blocks'
 }
 
-interface DependencyMutationResult {
+interface DepUpdateResult {
   success: boolean
   updatedTasks: Task[]
 }
@@ -68,12 +68,15 @@ const api = {
     openDialog: (): Promise<OpenDialogResult> => ipcRenderer.invoke('prt:project:open-dialog'),
     init: (options: InitOptions): Promise<Roadmap> =>
       ipcRenderer.invoke('prt:project:init', options),
-    save: (roadmap: Roadmap): Promise<SaveResult> => ipcRenderer.invoke('prt:project:save', roadmap)
+    save: (roadmap: Roadmap): Promise<SaveResult> =>
+      ipcRenderer.invoke('prt:project:save', roadmap),
+    validate: () => ipcRenderer.invoke('prt:project:validate'),
+    stats: () => ipcRenderer.invoke('prt:project:stats')
   },
   task: {
-    list: (): Promise<Task[]> => ipcRenderer.invoke('prt:task:list'),
+    list: (options?: unknown): Promise<Task[]> => ipcRenderer.invoke('prt:task:list', options),
     get: (taskId: string): Promise<Task> => ipcRenderer.invoke('prt:task:get', taskId),
-    add: (taskData: TaskCreateData): Promise<Task> => ipcRenderer.invoke('prt:task:add', taskData),
+    add: (taskData: CreateTaskData): Promise<Task> => ipcRenderer.invoke('prt:task:add', taskData),
     update: (taskId: string, updates: Partial<Task>): Promise<Task> =>
       ipcRenderer.invoke('prt:task:update', taskId, updates),
     complete: (taskId: string): Promise<Task> => ipcRenderer.invoke('prt:task:complete', taskId),
@@ -85,9 +88,9 @@ const api = {
     graph: (): Promise<SerializableDependencyGraph> => ipcRenderer.invoke('prt:deps:graph'),
     get: (taskId: string): Promise<{ dependsOn: Task[]; blocks: Task[] }> =>
       ipcRenderer.invoke('prt:deps:get', taskId),
-    add: (params: DependencyMutationParams): Promise<DependencyMutationResult> =>
+    add: (params: DepUpdate): Promise<DepUpdateResult> =>
       ipcRenderer.invoke('prt:deps:add', params),
-    remove: (params: DependencyMutationParams): Promise<DependencyMutationResult> =>
+    remove: (params: DepUpdate): Promise<DepUpdateResult> =>
       ipcRenderer.invoke('prt:deps:remove', params),
     validate: (): Promise<DependencyValidationError[]> => ipcRenderer.invoke('prt:deps:validate'),
     detectCircular: (): Promise<CircularDependency | null> =>
