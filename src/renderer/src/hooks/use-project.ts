@@ -34,6 +34,7 @@ import type {
   // @ts-ignore - This type is defined in preload/index.d.ts and should be available globally
 } from '../../../preload/index'
 import { queryKeys } from '@renderer/lib/query-keys'
+import { toast } from '@renderer/lib/toast'
 
 // ============================================================================
 // Read Hooks (useQuery)
@@ -156,8 +157,18 @@ export function useOpenProject(
       // Optimistically cache the new roadmap
       queryClient.setQueryData(queryKeys.project.roadmap(projectPath), roadmap)
 
+      // Show success toast
+      toast.success('Project opened', roadmap.metadata.name)
+
       // Call user's onSuccess if provided
       await options?.onSuccess?.(roadmap, projectPath, context, meta)
+    },
+    onError: async (error, projectPath, context, meta) => {
+      // Show error toast
+      toast.error('Failed to open project', error.message)
+
+      // Call user's onError if provided
+      await options?.onError?.(error, projectPath, context, meta)
     }
   })
 }
@@ -207,12 +218,22 @@ export function useOpenProjectDialog(
         queryClient.invalidateQueries({ queryKey: queryKeys.tasks.root })
         queryClient.invalidateQueries({ queryKey: queryKeys.deps.root })
 
+        // Show success toast
+        toast.success('Project opened', result.roadmap.metadata.name)
+
         // Note: We don't have the path here to cache the roadmap
         // The roadmap will be fetched via other queries as needed
       }
 
       // Call user's onSuccess if provided
       await options?.onSuccess?.(result, variables, context, meta)
+    },
+    onError: async (error, variables, context, meta) => {
+      // Show error toast
+      toast.error('Failed to open project', error.message)
+
+      // Call user's onError if provided
+      await options?.onError?.(error, variables, context, meta)
     }
   })
 }
@@ -233,7 +254,7 @@ export function useOpenProjectDialog(
  * function CreateProjectForm() {
  *   const initProject = useInitProject({
  *     onSuccess: (roadmap) => {
- *       console.log('Created project:', roadmap.projectInfo.name)
+ *       console.log('Created project:', roadmap.metadata.name)
  *     }
  *   })
  *
@@ -270,8 +291,18 @@ export function useInitProject(
       const projectPath = `${initOptions.path}/prt.json`
       queryClient.setQueryData(queryKeys.project.roadmap(projectPath), roadmap)
 
+      // Show success toast
+      toast.success('Project created', roadmap.metadata.name)
+
       // Call user's onSuccess if provided
       await options?.onSuccess?.(roadmap, initOptions, context, meta)
+    },
+    onError: async (error, initOptions, context, meta) => {
+      // Show error toast
+      toast.error('Failed to create project', error.message)
+
+      // Call user's onError if provided
+      await options?.onError?.(error, initOptions, context, meta)
     }
   })
 }
@@ -325,11 +356,21 @@ export function useSaveProject(
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.root })
       queryClient.invalidateQueries({ queryKey: queryKeys.deps.root })
 
+      // Show success toast
+      toast.success('Project saved', `Saved to ${result.path}`)
+
       // Note: We don't invalidate the roadmap cache itself - we just saved it,
       // so it's the freshest data available (optimistic approach)
 
       // Call user's onSuccess if provided
       await options?.onSuccess?.(result, roadmap, context, meta)
+    },
+    onError: async (error, roadmap, context, meta) => {
+      // Show error toast
+      toast.error('Failed to save project', error.message)
+
+      // Call user's onError if provided
+      await options?.onError?.(error, roadmap, context, meta)
     }
   })
 }

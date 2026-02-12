@@ -387,9 +387,9 @@
       "details": "Add shadcn/ui components: card, badge, separator, scroll-area, skeleton, sonner (toast), tooltip, table. Run bunx shadcn add for each.",
       "id": "F-013",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-5",
         "renderer",
@@ -397,7 +397,7 @@
       ],
       "title": "Install core shadcn/ui components",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:56.263Z"
+      "updatedAt": "2026-02-12T22:48:49.380Z"
     },
     {
       "blocks": [],
@@ -408,9 +408,9 @@
       "details": "Add Toaster to App.tsx or layout. Create src/renderer/src/lib/toast.ts helper wrapping toast.success/error/info. Wire mutation onSuccess/onError callbacks to show toasts.",
       "id": "F-014",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-5",
         "renderer",
@@ -418,7 +418,7 @@
       ],
       "title": "Set up toast notification system with Sonner",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:56.666Z"
+      "updatedAt": "2026-02-12T22:58:48.740Z"
     },
     {
       "blocks": [],

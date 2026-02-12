@@ -33,6 +33,7 @@ import type {
   // @ts-ignore - This type is defined in preload/index.d.ts and should be available globally
 } from '../../../preload/index'
 import { queryKeys } from '@renderer/lib/query-keys'
+import { toast } from '@renderer/lib/toast'
 
 // ============================================================================
 // Read Hooks (useQuery)
@@ -184,8 +185,18 @@ export function useAddTask(
       // Optimistically cache the new task for detail views
       queryClient.setQueryData(queryKeys.tasks.detail(task.id), task)
 
+      // Show success toast
+      toast.success('Task created', `${task.id}: ${task.title}`)
+
       // Call user's onSuccess if provided
       await options?.onSuccess?.(task, variables, context, meta)
+    },
+    onError: async (error, variables, context, meta) => {
+      // Show error toast
+      toast.error('Failed to create task', error.message)
+
+      // Call user's onError if provided
+      await options?.onError?.(error, variables, context, meta)
     }
   })
 }
@@ -248,8 +259,18 @@ export function useUpdateTask(
         queryClient.invalidateQueries({ queryKey: queryKeys.deps.root })
       }
 
+      // Show success toast
+      toast.success('Task updated', task.title)
+
       // Call user's onSuccess if provided
       await options?.onSuccess?.(task, variables, context, meta)
+    },
+    onError: async (error, variables, context, meta) => {
+      // Show error toast
+      toast.error('Failed to update task', error.message)
+
+      // Call user's onError if provided
+      await options?.onError?.(error, variables, context, meta)
     }
   })
 }
@@ -303,8 +324,18 @@ export function useCompleteTask(
       // Optimistically update the task in cache
       queryClient.setQueryData(queryKeys.tasks.detail(task.id), task)
 
+      // Show success toast
+      toast.success('Task completed', task.title)
+
       // Call user's onSuccess if provided
       await options?.onSuccess?.(task, taskId, context, meta)
+    },
+    onError: async (error, taskId, context, meta) => {
+      // Show error toast
+      toast.error('Failed to complete task', error.message)
+
+      // Call user's onError if provided
+      await options?.onError?.(error, taskId, context, meta)
     }
   })
 }
@@ -358,8 +389,18 @@ export function usePassTest(
       // Optimistically update the task in cache
       queryClient.setQueryData(queryKeys.tasks.detail(task.id), task)
 
+      // Show success toast
+      toast.success('Tests marked as passing', task.title)
+
       // Call user's onSuccess if provided
       await options?.onSuccess?.(task, taskId, context, meta)
+    },
+    onError: async (error, taskId, context, meta) => {
+      // Show error toast
+      toast.error('Failed to mark tests as passing', error.message)
+
+      // Call user's onError if provided
+      await options?.onError?.(error, taskId, context, meta)
     }
   })
 }
@@ -426,8 +467,18 @@ export function useDeleteTask(
       // Remove the deleted task from cache
       queryClient.removeQueries({ queryKey: queryKeys.tasks.detail(taskId) })
 
+      // Show success toast
+      toast.success('Task deleted', result.deletedTaskId)
+
       // Call user's onSuccess if provided
       await options?.onSuccess?.(result, taskId, context, meta)
+    },
+    onError: async (error, taskId, context, meta) => {
+      // Show error toast
+      toast.error('Failed to delete task', error.message)
+
+      // Call user's onError if provided
+      await options?.onError?.(error, taskId, context, meta)
     }
   })
 }
