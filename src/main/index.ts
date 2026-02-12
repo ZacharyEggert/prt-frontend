@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import './ipc/project.ipc'
 import './ipc/task.ipc'
+import './ipc/deps.ipc'
 
 function createWindow(): void {
   // Create the browser window.

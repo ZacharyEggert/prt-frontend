@@ -6,6 +6,10 @@ import type {
   PRIORITY,
   STATUS
 } from 'project-roadmap-tracking/dist/util/types'
+import type {
+  DependencyValidationError,
+  CircularDependency
+} from 'project-roadmap-tracking/dist/services/task-dependency.service'
 
 interface InitOptions {
   path: string
@@ -44,6 +48,22 @@ interface TaskDeleteResult {
   deletedTaskId: string
 }
 
+interface DependencyMutationParams {
+  fromTaskId: string
+  toTaskId: string
+  type: 'depends-on' | 'blocks'
+}
+
+interface DependencyMutationResult {
+  success: boolean
+  updatedTasks: Task[]
+}
+
+interface SerializableDependencyGraph {
+  blocks: Record<string, string[]>
+  dependsOn: Record<string, string[]>
+}
+
 declare global {
   interface Window {
     electron: ElectronAPI
@@ -62,6 +82,15 @@ declare global {
         complete: (taskId: string) => Promise<Task>
         passTest: (taskId: string) => Promise<Task>
         delete: (taskId: string) => Promise<TaskDeleteResult>
+      }
+      deps: {
+        graph: () => Promise<SerializableDependencyGraph>
+        get: (taskId: string) => Promise<{ dependsOn: Task[]; blocks: Task[] }>
+        add: (params: DependencyMutationParams) => Promise<DependencyMutationResult>
+        remove: (params: DependencyMutationParams) => Promise<DependencyMutationResult>
+        validate: () => Promise<DependencyValidationError[]>
+        detectCircular: () => Promise<CircularDependency | null>
+        sort: () => Promise<Task[]>
       }
     }
   }

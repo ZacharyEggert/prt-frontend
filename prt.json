@@ -193,9 +193,9 @@
       "details": "Create src/main/ipc/deps.ipc.ts with handlers: prt:deps:get, add, remove, graph. Import taskDependencyService. Serialize DependencyGraph Map objects for IPC transfer.",
       "id": "F-004",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-2",
         "main-process",
@@ -203,7 +203,7 @@
       ],
       "title": "Create dependency IPC handlers",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:43.204Z"
+      "updatedAt": "2026-02-12T20:01:27.056Z"
     },
     {
       "blocks": [],

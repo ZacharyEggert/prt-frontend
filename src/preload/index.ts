@@ -7,6 +7,10 @@ import type {
   PRIORITY,
   STATUS
 } from 'project-roadmap-tracking/dist/util/types'
+import type {
+  DependencyValidationError,
+  CircularDependency
+} from 'project-roadmap-tracking/dist/services/task-dependency.service'
 
 interface InitOptions {
   path: string
@@ -40,6 +44,22 @@ interface TaskCreateData {
   effort?: number | null
 }
 
+interface DependencyMutationParams {
+  fromTaskId: string
+  toTaskId: string
+  type: 'depends-on' | 'blocks'
+}
+
+interface DependencyMutationResult {
+  success: boolean
+  updatedTasks: Task[]
+}
+
+interface SerializableDependencyGraph {
+  blocks: Record<string, string[]>
+  dependsOn: Record<string, string[]>
+}
+
 // Custom APIs for renderer
 const api = {
   project: {
@@ -60,6 +80,19 @@ const api = {
     passTest: (taskId: string): Promise<Task> => ipcRenderer.invoke('prt:task:pass-test', taskId),
     delete: (taskId: string): Promise<{ success: boolean; deletedTaskId: string }> =>
       ipcRenderer.invoke('prt:task:delete', taskId)
+  },
+  deps: {
+    graph: (): Promise<SerializableDependencyGraph> => ipcRenderer.invoke('prt:deps:graph'),
+    get: (taskId: string): Promise<{ dependsOn: Task[]; blocks: Task[] }> =>
+      ipcRenderer.invoke('prt:deps:get', taskId),
+    add: (params: DependencyMutationParams): Promise<DependencyMutationResult> =>
+      ipcRenderer.invoke('prt:deps:add', params),
+    remove: (params: DependencyMutationParams): Promise<DependencyMutationResult> =>
+      ipcRenderer.invoke('prt:deps:remove', params),
+    validate: (): Promise<DependencyValidationError[]> => ipcRenderer.invoke('prt:deps:validate'),
+    detectCircular: (): Promise<CircularDependency | null> =>
+      ipcRenderer.invoke('prt:deps:detect-circular'),
+    sort: (): Promise<Task[]> => ipcRenderer.invoke('prt:deps:sort')
   }
 }
 
