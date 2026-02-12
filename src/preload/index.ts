@@ -13,7 +13,8 @@ import type {
   TaskDeleteResult,
   DepUpdate,
   DepUpdateResult,
-  SerializableDependencyGraph
+  SerializableDependencyGraph,
+  ListOptions
 } from './index.d'
 
 // Custom APIs for renderer
@@ -71,3 +72,5 @@ if (process.contextIsolated) {
   // @ts-ignore (define in dts)
   window.api = api
 }
+
+export type { ListOptions }
