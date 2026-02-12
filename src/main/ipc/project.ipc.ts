@@ -11,7 +11,7 @@ import { Roadmap } from 'project-roadmap-tracking/dist/util/types'
 const execFileAsync = promisify(execFile)
 
 // Module-level state to track currently open project
-let currentProjectPath: string | null = null
+export let currentProjectPath: string | null = null
 
 /**
  * Handler: prt:project:open

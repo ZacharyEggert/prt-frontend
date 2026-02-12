@@ -4,16 +4,16 @@ A desktop GUI for [project-roadmap-tracking](https://github.com/ZacharyEggert/pr
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Desktop runtime | Electron 39 |
-| Build tooling | electron-vite 5, Vite 7 |
-| Frontend | React 19, TypeScript 5.9 |
-| State management | TanStack Query |
-| UI components | shadcn/ui + Tailwind CSS |
-| PRT integration | Direct service imports in main process |
-| Testing | Vitest + React Testing Library |
-| Package manager | Bun |
+| Layer            | Technology                             |
+| ---------------- | -------------------------------------- |
+| Desktop runtime  | Electron 39                            |
+| Build tooling    | electron-vite 5, Vite 7                |
+| Frontend         | React 19, TypeScript 5.9               |
+| State management | TanStack Query                         |
+| UI components    | shadcn/ui + Tailwind CSS               |
+| PRT integration  | Direct service imports in main process |
+| Testing          | Vitest + React Testing Library         |
+| Package manager  | Bun                                    |
 
 ## Prerequisites
 
@@ -72,16 +72,16 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed architectural documentation.
 
 ## Scripts
 
-| Script | Description |
-|--------|-------------|
-| `bun run dev` | Start in development mode with HMR |
-| `bun run build` | Typecheck and build for production |
-| `bun run start` | Preview the production build |
-| `bun run typecheck` | Run TypeScript type checking (main + renderer) |
-| `bun run lint` | Lint with ESLint |
-| `bun run format` | Format with Prettier |
-| `bun run build:mac` | Build macOS distributable (DMG, ZIP) |
-| `bun run build:win` | Build Windows distributable (NSIS) |
+| Script                | Description                                     |
+| --------------------- | ----------------------------------------------- |
+| `bun run dev`         | Start in development mode with HMR              |
+| `bun run build`       | Typecheck and build for production              |
+| `bun run start`       | Preview the production build                    |
+| `bun run typecheck`   | Run TypeScript type checking (main + renderer)  |
+| `bun run lint`        | Lint with ESLint                                |
+| `bun run format`      | Format with Prettier                            |
+| `bun run build:mac`   | Build macOS distributable (DMG, ZIP)            |
+| `bun run build:win`   | Build Windows distributable (NSIS)              |
 | `bun run build:linux` | Build Linux distributable (AppImage, snap, deb) |
 
 ## IDE Setup

@@ -15,7 +15,8 @@ function App(): React.JSX.Element {
         <div className="max-w-2xl">
           <h2 className="text-xl font-medium mb-4">Welcome</h2>
           <p className="text-muted-foreground mb-6">
-            This is a minimal Electron + React + Tailwind shell. Start building your application here.
+            This is a minimal Electron + React + Tailwind shell. Start building your application
+            here.
           </p>
           <Button>Get Started</Button>
         </div>

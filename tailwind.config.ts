@@ -1,10 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 export default {
-  content: [
-    './src/renderer/index.html',
-    './src/renderer/src/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ['./src/renderer/index.html', './src/renderer/src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -19,7 +16,7 @@ export default {
         'ev-gray-3': '#32363f',
         'ev-text-1': 'rgba(255, 255, 245, 0.86)',
         'ev-text-2': 'rgba(235, 235, 245, 0.6)',
-        'ev-text-3': 'rgba(235, 235, 245, 0.38)',
+        'ev-text-3': 'rgba(235, 235, 245, 0.38)'
       },
       fontFamily: {
         sans: [
@@ -34,7 +31,7 @@ export default {
           'Fira Sans',
           'Droid Sans',
           'Helvetica Neue',
-          'sans-serif',
+          'sans-serif'
         ],
         mono: [
           'ui-monospace',
@@ -43,10 +40,10 @@ export default {
           'Menlo',
           'Consolas',
           'Liberation Mono',
-          'monospace',
-        ],
-      },
-    },
+          'monospace'
+        ]
+      }
+    }
   },
-  plugins: [],
+  plugins: []
 } satisfies Config

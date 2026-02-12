@@ -53,6 +53,7 @@ src/main/                                 src/preload/            src/renderer/s
 ```
 
 **Key Principles:**
+
 - **IPC channels** use convention: `prt:{domain}:{action}` (e.g., `prt:project:open`)
 - **PRT is the single source of truth** - all data persists in `prt.json` files managed by PRT services
 - **Main process** directly imports PRT services from `project-roadmap-tracking/dist/`
@@ -91,6 +92,7 @@ tests/
 This is the most common extension point. Follow this pattern:
 
 1. **Create handler** in `src/main/ipc/{domain}.ipc.ts`:
+
    ```typescript
    import { ipcMain } from 'electron'
    import { wrapHandler } from './utils'
@@ -105,12 +107,14 @@ This is the most common extension point. Follow this pattern:
    ```
 
 2. **Register** in `src/main/index.ts`:
+
    ```typescript
    import { register{Domain}Handlers } from './ipc/{domain}.ipc'
    register{Domain}Handlers()
    ```
 
 3. **Expose in preload** at `src/preload/index.ts`:
+
    ```typescript
    {domain}: {
      {action}: (...args) => ipcRenderer.invoke('prt:{domain}:{action}', ...args)
@@ -165,6 +169,7 @@ prt <command> [options]
 ```
 
 ### Common commands:
+
 - `prt list` - List all tasks
   - `prt list -i` - List incomplete tasks only
 - `prt add "Task title" -d "Detailed task description" -t [feature|bug|improvement|planning|research]` - Add a new task
@@ -192,8 +197,8 @@ bun run format
 bun run test
 bun run build
 ```
-run these commands sequentially and ensure that each command completes successfully before moving on to the next one. If any of these commands fail, investigate the issue and fix it before proceeding. Only after all commands have completed successfully should you mark the task as complete.
 
+run these commands sequentially and ensure that each command completes successfully before moving on to the next one. If any of these commands fail, investigate the issue and fix it before proceeding. Only after all commands have completed successfully should you mark the task as complete.
 
 **When** the user asks to show a task, look up the task by the given id and display its details. If the user requests dependency details, also show any tasks that are dependencies of this task.
 

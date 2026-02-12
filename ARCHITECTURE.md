@@ -103,11 +103,11 @@ The app opens a single project directory and works with its `prt.json` and `.prt
 
 ### Process Boundaries
 
-| Process | Responsibilities |
-|---------|-----------------|
-| **Main** | Window management, IPC handling, PRT service calls, file system access, native dialogs, menus |
-| **Preload** | Context bridge — exposes a typed, minimal API surface from main to renderer |
-| **Renderer** | UI rendering, user interaction, state management, query caching |
+| Process      | Responsibilities                                                                              |
+| ------------ | --------------------------------------------------------------------------------------------- |
+| **Main**     | Window management, IPC handling, PRT service calls, file system access, native dialogs, menus |
+| **Preload**  | Context bridge — exposes a typed, minimal API surface from main to renderer                   |
+| **Renderer** | UI rendering, user interaction, state management, query caching                               |
 
 ---
 
@@ -135,26 +135,33 @@ import { readConfigFile } from 'project-roadmap-tracking/dist/util/read-config.j
 
 // Types
 import {
-  Roadmap, Task, Config,
-  TASK_TYPE, STATUS, PRIORITY,
-  TaskID, Tag
+  Roadmap,
+  Task,
+  Config,
+  TASK_TYPE,
+  STATUS,
+  PRIORITY,
+  TaskID,
+  Tag
 } from 'project-roadmap-tracking/dist/util/types.js'
 
 // Errors
 import {
-  PrtError, TaskNotFoundError, ValidationError
+  PrtError,
+  TaskNotFoundError,
+  ValidationError
 } from 'project-roadmap-tracking/dist/errors/index.js'
 ```
 
 ### Available PRT Services
 
-| Service | Key Methods | GUI Usage |
-|---------|-------------|-----------|
-| `roadmapService` | `load`, `save`, `validate`, `getStats` | Open/save projects, validation view, dashboard stats |
-| `taskService` | `createTask`, `addTask`, `updateTask`, `findTask`, `generateNextId` | Task creation form, inline editing, task detail panel |
-| `taskQueryService` | `filter`, `search`, `sort`, `getByStatus`, `getByType` | List filtering, search bar, column sorting |
-| `taskDependencyService` | `buildGraph`, `detectCircular`, `validateDependencies`, `getBlockedTasks` | Dependency graph view, validation warnings |
-| `errorHandlerService` | `handleError`, `formatErrorMessage` | Error toasts, validation error display |
+| Service                 | Key Methods                                                               | GUI Usage                                             |
+| ----------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `roadmapService`        | `load`, `save`, `validate`, `getStats`                                    | Open/save projects, validation view, dashboard stats  |
+| `taskService`           | `createTask`, `addTask`, `updateTask`, `findTask`, `generateNextId`       | Task creation form, inline editing, task detail panel |
+| `taskQueryService`      | `filter`, `search`, `sort`, `getByStatus`, `getByType`                    | List filtering, search bar, column sorting            |
+| `taskDependencyService` | `buildGraph`, `detectCircular`, `validateDependencies`, `getBlockedTasks` | Dependency graph view, validation warnings            |
+| `errorHandlerService`   | `handleError`, `formatErrorMessage`                                       | Error toasts, validation error display                |
 
 ---
 
@@ -172,40 +179,40 @@ prt:{domain}:{action}
 
 #### Project
 
-| Channel | Args | Returns | Description |
-|---------|------|---------|-------------|
-| `prt:project:open` | `dirPath: string` | `Roadmap` | Open a project directory, load config + roadmap |
-| `prt:project:open-dialog` | — | `Roadmap \| null` | Show native directory picker, then load |
-| `prt:project:init` | `{ name, description?, withSampleTasks? }` | `Roadmap` | Initialize a new PRT project |
-| `prt:project:save` | `roadmap: Roadmap` | `void` | Save the current roadmap |
-| `prt:project:validate` | — | `ValidationResult` | Validate roadmap integrity |
-| `prt:project:stats` | — | `RoadmapStats` | Get roadmap statistics |
+| Channel                   | Args                                       | Returns            | Description                                     |
+| ------------------------- | ------------------------------------------ | ------------------ | ----------------------------------------------- |
+| `prt:project:open`        | `dirPath: string`                          | `Roadmap`          | Open a project directory, load config + roadmap |
+| `prt:project:open-dialog` | —                                          | `Roadmap \| null`  | Show native directory picker, then load         |
+| `prt:project:init`        | `{ name, description?, withSampleTasks? }` | `Roadmap`          | Initialize a new PRT project                    |
+| `prt:project:save`        | `roadmap: Roadmap`                         | `void`             | Save the current roadmap                        |
+| `prt:project:validate`    | —                                          | `ValidationResult` | Validate roadmap integrity                      |
+| `prt:project:stats`       | —                                          | `RoadmapStats`     | Get roadmap statistics                          |
 
 #### Tasks
 
-| Channel | Args | Returns | Description |
-|---------|------|---------|-------------|
-| `prt:task:list` | `{ filters?, sort?, search? }` | `Task[]` | List tasks with optional filtering/sorting |
-| `prt:task:get` | `taskId: TaskID` | `Task` | Get a single task by ID |
-| `prt:task:add` | `{ title, type, details?, priority? }` | `Task` | Create a new task |
-| `prt:task:update` | `{ taskId, updates }` | `Task` | Update task properties |
-| `prt:task:complete` | `taskId: TaskID` | `Task` | Mark a task as complete |
-| `prt:task:pass-test` | `taskId: TaskID` | `Task` | Mark a task as passing tests |
-| `prt:task:delete` | `taskId: TaskID` | `void` | Remove a task |
+| Channel              | Args                                   | Returns  | Description                                |
+| -------------------- | -------------------------------------- | -------- | ------------------------------------------ |
+| `prt:task:list`      | `{ filters?, sort?, search? }`         | `Task[]` | List tasks with optional filtering/sorting |
+| `prt:task:get`       | `taskId: TaskID`                       | `Task`   | Get a single task by ID                    |
+| `prt:task:add`       | `{ title, type, details?, priority? }` | `Task`   | Create a new task                          |
+| `prt:task:update`    | `{ taskId, updates }`                  | `Task`   | Update task properties                     |
+| `prt:task:complete`  | `taskId: TaskID`                       | `Task`   | Mark a task as complete                    |
+| `prt:task:pass-test` | `taskId: TaskID`                       | `Task`   | Mark a task as passing tests               |
+| `prt:task:delete`    | `taskId: TaskID`                       | `void`   | Remove a task                              |
 
 #### Dependencies
 
-| Channel | Args | Returns | Description |
-|---------|------|---------|-------------|
-| `prt:deps:get` | `taskId: TaskID` | `{ dependsOn: Task[], blocks: Task[] }` | Get task dependencies |
-| `prt:deps:add` | `{ taskId, dependsOn?: TaskID[], blocks?: TaskID[] }` | `Task` | Add dependency relationships |
-| `prt:deps:remove` | `{ taskId, dependsOn?: TaskID[], blocks?: TaskID[] }` | `Task` | Remove dependency relationships |
-| `prt:deps:graph` | — | `DependencyGraph` | Get full dependency graph |
+| Channel           | Args                                                  | Returns                                 | Description                     |
+| ----------------- | ----------------------------------------------------- | --------------------------------------- | ------------------------------- |
+| `prt:deps:get`    | `taskId: TaskID`                                      | `{ dependsOn: Task[], blocks: Task[] }` | Get task dependencies           |
+| `prt:deps:add`    | `{ taskId, dependsOn?: TaskID[], blocks?: TaskID[] }` | `Task`                                  | Add dependency relationships    |
+| `prt:deps:remove` | `{ taskId, dependsOn?: TaskID[], blocks?: TaskID[] }` | `Task`                                  | Remove dependency relationships |
+| `prt:deps:graph`  | —                                                     | `DependencyGraph`                       | Get full dependency graph       |
 
 #### File Watching
 
-| Channel | Direction | Payload | Description |
-|---------|-----------|---------|-------------|
+| Channel            | Direction       | Payload   | Description                                        |
+| ------------------ | --------------- | --------- | -------------------------------------------------- |
 | `prt:file:changed` | Main → Renderer | `Roadmap` | Notify renderer when `prt.json` changes externally |
 
 ### Preload API Shape
@@ -325,18 +332,18 @@ const queryKeys = {
   project: {
     root: ['project'] as const,
     stats: ['project', 'stats'] as const,
-    validation: ['project', 'validation'] as const,
+    validation: ['project', 'validation'] as const
   },
   tasks: {
     root: ['tasks'] as const,
     list: (filters?: ListOptions) => ['tasks', 'list', filters] as const,
-    detail: (id: TaskID) => ['tasks', 'detail', id] as const,
+    detail: (id: TaskID) => ['tasks', 'detail', id] as const
   },
   deps: {
     root: ['deps'] as const,
     detail: (id: TaskID) => ['deps', 'detail', id] as const,
-    graph: ['deps', 'graph'] as const,
-  },
+    graph: ['deps', 'graph'] as const
+  }
 }
 ```
 
@@ -349,7 +356,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 export function useTasks(filters?: ListOptions) {
   return useQuery({
     queryKey: queryKeys.tasks.list(filters),
-    queryFn: () => window.api.task.list(filters),
+    queryFn: () => window.api.task.list(filters)
   })
 }
 
@@ -361,7 +368,7 @@ export function useAddTask() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.root })
       queryClient.invalidateQueries({ queryKey: queryKeys.project.stats })
-    },
+    }
   })
 }
 ```
@@ -389,18 +396,18 @@ Components are sourced from [shadcn/ui](https://ui.shadcn.com/) — copy-pasted 
 
 ### Key UI Components Planned
 
-| Component | shadcn/ui Base | Purpose |
-|-----------|---------------|---------|
-| Task table | `Table`, `DataTable` | Filterable, sortable task list |
-| Task form | `Form`, `Input`, `Select` | Create and edit tasks |
-| Task detail | `Sheet` or `Dialog` | Full task view with dependencies |
-| Filter bar | `Select`, `Badge`, `Toggle` | Filter by status, type, priority |
-| Search | `Input` | Full-text task search |
-| Stats cards | `Card` | Dashboard statistics |
-| Validation | `Alert`, `Accordion` | Validation results display |
-| Dependency graph | Custom (canvas/SVG) | Visual dependency visualization |
-| Toasts | `Toast`/`Sonner` | Success/error feedback |
-| Command palette | `Command` | Quick task switching and actions |
+| Component        | shadcn/ui Base              | Purpose                          |
+| ---------------- | --------------------------- | -------------------------------- |
+| Task table       | `Table`, `DataTable`        | Filterable, sortable task list   |
+| Task form        | `Form`, `Input`, `Select`   | Create and edit tasks            |
+| Task detail      | `Sheet` or `Dialog`         | Full task view with dependencies |
+| Filter bar       | `Select`, `Badge`, `Toggle` | Filter by status, type, priority |
+| Search           | `Input`                     | Full-text task search            |
+| Stats cards      | `Card`                      | Dashboard statistics             |
+| Validation       | `Alert`, `Accordion`        | Validation results display       |
+| Dependency graph | Custom (canvas/SVG)         | Visual dependency visualization  |
+| Toasts           | `Toast`/`Sonner`            | Success/error feedback           |
+| Command palette  | `Command`                   | Quick task switching and actions |
 
 ### Theming
 
@@ -491,8 +498,14 @@ PRT's types are used across all three processes. The preload `index.d.ts` file r
 ```typescript
 // preload/index.d.ts
 import type {
-  Roadmap, Task, TaskID, Config,
-  TASK_TYPE, STATUS, PRIORITY, Tag
+  Roadmap,
+  Task,
+  TaskID,
+  Config,
+  TASK_TYPE,
+  STATUS,
+  PRIORITY,
+  Tag
 } from 'project-roadmap-tracking/dist/util/types.js'
 
 interface PrtAPI {
@@ -515,13 +528,27 @@ type TaskID = `${TASK_TYPE_LETTER}-${SingleDigit}${SingleDigit}${SingleDigit}`
 // e.g., 'F-001', 'B-003', 'I-012'
 
 // Task types
-enum TASK_TYPE { Bug, Feature, Improvement, Planning, Research }
+enum TASK_TYPE {
+  Bug,
+  Feature,
+  Improvement,
+  Planning,
+  Research
+}
 
 // Statuses
-enum STATUS { NotStarted, InProgress, Complete }
+enum STATUS {
+  NotStarted,
+  InProgress,
+  Complete
+}
 
 // Priorities
-enum PRIORITY { Low, Medium, High }
+enum PRIORITY {
+  Low,
+  Medium,
+  High
+}
 
 // Task shape
 interface Task {
@@ -575,12 +602,12 @@ The preload exposes only the `PrtAPI` object — a curated set of operations. No
 
 ### Vitest + React Testing Library
 
-| Test Type | Tool | Target |
-|-----------|------|--------|
-| Component tests | Vitest + React Testing Library | Renderer components in isolation |
-| Hook tests | Vitest + `renderHook` | TanStack Query hooks with mocked IPC |
-| Main process tests | Vitest | IPC handlers with mocked PRT services |
-| Preload tests | Vitest | Context bridge API shape |
+| Test Type          | Tool                           | Target                                |
+| ------------------ | ------------------------------ | ------------------------------------- |
+| Component tests    | Vitest + React Testing Library | Renderer components in isolation      |
+| Hook tests         | Vitest + `renderHook`          | TanStack Query hooks with mocked IPC  |
+| Main process tests | Vitest                         | IPC handlers with mocked PRT services |
+| Preload tests      | Vitest                         | Context bridge API shape              |
 
 ### Mocking Strategy
 
@@ -596,11 +623,15 @@ export const mockApi: PrtAPI = {
     update: vi.fn(),
     complete: vi.fn(),
     passTest: vi.fn(),
-    delete: vi.fn(),
+    delete: vi.fn()
   },
-  project: { /* ... */ },
-  deps: { /* ... */ },
-  onFileChanged: vi.fn().mockReturnValue(() => {}),
+  project: {
+    /* ... */
+  },
+  deps: {
+    /* ... */
+  },
+  onFileChanged: vi.fn().mockReturnValue(() => {})
 }
 ```
 
@@ -620,11 +651,11 @@ src/main/ipc/__tests__/task.ipc.test.ts
 
 Configured in `electron-builder.yml`. Targets:
 
-| Platform | Format | Notes |
-|----------|--------|-------|
-| macOS | DMG, ZIP | Notarization-ready, ARM64 + x64 |
-| Windows | NSIS installer | |
-| Linux | AppImage, snap, deb | |
+| Platform | Format              | Notes                           |
+| -------- | ------------------- | ------------------------------- |
+| macOS    | DMG, ZIP            | Notarization-ready, ARM64 + x64 |
+| Windows  | NSIS installer      |                                 |
+| Linux    | AppImage, snap, deb |                                 |
 
 ### Build Pipeline
 
