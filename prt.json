@@ -430,9 +430,9 @@
       "details": "Create src/renderer/src/components/layout.tsx with sidebar + main content area. Sidebar has nav items (Welcome/Dashboard/Tasks) and project indicator. Use Tailwind flex layout.",
       "id": "F-015",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-5",
         "renderer",
@@ -440,7 +440,7 @@
       ],
       "title": "Create app layout shell with sidebar navigation",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:57.073Z"
+      "updatedAt": "2026-02-12T23:13:11.401Z"
     },
     {
       "blocks": [],
