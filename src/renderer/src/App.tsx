@@ -1,39 +1,78 @@
 import { Button } from '@renderer/components/ui/button'
-import { useQuery } from '@tanstack/react-query'
-import { queryKeys } from '@renderer/lib/query-keys'
+import {
+  useProjectStats,
+  useProjectValidation,
+  useOpenProjectDialog
+} from '@renderer/hooks/use-project'
 
 /**
- * !TODO: Remove this test component once query keys are validated in the main app.
- * Test component to validate query keys work with TanStack Query.
+ * !TODO: Remove this test component once hooks are validated in the main app.
+ * Test component to validate project query hooks work end-to-end.
  * This demonstrates:
- * - Query key factory integration
- * - Type inference from query keys
- * - IPC API integration via window.api
+ * - Read hooks: useProjectStats, useProjectValidation
+ * - Mutation hooks: useOpenProjectDialog
+ * - Automatic cache invalidation on mutations
  */
-function QueryKeysTest(): React.JSX.Element {
-  const { data, isLoading, error } = useQuery({
-    queryKey: queryKeys.project.stats(),
-    queryFn: () => window.api.project.stats(),
-    // Only run if a project is open
-    enabled: false
+function ProjectHooksTest(): React.JSX.Element {
+  const { data: stats, isLoading: statsLoading, error: statsError } = useProjectStats()
+  const {
+    data: validation,
+    isLoading: validationLoading,
+    error: validationError
+  } = useProjectValidation()
+  const openDialog = useOpenProjectDialog({
+    onSuccess: (result) => {
+      if (!result.canceled) {
+        console.log('Project opened successfully')
+      }
+    },
+    onError: (error) => {
+      console.error('Failed to open project:', error.message)
+    }
   })
 
   return (
-    <div className="rounded-lg border border-border p-4 bg-card">
-      <h3 className="text-sm font-medium mb-2">Query Keys Test</h3>
-      <div className="text-sm text-muted-foreground space-y-1">
-        <p>Status: {isLoading ? 'Loading...' : error ? 'Error' : 'Ready'}</p>
-        {data && (
-          <pre className="text-xs mt-2 p-2 bg-muted rounded overflow-auto">
-            {JSON.stringify(data, null, 2)}
-          </pre>
-        )}
-        <p className="text-xs mt-2">
-          Query key:{' '}
-          <code className="bg-muted px-1 py-0.5 rounded">
-            {JSON.stringify(queryKeys.project.stats())}
-          </code>
-        </p>
+    <div className="rounded-lg border border-border p-4 bg-card space-y-4">
+      <div>
+        <h3 className="text-sm font-medium mb-2">Project Hooks Test</h3>
+        <Button onClick={() => openDialog.mutate()} disabled={openDialog.isPending}>
+          {openDialog.isPending ? 'Opening...' : 'Open Project (Dialog)'}
+        </Button>
+      </div>
+
+      <div>
+        <h4 className="text-xs font-medium mb-1">Stats:</h4>
+        <div className="text-xs text-muted-foreground">
+          {statsLoading ? (
+            <p>Loading stats...</p>
+          ) : statsError ? (
+            <p className="text-destructive">Error: {statsError.message}</p>
+          ) : stats ? (
+            <pre className="p-2 bg-muted rounded overflow-auto">
+              {JSON.stringify(stats, null, 2)}
+            </pre>
+          ) : (
+            <p>No stats available</p>
+          )}
+        </div>
+      </div>
+
+      <div>
+        <h4 className="text-xs font-medium mb-1">Validation:</h4>
+        <div className="text-xs text-muted-foreground">
+          {validationLoading ? (
+            <p>Validating...</p>
+          ) : validationError ? (
+            <p className="text-destructive">Error: {validationError.message}</p>
+          ) : validation ? (
+            <div>
+              <p>Status: {validation.success ? '✓ Valid' : '✗ Invalid'}</p>
+              {validation.errors && <p className="text-destructive mt-1">{validation.errors}</p>}
+            </div>
+          ) : (
+            <p>No validation data</p>
+          )}
+        </div>
       </div>
     </div>
   )
@@ -61,8 +100,8 @@ function App(): React.JSX.Element {
             <Button>Get Started</Button>
           </div>
 
-          {/* Query Keys Validation */}
-          <QueryKeysTest />
+          {/* Project Hooks Validation */}
+          <ProjectHooksTest />
         </div>
       </main>
 

@@ -9,11 +9,13 @@ import type {
   InitOptions,
   OpenDialogResult,
   SaveResult,
+  ProjectValidationResult,
   CreateTaskData,
   TaskDeleteResult,
   DepUpdate,
   DepUpdateResult,
   SerializableDependencyGraph,
+  DependencyInfo,
   ListOptions
 } from './index.d'
 
@@ -73,4 +75,16 @@ if (process.contextIsolated) {
   window.api = api
 }
 
-export type { ListOptions }
+export type {
+  ListOptions,
+  InitOptions,
+  OpenDialogResult,
+  SaveResult,
+  ProjectValidationResult,
+  CreateTaskData,
+  TaskDeleteResult,
+  DepUpdate,
+  DepUpdateResult,
+  SerializableDependencyGraph,
+  DependencyInfo
+}
