@@ -343,9 +343,9 @@
       "details": "Create src/renderer/src/hooks/use-tasks.ts with: useTasks(filters?), useTask(taskId), useAddTask, useUpdateTask, useCompleteTask, usePassTest, useDeleteTask. Invalidate task list + project stats on mutations.",
       "id": "F-011",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-4",
         "renderer",
@@ -353,7 +353,7 @@
       ],
       "title": "Create task query hooks",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:51.578Z"
+      "updatedAt": "2026-02-12T22:18:30.215Z"
     },
     {
       "blocks": [],
@@ -366,9 +366,9 @@
       "details": "Create src/renderer/src/hooks/use-deps.ts with: useTaskDeps(taskId), useDependencyGraph, useAddDependency, useRemoveDependency. Invalidate deps + task queries on mutations.",
       "id": "F-012",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-4",
         "renderer",
@@ -376,7 +376,7 @@
       ],
       "title": "Create dependency query hooks",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:51.988Z"
+      "updatedAt": "2026-02-12T22:26:28.642Z"
     },
     {
       "blocks": [],
