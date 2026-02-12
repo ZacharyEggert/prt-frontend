@@ -280,7 +280,7 @@
       "notes": "",
       "passes-tests": false,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-4",
         "renderer",
@@ -288,7 +288,7 @@
       ],
       "title": "Initialize QueryClientProvider in main.tsx",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:50.744Z"
+      "updatedAt": "2026-02-12T21:32:22.913Z"
     },
     {
       "blocks": [],
