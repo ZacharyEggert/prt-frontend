@@ -112,3 +112,46 @@ export function getTestIcon(passesTests: boolean): React.JSX.Element {
     <XCircle className="size-4 text-muted-foreground" />
   )
 }
+
+/**
+ * Formats an ISO date string to a human-readable format with time.
+ * Returns "Not set" for null/undefined dates.
+ * Example: "Jan 15, 2026 at 3:45 PM"
+ */
+export function formatDate(dateString: string | null | undefined): string {
+  if (!dateString) return 'Not set'
+
+  try {
+    const date = new Date(dateString)
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    }).format(date)
+  } catch {
+    return 'Invalid date'
+  }
+}
+
+/**
+ * Formats a date string to show only the date (no time).
+ * Returns "Not set" for null/undefined dates.
+ * Example: "Jan 15, 2026"
+ */
+export function formatDateShort(dateString: string | null | undefined): string {
+  if (!dateString) return 'Not set'
+
+  try {
+    const date = new Date(dateString)
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    }).format(date)
+  } catch {
+    return 'Invalid date'
+  }
+}

@@ -1,21 +1,27 @@
 import { useState } from 'react'
 import { TaskList } from '@renderer/components/task-list'
+import { TaskDetail } from '@renderer/components/task-detail'
 import { useTasks } from '@renderer/hooks/use-tasks'
 import { Button } from '@renderer/components/ui/button'
 import { Plus } from 'lucide-react'
-import { toast } from '@renderer/lib/toast'
 import { CreateTaskDialog } from '@renderer/components/create-task-dialog'
 
 export function TasksView(): React.JSX.Element {
   const { data: tasks, isLoading, error } = useTasks()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
+  const isDetailOpen = selectedTaskId !== null
 
   const handleAddTask = (): void => {
     setIsCreateDialogOpen(true)
   }
 
   const handleTaskClick = (taskId: string): void => {
-    toast.info('Task Details', `Viewing task ${taskId}`)
+    setSelectedTaskId(taskId)
+  }
+
+  const handleDetailClose = (): void => {
+    setSelectedTaskId(null)
   }
 
   if (error) {
@@ -43,6 +49,14 @@ export function TasksView(): React.JSX.Element {
 
       {/* Create task dialog */}
       <CreateTaskDialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} />
+
+      {/* Task detail panel */}
+      <TaskDetail
+        taskId={selectedTaskId}
+        open={isDetailOpen}
+        onOpenChange={(open) => !open && handleDetailClose()}
+        onTaskChange={setSelectedTaskId}
+      />
     </div>
   )
 }

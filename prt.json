@@ -626,9 +626,9 @@
       "details": "Create src/renderer/src/components/task-detail.tsx. Sheet/slide-over panel showing full task details, formatted dates, badges, dependency lists, tags. Action buttons: Edit (switches to form), Complete, Pass Test, Delete (with AlertDialog confirmation).",
       "id": "F-024",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-6",
         "renderer",
@@ -636,7 +636,7 @@
       ],
       "title": "Build task-detail panel",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:04.808Z"
+      "updatedAt": "2026-02-13T03:23:08.229Z"
     },
     {
       "blocks": [],
