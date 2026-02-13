@@ -158,18 +158,14 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
 
   ul {
     list-style: none;
   }
 
   body {
+    @apply bg-background text-foreground;
     min-height: 100vh;
-    color: var(--color-text);
-    background: var(--color-background);
     line-height: 1.6;
     font-family:
       Inter,
@@ -192,10 +188,10 @@
   }
 
   code {
+    @apply bg-muted text-foreground;
     font-weight: 600;
     padding: 3px 5px;
     border-radius: 2px;
-    background-color: var(--color-background-mute);
     font-family:
       ui-monospace,
       SFMono-Regular,

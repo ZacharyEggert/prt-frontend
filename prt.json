@@ -17,10 +17,7 @@
       "passes-tests": false,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-1",
-        "foundation"
-      ],
+      "tags": ["stage-1", "foundation"],
       "title": "Install project-roadmap-tracking and TanStack Query",
       "type": "planning",
       "updatedAt": "2026-02-11T02:57:46.037Z"
@@ -35,10 +32,7 @@
       "passes-tests": false,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-1",
-        "foundation"
-      ],
+      "tags": ["stage-1", "foundation"],
       "title": "Install and configure Tailwind CSS v4",
       "type": "planning",
       "updatedAt": "2026-02-11T03:12:50.609Z"
@@ -46,19 +40,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:21:37.445Z",
-      "depends-on": [
-        "P-002"
-      ],
+      "depends-on": ["P-002"],
       "details": "Run shadcn init, configure components.json for src/renderer/src/components/ui/, create lib/utils.ts with cn() helper. Install button component to verify pipeline. Depends on Tailwind CSS setup.",
       "id": "P-003",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-1",
-        "foundation"
-      ],
+      "tags": ["stage-1", "foundation"],
       "title": "Initialize shadcn/ui with cn() utility and first component",
       "type": "planning",
       "updatedAt": "2026-02-11T03:38:05.931Z"
@@ -73,10 +62,7 @@
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-1",
-        "foundation"
-      ],
+      "tags": ["stage-1", "foundation"],
       "title": "Install and configure Vitest and React Testing Library",
       "type": "planning",
       "updatedAt": "2026-02-11T04:21:42.734Z"
@@ -91,10 +77,7 @@
       "passes-tests": false,
       "priority": "medium",
       "status": "completed",
-      "tags": [
-        "stage-1",
-        "foundation"
-      ],
+      "tags": ["stage-1", "foundation"],
       "title": "Create planned directory skeleton",
       "type": "planning",
       "updatedAt": "2026-02-11T04:23:52.903Z"
@@ -102,20 +85,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:21:38.739Z",
-      "depends-on": [
-        "P-002",
-        "P-003"
-      ],
+      "depends-on": ["P-002", "P-003"],
       "details": "Remove electron logo, Versions.tsx, ping IPC handler, demo content from App.tsx. Replace with minimal Tailwind-styled shell. Clean up unused assets (electron.svg, wavy-lines.svg).",
       "id": "I-001",
       "notes": "",
       "passes-tests": true,
       "priority": "medium",
       "status": "completed",
-      "tags": [
-        "stage-1",
-        "foundation"
-      ],
+      "tags": ["stage-1", "foundation"],
       "title": "Remove scaffold demo content",
       "type": "improvement",
       "updatedAt": "2026-02-11T04:33:21.374Z"
@@ -123,20 +100,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:21:50.955Z",
-      "depends-on": [
-        "P-005"
-      ],
+      "depends-on": ["P-005"],
       "details": "Create wrapHandler utility in src/main/ipc/utils.ts that wraps ipcMain.handle callbacks in try/catch. Uses errorHandlerService.formatErrorMessage() to create serializable error objects for IPC boundary.",
       "id": "F-001",
       "notes": "",
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-2",
-        "main-process",
-        "ipc"
-      ],
+      "tags": ["stage-2", "main-process", "ipc"],
       "title": "Create IPC error-handling wrapper utility",
       "type": "feature",
       "updatedAt": "2026-02-11T04:56:55.737Z"
@@ -144,21 +115,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:21:51.378Z",
-      "depends-on": [
-        "P-005",
-        "F-001"
-      ],
+      "depends-on": ["P-005", "F-001"],
       "details": "Create src/main/ipc/project.ipc.ts with handlers: prt:project:open, open-dialog, init, save, validate, stats. Import roadmapService, readConfigFile. Manage currentProjectPath state.",
       "id": "F-002",
       "notes": "",
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-2",
-        "main-process",
-        "ipc"
-      ],
+      "tags": ["stage-2", "main-process", "ipc"],
       "title": "Create project IPC handlers",
       "type": "feature",
       "updatedAt": "2026-02-11T23:05:37.029Z"
@@ -166,20 +130,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:21:51.463Z",
-      "depends-on": [
-        "F-002"
-      ],
+      "depends-on": ["F-002"],
       "details": "Create src/main/ipc/task.ipc.ts with handlers: prt:task:list, get, add, update, complete, pass-test, delete. Import taskService, taskQueryService, roadmapService.",
       "id": "F-003",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-2",
-        "main-process",
-        "ipc"
-      ],
+      "tags": ["stage-2", "main-process", "ipc"],
       "title": "Create task IPC handlers",
       "type": "feature",
       "updatedAt": "2026-02-12T19:43:03.872Z"
@@ -187,20 +145,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:21:51.883Z",
-      "depends-on": [
-        "F-002"
-      ],
+      "depends-on": ["F-002"],
       "details": "Create src/main/ipc/deps.ipc.ts with handlers: prt:deps:get, add, remove, graph. Import taskDependencyService. Serialize DependencyGraph Map objects for IPC transfer.",
       "id": "F-004",
       "notes": "",
       "passes-tests": true,
       "priority": "medium",
       "status": "completed",
-      "tags": [
-        "stage-2",
-        "main-process",
-        "ipc"
-      ],
+      "tags": ["stage-2", "main-process", "ipc"],
       "title": "Create dependency IPC handlers",
       "type": "feature",
       "updatedAt": "2026-02-12T20:01:27.056Z"
@@ -208,22 +160,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:21:51.965Z",
-      "depends-on": [
-        "F-002",
-        "F-003",
-        "F-004"
-      ],
+      "depends-on": ["F-002", "F-003", "F-004"],
       "details": "Create src/main/ipc/index.ts that imports and registers all handlers from project/task/deps IPC modules. Update src/main/index.ts to call registration after app.whenReady().",
       "id": "F-005",
       "notes": "",
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-2",
-        "main-process",
-        "ipc"
-      ],
+      "tags": ["stage-2", "main-process", "ipc"],
       "title": "Create IPC registration index and wire into main process",
       "type": "feature",
       "updatedAt": "2026-02-12T20:14:49.983Z"
@@ -238,11 +182,7 @@
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-3",
-        "preload",
-        "types"
-      ],
+      "tags": ["stage-3", "preload", "types"],
       "title": "Define PrtAPI types and Window augmentation",
       "type": "feature",
       "updatedAt": "2026-02-12T20:31:13.446Z"
@@ -250,21 +190,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:00.713Z",
-      "depends-on": [
-        "F-005",
-        "F-006"
-      ],
+      "depends-on": ["F-005", "F-006"],
       "details": "Rewrite src/preload/index.ts to build PrtAPI object using ipcRenderer.invoke() for each channel. Namespace as window.api.project.*, task.*, deps.*. Implement onFileChanged with cleanup function. Expose via contextBridge.",
       "id": "F-007",
       "notes": "",
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-3",
-        "preload",
-        "ipc"
-      ],
+      "tags": ["stage-3", "preload", "ipc"],
       "title": "Implement preload context bridge with full PrtAPI surface",
       "type": "feature",
       "updatedAt": "2026-02-12T20:42:25.949Z"
@@ -272,20 +205,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:12.823Z",
-      "depends-on": [
-        "P-001"
-      ],
+      "depends-on": ["P-001"],
       "details": "Wrap App in QueryClientProvider in src/renderer/src/main.tsx. Create QueryClient with defaults: staleTime 30s, gcTime 5min, retry 1. Export client instance for file-change listener.",
       "id": "F-008",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-4",
-        "renderer",
-        "data-layer"
-      ],
+      "tags": ["stage-4", "renderer", "data-layer"],
       "title": "Initialize QueryClientProvider in main.tsx",
       "type": "feature",
       "updatedAt": "2026-02-12T21:32:22.913Z"
@@ -300,11 +227,7 @@
       "passes-tests": true,
       "priority": "medium",
       "status": "completed",
-      "tags": [
-        "stage-4",
-        "renderer",
-        "data-layer"
-      ],
+      "tags": ["stage-4", "renderer", "data-layer"],
       "title": "Define query key factory",
       "type": "feature",
       "updatedAt": "2026-02-12T21:47:33.947Z"
@@ -312,22 +235,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:13.640Z",
-      "depends-on": [
-        "F-007",
-        "F-008",
-        "F-009"
-      ],
+      "depends-on": ["F-007", "F-008", "F-009"],
       "details": "Create src/renderer/src/hooks/use-project.ts with: useProjectStats, useProjectValidation, useOpenProject, useOpenProjectDialog, useInitProject, useSaveProject. Use query keys from factory.",
       "id": "F-010",
       "notes": "",
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-4",
-        "renderer",
-        "hooks"
-      ],
+      "tags": ["stage-4", "renderer", "hooks"],
       "title": "Create project query hooks",
       "type": "feature",
       "updatedAt": "2026-02-12T22:09:00.671Z"
@@ -335,22 +250,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:14.056Z",
-      "depends-on": [
-        "F-007",
-        "F-008",
-        "F-009"
-      ],
+      "depends-on": ["F-007", "F-008", "F-009"],
       "details": "Create src/renderer/src/hooks/use-tasks.ts with: useTasks(filters?), useTask(taskId), useAddTask, useUpdateTask, useCompleteTask, usePassTest, useDeleteTask. Invalidate task list + project stats on mutations.",
       "id": "F-011",
       "notes": "",
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-4",
-        "renderer",
-        "hooks"
-      ],
+      "tags": ["stage-4", "renderer", "hooks"],
       "title": "Create task query hooks",
       "type": "feature",
       "updatedAt": "2026-02-12T22:18:30.215Z"
@@ -358,22 +265,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:14.471Z",
-      "depends-on": [
-        "F-007",
-        "F-008",
-        "F-009"
-      ],
+      "depends-on": ["F-007", "F-008", "F-009"],
       "details": "Create src/renderer/src/hooks/use-deps.ts with: useTaskDeps(taskId), useDependencyGraph, useAddDependency, useRemoveDependency. Invalidate deps + task queries on mutations.",
       "id": "F-012",
       "notes": "",
       "passes-tests": true,
       "priority": "medium",
       "status": "completed",
-      "tags": [
-        "stage-4",
-        "renderer",
-        "hooks"
-      ],
+      "tags": ["stage-4", "renderer", "hooks"],
       "title": "Create dependency query hooks",
       "type": "feature",
       "updatedAt": "2026-02-12T22:26:28.642Z"
@@ -381,20 +280,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:31.565Z",
-      "depends-on": [
-        "P-003"
-      ],
+      "depends-on": ["P-003"],
       "details": "Add shadcn/ui components: card, badge, separator, scroll-area, skeleton, sonner (toast), tooltip, table. Run bunx shadcn add for each.",
       "id": "F-013",
       "notes": "",
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-5",
-        "renderer",
-        "ui"
-      ],
+      "tags": ["stage-5", "renderer", "ui"],
       "title": "Install core shadcn/ui components",
       "type": "feature",
       "updatedAt": "2026-02-12T22:48:49.380Z"
@@ -402,20 +295,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:31.980Z",
-      "depends-on": [
-        "F-013"
-      ],
+      "depends-on": ["F-013"],
       "details": "Add Toaster to App.tsx or layout. Create src/renderer/src/lib/toast.ts helper wrapping toast.success/error/info. Wire mutation onSuccess/onError callbacks to show toasts.",
       "id": "F-014",
       "notes": "",
       "passes-tests": true,
       "priority": "medium",
       "status": "completed",
-      "tags": [
-        "stage-5",
-        "renderer",
-        "ui"
-      ],
+      "tags": ["stage-5", "renderer", "ui"],
       "title": "Set up toast notification system with Sonner",
       "type": "feature",
       "updatedAt": "2026-02-12T22:58:48.740Z"
@@ -423,21 +310,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:32.387Z",
-      "depends-on": [
-        "I-001",
-        "F-013"
-      ],
+      "depends-on": ["I-001", "F-013"],
       "details": "Create src/renderer/src/components/layout.tsx with sidebar + main content area. Sidebar has nav items (Welcome/Dashboard/Tasks) and project indicator. Use Tailwind flex layout.",
       "id": "F-015",
       "notes": "",
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-5",
-        "renderer",
-        "ui"
-      ],
+      "tags": ["stage-5", "renderer", "ui"],
       "title": "Create app layout shell with sidebar navigation",
       "type": "feature",
       "updatedAt": "2026-02-12T23:13:11.401Z"
@@ -445,20 +325,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:32.806Z",
-      "depends-on": [
-        "F-015"
-      ],
+      "depends-on": ["F-015"],
       "details": "Create useNavigation hook/context in src/renderer/src/hooks/use-navigation.ts managing currentPage state (welcome/dashboard/tasks). App.tsx renders Layout with appropriate page. Default to welcome when no project open.",
       "id": "F-016",
       "notes": "",
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-5",
-        "renderer",
-        "routing"
-      ],
+      "tags": ["stage-5", "renderer", "routing"],
       "title": "Implement state-based page routing",
       "type": "feature",
       "updatedAt": "2026-02-13T00:34:42.673Z"
@@ -466,21 +340,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:33.212Z",
-      "depends-on": [
-        "F-010",
-        "F-016"
-      ],
+      "depends-on": ["F-010", "F-016"],
       "details": "Create src/renderer/src/pages/welcome.tsx. Centered landing with app title, Open Project button (useOpenProjectDialog), Initialize New Project button with name/description form. Navigate to dashboard on success.",
       "id": "F-017",
       "notes": "",
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-5",
-        "renderer",
-        "pages"
-      ],
+      "tags": ["stage-5", "renderer", "pages"],
       "title": "Build welcome page",
       "type": "feature",
       "updatedAt": "2026-02-13T00:50:00.265Z"
@@ -488,20 +355,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:33.632Z",
-      "depends-on": [
-        "F-013"
-      ],
+      "depends-on": ["F-013"],
       "details": "Create src/renderer/src/components/project-stats.tsx. Receives RoadmapStats props. Grid of stat cards showing counts by status, type, and priority. Color-coded badges.",
       "id": "F-018",
       "notes": "",
       "passes-tests": true,
       "priority": "medium",
       "status": "completed",
-      "tags": [
-        "stage-5",
-        "renderer",
-        "components"
-      ],
+      "tags": ["stage-5", "renderer", "components"],
       "title": "Build project-stats component",
       "type": "feature",
       "updatedAt": "2026-02-13T01:21:21.603Z"
@@ -509,22 +370,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:34.046Z",
-      "depends-on": [
-        "F-010",
-        "F-016",
-        "F-018"
-      ],
+      "depends-on": ["F-010", "F-016", "F-018"],
       "details": "Create src/renderer/src/pages/dashboard.tsx. Uses useProjectStats for data. Shows project name/description, stats cards grid, completion progress, quick action buttons (Add Task, View Tasks, Validate). Skeleton loading states.",
       "id": "F-019",
       "notes": "",
       "passes-tests": true,
       "priority": "high",
       "status": "completed",
-      "tags": [
-        "stage-5",
-        "renderer",
-        "pages"
-      ],
+      "tags": ["stage-5", "renderer", "pages"],
       "title": "Build dashboard page with stats and quick actions",
       "type": "feature",
       "updatedAt": "2026-02-13T01:43:28.237Z"
@@ -532,41 +385,29 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:34.470Z",
-      "depends-on": [
-        "F-013"
-      ],
+      "depends-on": ["F-013"],
       "details": "Create src/renderer/src/components/task-list.tsx. Receives Task[] props. Table showing: status icon, priority badge, task ID, title, type badge, passes-tests indicator, dependency count. Clickable rows for detail view.",
       "id": "F-020",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
-      "tags": [
-        "stage-5",
-        "renderer",
-        "components"
-      ],
+      "status": "completed",
+      "tags": ["stage-5", "renderer", "components"],
       "title": "Build task-list component",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:59.118Z"
+      "updatedAt": "2026-02-13T02:00:09.651Z"
     },
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:46.193Z",
-      "depends-on": [
-        "P-003"
-      ],
+      "depends-on": ["P-003"],
       "details": "Add shadcn/ui components: dialog, sheet, form, input, textarea, select, label, switch, alert-dialog. Required for task forms and detail views.",
       "id": "F-021",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "not-started",
-      "tags": [
-        "stage-6",
-        "renderer",
-        "ui"
-      ],
+      "tags": ["stage-6", "renderer", "ui"],
       "title": "Install form shadcn/ui components",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:03.577Z"
@@ -574,21 +415,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:46.620Z",
-      "depends-on": [
-        "F-011",
-        "F-021"
-      ],
+      "depends-on": ["F-011", "F-021"],
       "details": "Create src/renderer/src/components/task-form.tsx. Reusable form for create/edit. Fields: title, type (select), details (textarea), priority (select), tags (text input). Pre-populate in edit mode. Client-side validation.",
       "id": "F-022",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "not-started",
-      "tags": [
-        "stage-6",
-        "renderer",
-        "components"
-      ],
+      "tags": ["stage-6", "renderer", "components"],
       "title": "Build task-form component with create and edit modes",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:03.984Z"
@@ -596,21 +430,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:47.026Z",
-      "depends-on": [
-        "F-022",
-        "F-014"
-      ],
+      "depends-on": ["F-022", "F-014"],
       "details": "Create dialog wrapping task-form in create mode. Triggered from Tasks page Add Task button or dashboard. On success closes dialog, list auto-refreshes via query invalidation, shows toast.",
       "id": "F-023",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "not-started",
-      "tags": [
-        "stage-6",
-        "renderer",
-        "components"
-      ],
+      "tags": ["stage-6", "renderer", "components"],
       "title": "Build create-task dialog",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:04.397Z"
@@ -618,22 +445,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:47.414Z",
-      "depends-on": [
-        "F-011",
-        "F-021",
-        "F-022"
-      ],
+      "depends-on": ["F-011", "F-021", "F-022"],
       "details": "Create src/renderer/src/components/task-detail.tsx. Sheet/slide-over panel showing full task details, formatted dates, badges, dependency lists, tags. Action buttons: Edit (switches to form), Complete, Pass Test, Delete (with AlertDialog confirmation).",
       "id": "F-024",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "not-started",
-      "tags": [
-        "stage-6",
-        "renderer",
-        "components"
-      ],
+      "tags": ["stage-6", "renderer", "components"],
       "title": "Build task-detail panel",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:04.808Z"
@@ -641,23 +460,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:47.822Z",
-      "depends-on": [
-        "F-016",
-        "F-020",
-        "F-023",
-        "F-024"
-      ],
+      "depends-on": ["F-016", "F-020", "F-023", "F-024"],
       "details": "Create src/renderer/src/pages/tasks.tsx. Combines task-list, create-task dialog, and task-detail panel. Uses useTasks hook. Shows loading/empty/error states. Top bar reserved for filters.",
       "id": "F-025",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "not-started",
-      "tags": [
-        "stage-6",
-        "renderer",
-        "pages"
-      ],
+      "tags": ["stage-6", "renderer", "pages"],
       "title": "Build tasks page integrating list, create dialog, and detail panel",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:05.211Z"
@@ -665,20 +475,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:58.844Z",
-      "depends-on": [
-        "P-003"
-      ],
+      "depends-on": ["P-003"],
       "details": "Add shadcn/ui components: toggle, toggle-group, popover, command, dropdown-menu. Support filter bar and search functionality.",
       "id": "F-026",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-7",
-        "renderer",
-        "ui"
-      ],
+      "tags": ["stage-7", "renderer", "ui"],
       "title": "Install filter-related shadcn/ui components",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:08.676Z"
@@ -686,20 +490,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:59.241Z",
-      "depends-on": [
-        "F-026"
-      ],
+      "depends-on": ["F-026"],
       "details": "Create src/renderer/src/components/filter-bar.tsx. Status filter (toggle group), type filter (dropdown), priority filter (dropdown). Manages filter state locally, passes FilterCriteria to parent. Active filters shown as removable badges.",
       "id": "F-027",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "not-started",
-      "tags": [
-        "stage-7",
-        "renderer",
-        "components"
-      ],
+      "tags": ["stage-7", "renderer", "components"],
       "title": "Build filter-bar component",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:09.080Z"
@@ -707,20 +505,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:22:59.658Z",
-      "depends-on": [
-        "F-026"
-      ],
+      "depends-on": ["F-026"],
       "details": "Create src/renderer/src/components/search-bar.tsx. Text input with search icon and clear button. 300ms debounce before updating parent search query. Integrates with useTasks filter.search parameter.",
       "id": "F-028",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "not-started",
-      "tags": [
-        "stage-7",
-        "renderer",
-        "components"
-      ],
+      "tags": ["stage-7", "renderer", "components"],
       "title": "Build search-bar component with debounced input",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:09.519Z"
@@ -728,22 +520,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:00.069Z",
-      "depends-on": [
-        "F-025",
-        "F-027",
-        "F-028"
-      ],
+      "depends-on": ["F-025", "F-027", "F-028"],
       "details": "Update tasks page to render filter-bar and search-bar. Maintain filter/sort/search state. Pass combined ListOptions to useTasks(). Make task-list headers clickable for sort toggling (asc/desc).",
       "id": "F-029",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "not-started",
-      "tags": [
-        "stage-7",
-        "renderer",
-        "pages"
-      ],
+      "tags": ["stage-7", "renderer", "pages"],
       "title": "Integrate filters, search, and column sorting into tasks page",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:09.928Z"
@@ -751,21 +535,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:10.189Z",
-      "depends-on": [
-        "F-012",
-        "F-024"
-      ],
+      "depends-on": ["F-012", "F-024"],
       "details": "Enhance task-detail.tsx with useTaskDeps(taskId). Show Depends On and Blocks lists with clickable task items. Include Add Dependency and Add Blocked buttons.",
       "id": "F-030",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-8",
-        "renderer",
-        "dependencies"
-      ],
+      "tags": ["stage-8", "renderer", "dependencies"],
       "title": "Add dependency lists to task-detail panel",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:13.606Z"
@@ -773,20 +550,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:10.273Z",
-      "depends-on": [
-        "F-030"
-      ],
+      "depends-on": ["F-030"],
       "details": "Create dialog for adding dependencies with searchable task list (excluding self/already-linked). Support both depends-on and blocks relationships. Remove buttons with confirmation on each dependency item.",
       "id": "F-031",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-8",
-        "renderer",
-        "dependencies"
-      ],
+      "tags": ["stage-8", "renderer", "dependencies"],
       "title": "Build add and remove dependency dialogs",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:14.011Z"
@@ -794,21 +565,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:10.699Z",
-      "depends-on": [
-        "F-010",
-        "F-013"
-      ],
+      "depends-on": ["F-010", "F-013"],
       "details": "Create src/renderer/src/components/validation-panel.tsx. Uses useProjectValidation(). Shows errors/warnings with Alert and Accordion components. Categorizes by error type. Clickable task IDs. Accessible from dashboard.",
       "id": "F-032",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-8",
-        "renderer",
-        "components"
-      ],
+      "tags": ["stage-8", "renderer", "components"],
       "title": "Build validation-panel component",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:14.412Z"
@@ -816,20 +580,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:10.786Z",
-      "depends-on": [
-        "F-012"
-      ],
+      "depends-on": ["F-012"],
       "details": "Create src/renderer/src/components/dependency-graph.tsx. Uses dagre (~30KB) for DAG layout + SVG rendering. useDependencyGraph() for data. Nodes as rectangles with task ID/title, edges as arrows. Color-coded by status. Clickable nodes.",
       "id": "F-033",
       "notes": "",
       "passes-tests": false,
       "priority": "low",
       "status": "not-started",
-      "tags": [
-        "stage-8",
-        "renderer",
-        "components"
-      ],
+      "tags": ["stage-8", "renderer", "components"],
       "title": "Build dependency-graph visualization with dagre",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:14.825Z"
@@ -837,20 +595,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:20.085Z",
-      "depends-on": [
-        "F-002"
-      ],
+      "depends-on": ["F-002"],
       "details": "Set up chokidar file watcher on prt.json when project is opened. On change, load updated roadmap and send prt:file:changed event to renderer. 500ms debounce. Clean up on project close/switch.",
       "id": "F-034",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-9",
-        "main-process",
-        "file-watching"
-      ],
+      "tags": ["stage-9", "main-process", "file-watching"],
       "title": "Implement file watcher in main process",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:20.709Z"
@@ -858,21 +610,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:20.504Z",
-      "depends-on": [
-        "F-008",
-        "F-034"
-      ],
+      "depends-on": ["F-008", "F-034"],
       "details": "In App.tsx or dedicated provider, useEffect calling window.api.onFileChanged to invalidate all queries via queryClient.invalidateQueries(). Return cleanup unsubscribe function.",
       "id": "F-035",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-9",
-        "renderer",
-        "file-watching"
-      ],
+      "tags": ["stage-9", "renderer", "file-watching"],
       "title": "Wire file-change listener in renderer",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:21.121Z"
@@ -880,20 +625,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:20.926Z",
-      "depends-on": [
-        "F-034"
-      ],
+      "depends-on": ["F-034"],
       "details": "When opening a new project while one is active: stop file watcher on old project, invalidate all renderer queries, reset module-level main process state. Prevent stale data from previous project.",
       "id": "F-036",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-9",
-        "main-process",
-        "file-watching"
-      ],
+      "tags": ["stage-9", "main-process", "file-watching"],
       "title": "Handle project switching cleanup",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:21.522Z"
@@ -901,20 +640,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:32.260Z",
-      "depends-on": [
-        "P-004",
-        "F-006"
-      ],
+      "depends-on": ["P-004", "F-006"],
       "details": "Create test mocks matching PrtAPI interface with vi.fn() stubs. Create setup file assigning mockApi to window.api. Register in vitest.config.ts. All methods return sensible defaults.",
       "id": "P-006",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "not-started",
-      "tags": [
-        "stage-10",
-        "testing"
-      ],
+      "tags": ["stage-10", "testing"],
       "title": "Create window.api mock setup and test utilities",
       "type": "planning",
       "updatedAt": "2026-02-11T00:26:25.056Z"
@@ -922,19 +655,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:32.342Z",
-      "depends-on": [
-        "P-006"
-      ],
+      "depends-on": ["P-006"],
       "details": "Test use-tasks, use-project, use-deps hooks using renderHook with QueryClientProvider wrapper. Assert correct window.api method calls and query invalidation behavior on mutations.",
       "id": "F-037",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-10",
-        "testing"
-      ],
+      "tags": ["stage-10", "testing"],
       "title": "Write query hook tests",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:25.466Z"
@@ -942,19 +670,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:32.768Z",
-      "depends-on": [
-        "P-006"
-      ],
+      "depends-on": ["P-006"],
       "details": "React Testing Library tests for: task-list (render, badges, row click), task-form (fill, submit, validation), task-detail (render, action buttons), filter-bar (toggle, callback payloads), project-stats (stat cards).",
       "id": "F-038",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-10",
-        "testing"
-      ],
+      "tags": ["stage-10", "testing"],
       "title": "Write component tests",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:25.877Z"
@@ -962,19 +685,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:32.854Z",
-      "depends-on": [
-        "P-006"
-      ],
+      "depends-on": ["P-006"],
       "details": "Integration tests for: welcome page (render, open project mock), dashboard (stats cards with mock data), tasks page (render with mock tasks, apply filter, verify filtered results).",
       "id": "F-039",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-10",
-        "testing"
-      ],
+      "tags": ["stage-10", "testing"],
       "title": "Write page integration tests",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:26.285Z"
@@ -982,19 +700,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:32.956Z",
-      "depends-on": [
-        "P-004"
-      ],
+      "depends-on": ["P-004"],
       "details": "Test main process IPC handlers directly (without Electron transport). Mock PRT services. Verify correct service calls and error wrapping for project.ipc, task.ipc, deps.ipc.",
       "id": "F-040",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-10",
-        "testing"
-      ],
+      "tags": ["stage-10", "testing"],
       "title": "Write IPC handler unit tests",
       "type": "feature",
       "updatedAt": "2026-02-11T00:26:26.698Z"
@@ -1002,20 +715,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:48.289Z",
-      "depends-on": [
-        "P-002"
-      ],
+      "depends-on": ["P-002"],
       "details": "Configure Tailwind dark mode (class strategy). Add toggle to sidebar. Store preference in localStorage. Set up dark CSS variables in globals.css. Verify all shadcn/ui components in both modes.",
       "id": "I-002",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-11",
-        "renderer",
-        "polish"
-      ],
+      "tags": ["stage-11", "renderer", "polish"],
       "title": "Implement dark mode toggle with system preference detection",
       "type": "improvement",
       "updatedAt": "2026-02-11T00:26:30.992Z"
@@ -1023,20 +730,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:48.721Z",
-      "depends-on": [
-        "F-025"
-      ],
+      "depends-on": ["F-025"],
       "details": "Audit all interactive elements: logical tab order, focus rings, dialog focus trapping, arrow key navigation in task list, Escape to close dialogs. Add aria-labels. Verify with VoiceOver.",
       "id": "I-003",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-11",
-        "renderer",
-        "accessibility"
-      ],
+      "tags": ["stage-11", "renderer", "accessibility"],
       "title": "Keyboard navigation and accessibility audit",
       "type": "improvement",
       "updatedAt": "2026-02-11T00:26:31.397Z"
@@ -1044,20 +745,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:49.144Z",
-      "depends-on": [
-        "F-014"
-      ],
+      "depends-on": ["F-014"],
       "details": "Review all pages/components for consistent skeleton loading, friendly error messages with retry buttons, helpful empty states with CTAs. No raw error text shown to users.",
       "id": "I-004",
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
       "status": "not-started",
-      "tags": [
-        "stage-11",
-        "renderer",
-        "polish"
-      ],
+      "tags": ["stage-11", "renderer", "polish"],
       "title": "Polish loading, error, and empty states across all views",
       "type": "improvement",
       "updatedAt": "2026-02-11T00:26:31.797Z"
@@ -1065,20 +760,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:49.563Z",
-      "depends-on": [
-        "F-002"
-      ],
+      "depends-on": ["F-002"],
       "details": "Create proper Electron menu in src/main/index.ts. File (Open/New/Save/Quit), Edit (Undo/Cut/Copy/Paste), View (DevTools/Reload), Help (About). Wire menu items to IPC calls.",
       "id": "I-005",
       "notes": "",
       "passes-tests": false,
       "priority": "low",
       "status": "not-started",
-      "tags": [
-        "stage-11",
-        "main-process",
-        "polish"
-      ],
+      "tags": ["stage-11", "main-process", "polish"],
       "title": "Create Electron application menu",
       "type": "improvement",
       "updatedAt": "2026-02-11T00:26:32.215Z"
@@ -1086,19 +775,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:49.976Z",
-      "depends-on": [
-        "F-002"
-      ],
+      "depends-on": ["F-002"],
       "details": "Dynamic window title showing project name. Update index.html title from Electron to PRT. Set app icons for all platforms. Change electron-builder.yml appId to com.prt.frontend.",
       "id": "I-006",
       "notes": "",
       "passes-tests": false,
       "priority": "low",
       "status": "not-started",
-      "tags": [
-        "stage-11",
-        "polish"
-      ],
+      "tags": ["stage-11", "polish"],
       "title": "Update window title, app metadata, and appId",
       "type": "improvement",
       "updatedAt": "2026-02-11T00:26:32.622Z"
@@ -1106,24 +790,14 @@
     {
       "blocks": [],
       "createdAt": "2026-02-11T00:23:50.381Z",
-      "depends-on": [
-        "F-029",
-        "F-033",
-        "F-036",
-        "F-040",
-        "I-004",
-        "I-006"
-      ],
+      "depends-on": ["F-029", "F-033", "F-036", "F-040", "I-004", "I-006"],
       "details": "Run bun run build:mac. Verify built app launches, can open a project, all features work. Check PRT package bundled correctly. Verify CSP allows required resources. Check app size.",
       "id": "P-007",
       "notes": "",
       "passes-tests": false,
       "priority": "high",
       "status": "not-started",
-      "tags": [
-        "stage-11",
-        "build"
-      ],
+      "tags": ["stage-11", "build"],
       "title": "Production build verification on macOS",
       "type": "planning",
       "updatedAt": "2026-02-11T00:26:33.029Z"
