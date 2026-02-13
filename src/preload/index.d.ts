@@ -24,6 +24,11 @@ interface OpenDialogResult {
   roadmap?: Roadmap
 }
 
+interface DirectorySelectResult {
+  canceled: boolean
+  path?: string
+}
+
 interface SaveResult {
   success: boolean
   path: string
@@ -116,6 +121,8 @@ interface ProjectAPI {
   open: (projectPath: string) => Promise<Roadmap>
   /** Shows native file dialog to browse for project */
   openDialog: () => Promise<OpenDialogResult>
+  /** Shows native file dialog to select directory for new project */
+  selectDirectory: () => Promise<DirectorySelectResult>
   /** Initializes new PRT project via CLI */
   init: (options: InitOptions) => Promise<Roadmap>
   /** Saves roadmap to disk */
@@ -210,6 +217,7 @@ export type {
   // Helper types
   InitOptions,
   OpenDialogResult,
+  DirectorySelectResult,
   SaveResult,
   CreateTaskData,
   TaskDeleteResult,

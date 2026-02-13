@@ -473,9 +473,9 @@
       "details": "Create src/renderer/src/pages/welcome.tsx. Centered landing with app title, Open Project button (useOpenProjectDialog), Initialize New Project button with name/description form. Navigate to dashboard on success.",
       "id": "F-017",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-5",
         "renderer",
@@ -483,7 +483,7 @@
       ],
       "title": "Build welcome page",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:57.888Z"
+      "updatedAt": "2026-02-13T00:50:00.265Z"
     },
     {
       "blocks": [],

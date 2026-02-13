@@ -59,6 +59,26 @@ export function registerProjectHandlers(): void {
   )
 
   /**
+   * Handler: prt:project:select-directory
+   * Shows a native file dialog to select a directory for new project creation
+   */
+  ipcMain.handle(
+    'prt:project:select-directory',
+    wrapHandler(async () => {
+      const result = await dialog.showOpenDialog({
+        properties: ['openDirectory', 'createDirectory'],
+        title: 'Select Project Directory',
+        message: 'Choose where to create your new project'
+      })
+
+      return {
+        canceled: result.canceled,
+        path: result.canceled ? undefined : result.filePaths[0]
+      }
+    })
+  )
+
+  /**
    * Handler: prt:project:init
    * Initializes a new PRT project using the CLI
    *

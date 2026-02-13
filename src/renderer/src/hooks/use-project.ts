@@ -10,6 +10,7 @@
  * **Mutation hooks (useMutation):**
  * - useOpenProject - Open project by path
  * - useOpenProjectDialog - Open project via file dialog
+ * - useSelectDirectory - Select directory for new project
  * - useInitProject - Initialize new project
  * - useSaveProject - Save roadmap to disk
  *
@@ -29,6 +30,7 @@ import type { RoadmapStats } from 'project-roadmap-tracking/dist/services/roadma
 import type {
   InitOptions,
   OpenDialogResult,
+  DirectorySelectResult,
   SaveResult,
   ProjectValidationResult
   // @ts-ignore - This type is defined in preload/index.d.ts and should be available globally
@@ -235,6 +237,43 @@ export function useOpenProjectDialog(
       // Call user's onError if provided
       await options?.onError?.(error, variables, context, meta)
     }
+  })
+}
+
+/**
+ * Shows a native directory picker for selecting where to create a new project.
+ *
+ * Unlike `useOpenProjectDialog`, this only selects a directory without opening
+ * a project. Use this to get a path before calling `useInitProject`.
+ *
+ * @param options - Optional TanStack Query mutation options
+ * @returns Mutation result with directory selection result
+ *
+ * @example
+ * ```tsx
+ * function CreateProjectButton() {
+ *   const selectDir = useSelectDirectory({
+ *     onSuccess: (result) => {
+ *       if (!result.canceled && result.path) {
+ *         console.log('Selected directory:', result.path)
+ *       }
+ *     }
+ *   })
+ *
+ *   return (
+ *     <button onClick={() => selectDir.mutate()}>
+ *       Choose Directory
+ *     </button>
+ *   )
+ * }
+ * ```
+ */
+export function useSelectDirectory(
+  options?: UseMutationOptions<DirectorySelectResult, Error, void, unknown>
+): UseMutationResult<DirectorySelectResult, Error, void, unknown> {
+  return useMutation({
+    ...options,
+    mutationFn: () => window.api.project.selectDirectory()
   })
 }
 

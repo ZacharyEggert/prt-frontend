@@ -8,6 +8,7 @@ import type {
 import type {
   InitOptions,
   OpenDialogResult,
+  DirectorySelectResult,
   SaveResult,
   ProjectValidationResult,
   CreateTaskData,
@@ -25,6 +26,8 @@ const api = {
     open: (projectPath: string): Promise<Roadmap> =>
       ipcRenderer.invoke('prt:project:open', projectPath),
     openDialog: (): Promise<OpenDialogResult> => ipcRenderer.invoke('prt:project:open-dialog'),
+    selectDirectory: (): Promise<DirectorySelectResult> =>
+      ipcRenderer.invoke('prt:project:select-directory'),
     init: (options: InitOptions): Promise<Roadmap> =>
       ipcRenderer.invoke('prt:project:init', options),
     save: (roadmap: Roadmap): Promise<SaveResult> =>
@@ -79,6 +82,7 @@ export type {
   ListOptions,
   InitOptions,
   OpenDialogResult,
+  DirectorySelectResult,
   SaveResult,
   ProjectValidationResult,
   CreateTaskData,
