@@ -3,15 +3,12 @@ import { Card, CardHeader, CardTitle, CardDescription } from '@renderer/componen
 import { ScrollArea } from '@renderer/components/ui/scroll-area'
 import { Skeleton } from '@renderer/components/ui/skeleton'
 import { useProjectStats } from '@renderer/hooks/use-project'
+import { useNavigation } from '@renderer/hooks/use-navigation'
 import { cn } from '@renderer/lib/utils'
 import type { RoadmapStats } from 'project-roadmap-tracking/dist/services/roadmap.service'
 
-type ViewType = 'welcome' | 'dashboard' | 'tasks'
-
 interface LayoutProps {
   children: React.ReactNode
-  currentView: ViewType
-  onNavigate: (view: ViewType) => void
 }
 
 const NAV_ITEMS = [
@@ -20,7 +17,8 @@ const NAV_ITEMS = [
   { id: 'tasks' as const, label: 'Tasks', icon: ListTodo }
 ]
 
-export function Layout({ children, currentView, onNavigate }: LayoutProps): React.JSX.Element {
+export function Layout({ children }: LayoutProps): React.JSX.Element {
+  const { currentView, navigate } = useNavigation()
   const { data: stats, isLoading } = useProjectStats()
 
   return (
@@ -38,7 +36,7 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps): Reac
             {NAV_ITEMS.map((item) => (
               <li key={item.id}>
                 <button
-                  onClick={() => onNavigate(item.id)}
+                  onClick={() => navigate(item.id)}
                   aria-current={currentView === item.id ? 'page' : undefined}
                   className={cn(
                     'flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors',

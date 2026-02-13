@@ -451,9 +451,9 @@
       "details": "Create useNavigation hook/context in src/renderer/src/hooks/use-navigation.ts managing currentPage state (welcome/dashboard/tasks). App.tsx renders Layout with appropriate page. Default to welcome when no project open.",
       "id": "F-016",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-5",
         "renderer",
@@ -461,7 +461,7 @@
       ],
       "title": "Implement state-based page routing",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:57.482Z"
+      "updatedAt": "2026-02-13T00:34:42.673Z"
     },
     {
       "blocks": [],
