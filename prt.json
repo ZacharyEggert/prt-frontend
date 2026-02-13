@@ -494,9 +494,9 @@
       "details": "Create src/renderer/src/components/project-stats.tsx. Receives RoadmapStats props. Grid of stat cards showing counts by status, type, and priority. Color-coded badges.",
       "id": "F-018",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-5",
         "renderer",
@@ -504,7 +504,7 @@
       ],
       "title": "Build project-stats component",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:25:58.296Z"
+      "updatedAt": "2026-02-13T01:21:21.603Z"
     },
     {
       "blocks": [],
