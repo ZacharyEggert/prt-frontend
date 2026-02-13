@@ -603,9 +603,9 @@
       "details": "Create dialog wrapping task-form in create mode. Triggered from Tasks page Add Task button or dashboard. On success closes dialog, list auto-refreshes via query invalidation, shows toast.",
       "id": "F-023",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-6",
         "renderer",
@@ -613,7 +613,7 @@
       ],
       "title": "Build create-task dialog",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:04.397Z"
+      "updatedAt": "2026-02-13T03:00:28.715Z"
     },
     {
       "blocks": [],
@@ -1127,6 +1127,27 @@
       "title": "Production build verification on macOS",
       "type": "planning",
       "updatedAt": "2026-02-11T00:26:33.029Z"
+    },
+    {
+      "blocks": [],
+      "createdAt": "2026-02-13T03:08:11.643Z",
+      "depends-on": [],
+      "details": "Add tailwindcss breakpoint classes to the existing elements to allow for use in small screens. Text size should be reduced but readable, tables may need to be substituted with a breakpoint controlled hidden class to allow for a less horizontal-focused data display approach",
+      "id": "I-007",
+      "notes": "",
+      "passes-tests": false,
+      "priority": "medium",
+      "status": "not-started",
+      "tags": [
+        "frontend",
+        "ui",
+        "mobile",
+        "responsive",
+        "css"
+      ],
+      "title": "Add some more responsive design to accommodate for small screens",
+      "type": "improvement",
+      "updatedAt": "2026-02-13T03:08:11.643Z"
     }
   ]
 }

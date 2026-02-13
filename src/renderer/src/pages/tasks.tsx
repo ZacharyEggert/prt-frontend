@@ -1,14 +1,17 @@
+import { useState } from 'react'
 import { TaskList } from '@renderer/components/task-list'
 import { useTasks } from '@renderer/hooks/use-tasks'
 import { Button } from '@renderer/components/ui/button'
 import { Plus } from 'lucide-react'
 import { toast } from '@renderer/lib/toast'
+import { CreateTaskDialog } from '@renderer/components/create-task-dialog'
 
 export function TasksView(): React.JSX.Element {
   const { data: tasks, isLoading, error } = useTasks()
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   const handleAddTask = (): void => {
-    toast.info('Add Task', 'Task creation interface coming soon')
+    setIsCreateDialogOpen(true)
   }
 
   const handleTaskClick = (taskId: string): void => {
@@ -37,6 +40,9 @@ export function TasksView(): React.JSX.Element {
 
       {/* Task list */}
       <TaskList tasks={tasks || []} isLoading={isLoading} onTaskClick={handleTaskClick} />
+
+      {/* Create task dialog */}
+      <CreateTaskDialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} />
     </div>
   )
 }

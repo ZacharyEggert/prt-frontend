@@ -99,7 +99,7 @@ export function TaskList({
                 <TableCell className="font-mono text-sm">{task.id}</TableCell>
 
                 {/* Title */}
-                <TableCell className="max-w-[400px] truncate">{task.title}</TableCell>
+                <TableCell className="max-w-100 truncate">{task.title}</TableCell>
 
                 {/* Type Badge */}
                 <TableCell>

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Card,
   CardHeader,
@@ -16,12 +17,14 @@ import {
 import { useNavigation } from '@renderer/hooks/use-navigation'
 import { Plus, List, CheckCircle, AlertCircle } from 'lucide-react'
 import { toast } from '@renderer/lib/toast'
+import { CreateTaskDialog } from '@renderer/components/create-task-dialog'
 
 export function DashboardView(): React.JSX.Element {
   const { navigate } = useNavigation()
   const { data: stats, isLoading: statsLoading } = useProjectStats()
   const { data: metadata, isLoading: metadataLoading } = useProjectMetadata()
   const { refetch: validateProject, isFetching: isValidating } = useProjectValidation()
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   const isLoading = statsLoading || metadataLoading
 
@@ -36,10 +39,7 @@ export function DashboardView(): React.JSX.Element {
   }
 
   const handleAddTask = (): void => {
-    // For now, navigate to tasks page
-    // Future: Open add task dialog
-    navigate('tasks')
-    toast.info('Add Task', 'Task creation interface coming soon')
+    setIsCreateDialogOpen(true)
   }
 
   const handleViewTasks = (): void => {
@@ -132,6 +132,9 @@ export function DashboardView(): React.JSX.Element {
           </Button>
         </div>
       </div>
+
+      {/* Create task dialog */}
+      <CreateTaskDialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} />
     </div>
   )
 }
