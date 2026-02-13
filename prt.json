@@ -581,9 +581,9 @@
       "details": "Create src/renderer/src/components/task-form.tsx. Reusable form for create/edit. Fields: title, type (select), details (textarea), priority (select), tags (text input). Pre-populate in edit mode. Client-side validation.",
       "id": "F-022",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-6",
         "renderer",
@@ -591,7 +591,7 @@
       ],
       "title": "Build task-form component with create and edit modes",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:03.984Z"
+      "updatedAt": "2026-02-13T02:47:28.010Z"
     },
     {
       "blocks": [],
