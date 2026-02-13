@@ -6,6 +6,7 @@
  * **Read hooks (useQuery):**
  * - useProjectStats - Fetch project statistics
  * - useProjectValidation - Validate project structure
+ * - useProjectMetadata - Fetch project metadata (name, description, etc.)
  *
  * **Mutation hooks (useMutation):**
  * - useOpenProject - Open project by path
@@ -105,6 +106,39 @@ export function useProjectValidation(
   })
 }
 
+/**
+ * Fetches metadata for the currently open project.
+ *
+ * @param options - Optional TanStack Query options for customization
+ * @returns Query result with project metadata (name, description, createdAt, createdBy)
+ *
+ * @example
+ * ```tsx
+ * function ProjectHeader() {
+ *   const { data, isLoading, error } = useProjectMetadata()
+ *
+ *   if (isLoading) return <div>Loading...</div>
+ *   if (error) return <div>Error: {error.message}</div>
+ *
+ *   return (
+ *     <div>
+ *       <h1>{data.name}</h1>
+ *       <p>{data.description}</p>
+ *     </div>
+ *   )
+ * }
+ * ```
+ */
+export function useProjectMetadata(
+  options?: UseQueryOptions<Roadmap['metadata'], Error>
+): UseQueryResult<Roadmap['metadata'], Error> {
+  return useQuery({
+    queryKey: queryKeys.project.metadata(),
+    queryFn: () => window.api.project.metadata(),
+    ...options
+  })
+}
+
 // ============================================================================
 // Mutation Hooks (useMutation)
 // ============================================================================
@@ -156,8 +190,9 @@ export function useOpenProject(
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.root })
       queryClient.invalidateQueries({ queryKey: queryKeys.deps.root })
 
-      // Optimistically cache the new roadmap
+      // Optimistically cache the new roadmap and metadata
       queryClient.setQueryData(queryKeys.project.roadmap(projectPath), roadmap)
+      queryClient.setQueryData(queryKeys.project.metadata(), roadmap.metadata)
 
       // Show success toast
       toast.success('Project opened', roadmap.metadata.name)
@@ -219,6 +254,9 @@ export function useOpenProjectDialog(
         queryClient.invalidateQueries({ queryKey: queryKeys.project.root })
         queryClient.invalidateQueries({ queryKey: queryKeys.tasks.root })
         queryClient.invalidateQueries({ queryKey: queryKeys.deps.root })
+
+        // Optimistically cache metadata
+        queryClient.setQueryData(queryKeys.project.metadata(), result.roadmap.metadata)
 
         // Show success toast
         toast.success('Project opened', result.roadmap.metadata.name)
@@ -325,10 +363,11 @@ export function useInitProject(
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.root })
       queryClient.invalidateQueries({ queryKey: queryKeys.deps.root })
 
-      // Optimistically cache the new roadmap
+      // Optimistically cache the new roadmap and metadata
       // Path is the directory + prt.json
       const projectPath = `${initOptions.path}/prt.json`
       queryClient.setQueryData(queryKeys.project.roadmap(projectPath), roadmap)
+      queryClient.setQueryData(queryKeys.project.metadata(), roadmap.metadata)
 
       // Show success toast
       toast.success('Project created', roadmap.metadata.name)
@@ -392,6 +431,7 @@ export function useSaveProject(
       // Roadmap structure might have changed, invalidate dependent queries
       queryClient.invalidateQueries({ queryKey: queryKeys.project.stats() })
       queryClient.invalidateQueries({ queryKey: queryKeys.project.validation() })
+      queryClient.invalidateQueries({ queryKey: queryKeys.project.metadata() })
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.root })
       queryClient.invalidateQueries({ queryKey: queryKeys.deps.root })
 

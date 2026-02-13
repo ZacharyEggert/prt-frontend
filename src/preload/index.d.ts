@@ -131,6 +131,8 @@ interface ProjectAPI {
   validate: () => Promise<ProjectValidationResult>
   /** Generates statistics for current roadmap */
   stats: () => Promise<RoadmapStats>
+  /** Gets metadata for current project */
+  metadata: () => Promise<Roadmap['metadata']>
 }
 
 /**

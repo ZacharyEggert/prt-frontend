@@ -197,4 +197,25 @@ export function registerProjectHandlers(): void {
       return stats
     })
   )
+
+  /**
+   * Handler: prt:project:metadata
+   * Gets metadata for the currently open project
+   */
+  ipcMain.handle(
+    'prt:project:metadata',
+    wrapHandler(async () => {
+      if (!currentProjectPath) {
+        throw new Error('No project is currently open. Please open a project to view metadata.')
+      }
+
+      const roadmap = await readRoadmapFile(currentProjectPath)
+
+      if (!roadmap) {
+        throw new Error('Failed to load roadmap for metadata.')
+      }
+
+      return roadmap.metadata
+    })
+  )
 }

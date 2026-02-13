@@ -33,7 +33,8 @@ const api = {
     save: (roadmap: Roadmap): Promise<SaveResult> =>
       ipcRenderer.invoke('prt:project:save', roadmap),
     validate: () => ipcRenderer.invoke('prt:project:validate'),
-    stats: () => ipcRenderer.invoke('prt:project:stats')
+    stats: () => ipcRenderer.invoke('prt:project:stats'),
+    metadata: () => ipcRenderer.invoke('prt:project:metadata')
   },
   task: {
     list: (options?: unknown): Promise<Task[]> => ipcRenderer.invoke('prt:task:list', options),

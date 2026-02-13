@@ -45,6 +45,9 @@ export const queryKeys = {
     /** All project validation queries */
     validation: () => [...queryKeys.project.root, 'validation'] as const,
 
+    /** Project metadata query */
+    metadata: () => [...queryKeys.project.root, 'metadata'] as const,
+
     /** Specific roadmap data by path */
     roadmap: (path?: string) => [...queryKeys.project.root, 'roadmap', path] as const
   },
