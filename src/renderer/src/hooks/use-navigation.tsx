@@ -37,7 +37,6 @@
 
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
 import { useProjectStats } from './use-project'
-import { toast } from '@renderer/lib/toast'
 
 // ============================================================================
 // Types
@@ -99,40 +98,31 @@ interface NavigationProviderProps {
  */
 export function NavigationProvider({ children }: NavigationProviderProps): React.JSX.Element {
   const [currentView, setCurrentView] = useState<ViewType>('welcome')
-  const { data: stats, isLoading } = useProjectStats()
+  const { data: stats, isLoading, isFetching } = useProjectStats()
 
   // Auto-redirect to welcome when project is closed
   useEffect(() => {
     // Only redirect if:
-    // 1. Stats query is not loading (we have a definitive answer)
+    // 1. Stats query is not loading or fetching (we have a definitive answer)
     // 2. No stats available (no project open)
     // 3. Currently not on welcome page (avoid unnecessary state update)
-    if (!isLoading && !stats && currentView !== 'welcome') {
+    if (!isLoading && !isFetching && !stats && currentView !== 'welcome') {
       // This is a valid use case for setState in effect: synchronizing navigation state
       // with external project state. When a project closes, we must redirect to welcome.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentView('welcome')
     }
-  }, [stats, isLoading, currentView])
+  }, [stats, isLoading, isFetching, currentView])
 
   /**
    * Navigate to a different view.
    *
-   * Includes guard logic to prevent navigation to project-dependent pages
-   * (dashboard/tasks) when no project is open.
+   * No guard logic - navigation is always allowed. The useEffect below handles
+   * auto-redirecting to welcome if a user navigates to dashboard/tasks without a project.
    */
-  const navigate = useCallback(
-    (view: ViewType) => {
-      // Block navigation to dashboard/tasks if no project is open
-      if (!stats && (view === 'dashboard' || view === 'tasks')) {
-        toast.error('No project open', 'Please open or create a project first')
-        return
-      }
-
-      setCurrentView(view)
-    },
-    [stats]
-  )
+  const navigate = useCallback((view: ViewType) => {
+    setCurrentView(view)
+  }, [])
 
   const value: NavigationContextValue = {
     currentView,

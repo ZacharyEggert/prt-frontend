@@ -32,6 +32,8 @@ export function WelcomeView(): React.JSX.Element {
     openDialog.mutate(undefined, {
       onSuccess: (result) => {
         if (!result.canceled && result.roadmap) {
+          // Mutation already invalidates queries and caches metadata
+          // Navigate immediately - stats will load automatically
           navigate('dashboard')
         }
       }
