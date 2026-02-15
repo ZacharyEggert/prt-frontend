@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { registerAllIpcHandlers } from './ipc'
+import { stopWatching } from './ipc/file-watcher'
 
 function createWindow(): void {
   // Create the browser window.
@@ -60,6 +61,10 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+})
+
+app.on('before-quit', async () => {
+  await stopWatching()
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

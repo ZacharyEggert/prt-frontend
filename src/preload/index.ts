@@ -17,7 +17,8 @@ import type {
   DepUpdateResult,
   SerializableDependencyGraph,
   DependencyInfo,
-  ListOptions
+  ListOptions,
+  FileChangeEvent
 } from './index.d'
 
 // Custom APIs for renderer
@@ -59,6 +60,17 @@ const api = {
     detectCircular: (): Promise<CircularDependency | null> =>
       ipcRenderer.invoke('prt:deps:detect-circular'),
     sort: (): Promise<Task[]> => ipcRenderer.invoke('prt:deps:sort')
+  },
+  onFileChanged: {
+    subscribe: (callback: (event: FileChangeEvent) => void): (() => void) => {
+      const handler = (_ipcEvent: Electron.IpcRendererEvent, fileEvent: FileChangeEvent): void => {
+        callback(fileEvent)
+      }
+      ipcRenderer.on('prt:file:changed', handler)
+      return () => {
+        ipcRenderer.removeListener('prt:file:changed', handler)
+      }
+    }
   }
 }
 

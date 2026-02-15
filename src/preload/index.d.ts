@@ -198,8 +198,7 @@ interface PrtAPI {
   project: ProjectAPI
   task: TaskAPI
   deps: DepsAPI
-  // TODO: Implement file watching (requires IPC handler + fs.watch integration)
-  // onFileChanged: FileWatchAPI
+  onFileChanged: FileWatchAPI
 }
 
 declare global {

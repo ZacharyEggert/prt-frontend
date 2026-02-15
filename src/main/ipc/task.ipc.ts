@@ -1,6 +1,7 @@
 import { ipcMain } from 'electron'
 import { wrapHandler } from './utils'
 import { currentProjectPath } from './project.ipc'
+import { suppressNextChange } from './file-watcher'
 import { TaskService } from 'project-roadmap-tracking/dist/services/task.service.js'
 import { TaskQueryService } from 'project-roadmap-tracking/dist/services/task-query.service.js'
 import { SortOrder } from 'project-roadmap-tracking/dist/services/task-query.service.js'
@@ -196,6 +197,7 @@ export function registerTaskHandlers(): void {
       const updatedRoadmap = taskService.addTask(roadmap, newTask)
 
       // Write back to disk
+      suppressNextChange()
       await writeRoadmapFile(currentProjectPath, updatedRoadmap)
 
       return newTask
@@ -236,6 +238,7 @@ export function registerTaskHandlers(): void {
             ? taskService.updateTask(updatedRoadmap, newTaskId, remainingUpdates)
             : updatedRoadmap
 
+        suppressNextChange()
         await writeRoadmapFile(currentProjectPath, finalRoadmap)
 
         const updatedTask = taskService.findTask(finalRoadmap, newTaskId)
@@ -244,6 +247,7 @@ export function registerTaskHandlers(): void {
 
       // Standard update
       const updatedRoadmap = taskService.updateTask(roadmap, taskId, updates)
+      suppressNextChange()
       await writeRoadmapFile(currentProjectPath, updatedRoadmap)
 
       const updatedTask = taskService.findTask(updatedRoadmap, taskId)
@@ -272,6 +276,7 @@ export function registerTaskHandlers(): void {
         status: 'completed' as STATUS
       })
 
+      suppressNextChange()
       await writeRoadmapFile(currentProjectPath, updatedRoadmap)
 
       const updatedTask = taskService.findTask(updatedRoadmap, taskId)
@@ -300,6 +305,7 @@ export function registerTaskHandlers(): void {
         'passes-tests': true
       })
 
+      suppressNextChange()
       await writeRoadmapFile(currentProjectPath, updatedRoadmap)
 
       const updatedTask = taskService.findTask(updatedRoadmap, taskId)
@@ -341,6 +347,7 @@ export function registerTaskHandlers(): void {
           }))
       }
 
+      suppressNextChange()
       await writeRoadmapFile(currentProjectPath, updatedRoadmap)
 
       return {

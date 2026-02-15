@@ -1,5 +1,6 @@
 import { ipcMain, dialog } from 'electron'
 import { wrapHandler } from './utils'
+import { startWatching, suppressNextChange } from './file-watcher'
 import { readRoadmapFile } from 'project-roadmap-tracking/dist/util/read-roadmap.js'
 import { RoadmapService } from 'project-roadmap-tracking/dist/services/roadmap.service.js'
 import { writeRoadmapFile } from 'project-roadmap-tracking/dist/util/write-roadmap.js'
@@ -27,6 +28,7 @@ export function registerProjectHandlers(): void {
       const projectPath = args[1] as string
       const roadmap = await readRoadmapFile(projectPath)
       currentProjectPath = projectPath
+      await startWatching(projectPath)
       return roadmap
     })
   )
@@ -53,6 +55,7 @@ export function registerProjectHandlers(): void {
 
       const roadmap = await readRoadmapFile(prtJsonPath)
       currentProjectPath = prtJsonPath
+      await startWatching(prtJsonPath)
 
       return { canceled: false, roadmap }
     })
@@ -112,6 +115,7 @@ export function registerProjectHandlers(): void {
       // Update current project path and load the created roadmap
       const prtJsonPath = join(projectPath, 'prt.json')
       currentProjectPath = prtJsonPath
+      await startWatching(prtJsonPath)
 
       const roadmap = await readRoadmapFile(prtJsonPath)
       return roadmap
@@ -131,6 +135,7 @@ export function registerProjectHandlers(): void {
         throw new Error('No project is currently open. Please open a project before saving.')
       }
 
+      suppressNextChange()
       await writeRoadmapFile(currentProjectPath, roadmap)
 
       return {

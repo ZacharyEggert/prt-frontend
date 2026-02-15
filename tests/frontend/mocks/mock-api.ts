@@ -24,6 +24,7 @@ export interface MockPrtAPI {
   project: MockedObject<ProjectAPI>
   task: MockedObject<TaskAPI>
   deps: MockedObject<DepsAPI>
+  onFileChanged: { subscribe: MockedFn }
 }
 
 function createMockApi(): MockPrtAPI {
@@ -55,6 +56,9 @@ function createMockApi(): MockPrtAPI {
       validate: vi.fn().mockResolvedValue([]),
       detectCircular: vi.fn().mockResolvedValue(null),
       sort: vi.fn().mockResolvedValue([])
+    },
+    onFileChanged: {
+      subscribe: vi.fn().mockReturnValue(() => {})
     }
   }
 }
@@ -99,4 +103,7 @@ export function resetMockApi(): void {
   mockApi.deps.validate.mockReset().mockResolvedValue([])
   mockApi.deps.detectCircular.mockReset().mockResolvedValue(null)
   mockApi.deps.sort.mockReset().mockResolvedValue([])
+
+  // File watching
+  mockApi.onFileChanged.subscribe.mockReset().mockReturnValue(() => {})
 }

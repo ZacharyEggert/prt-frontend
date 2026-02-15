@@ -1,6 +1,7 @@
 import { ipcMain } from 'electron'
 import { wrapHandler } from './utils'
 import { currentProjectPath } from './project.ipc'
+import { suppressNextChange } from './file-watcher'
 import { TaskDependencyService } from 'project-roadmap-tracking/dist/services/task-dependency.service.js'
 import { TaskService } from 'project-roadmap-tracking/dist/services/task.service.js'
 import { readRoadmapFile } from 'project-roadmap-tracking/dist/util/read-roadmap.js'
@@ -143,6 +144,7 @@ export function registerDepsHandlers(): void {
       }
 
       // Write updated roadmap
+      suppressNextChange()
       await writeRoadmapFile(currentProjectPath, tempRoadmap)
 
       // Return updated tasks
@@ -219,6 +221,7 @@ export function registerDepsHandlers(): void {
       const updatedRoadmap: Roadmap = { ...roadmap, tasks: updatedTasks }
 
       // Write updated roadmap
+      suppressNextChange()
       await writeRoadmapFile(currentProjectPath, updatedRoadmap)
 
       // Return updated tasks
