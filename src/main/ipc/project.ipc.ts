@@ -1,6 +1,6 @@
 import { ipcMain, dialog } from 'electron'
 import { wrapHandler } from './utils'
-import { startWatching, suppressNextChange } from './file-watcher'
+import { startWatching, stopWatching, suppressNextChange } from './file-watcher'
 import { readRoadmapFile } from 'project-roadmap-tracking/dist/util/read-roadmap.js'
 import { RoadmapService } from 'project-roadmap-tracking/dist/services/roadmap.service.js'
 import { writeRoadmapFile } from 'project-roadmap-tracking/dist/util/write-roadmap.js'
@@ -26,6 +26,7 @@ export function registerProjectHandlers(): void {
     'prt:project:open',
     wrapHandler(async (...args: unknown[]) => {
       const projectPath = args[1] as string
+      await stopWatching()
       const roadmap = await readRoadmapFile(projectPath)
       currentProjectPath = projectPath
       await startWatching(projectPath)
@@ -53,6 +54,7 @@ export function registerProjectHandlers(): void {
       const selectedDir = result.filePaths[0]
       const prtJsonPath = join(selectedDir, 'prt.json')
 
+      await stopWatching()
       const roadmap = await readRoadmapFile(prtJsonPath)
       currentProjectPath = prtJsonPath
       await startWatching(prtJsonPath)
@@ -99,6 +101,8 @@ export function registerProjectHandlers(): void {
       }
 
       const { path: projectPath, name, description, withSampleTasks } = options
+
+      await stopWatching()
 
       // Build CLI arguments
       const cliArgs = ['init', '-n', name, '-d', description]

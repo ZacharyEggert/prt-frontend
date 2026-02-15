@@ -19,7 +19,7 @@
  * synchronized with backend state changes.
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query'
 import type {
   UseQueryOptions,
   UseMutationOptions,
@@ -38,6 +38,25 @@ import type {
 } from '../../../preload/index'
 import { queryKeys } from '@renderer/lib/query-keys'
 import { toast } from '@renderer/lib/toast'
+
+// ============================================================================
+// Helpers
+// ============================================================================
+
+/**
+ * Clears all query caches from the previous project.
+ * Cancels in-flight queries then removes cached data to prevent
+ * stale data from appearing when switching projects.
+ */
+async function clearProjectCaches(queryClient: QueryClient): Promise<void> {
+  await queryClient.cancelQueries({ queryKey: queryKeys.project.root })
+  await queryClient.cancelQueries({ queryKey: queryKeys.tasks.root })
+  await queryClient.cancelQueries({ queryKey: queryKeys.deps.root })
+
+  queryClient.removeQueries({ queryKey: queryKeys.project.root })
+  queryClient.removeQueries({ queryKey: queryKeys.tasks.root })
+  queryClient.removeQueries({ queryKey: queryKeys.deps.root })
+}
 
 // ============================================================================
 // Read Hooks (useQuery)
@@ -147,7 +166,7 @@ export function useProjectMetadata(
  * Opens a project file at the specified path and sets it as the current project.
  *
  * **Side effects:**
- * - Invalidates all project, task, and dependency queries (data from old project)
+ * - Cancels in-flight queries and removes all cached data from previous project
  * - Sets new roadmap in cache for immediate access
  *
  * @param options - Optional TanStack Query mutation options
@@ -185,10 +204,8 @@ export function useOpenProject(
     ...options,
     mutationFn: (projectPath: string) => window.api.project.open(projectPath),
     onSuccess: async (roadmap, projectPath, context, meta) => {
-      // Invalidate ALL queries from previous project
-      queryClient.invalidateQueries({ queryKey: queryKeys.project.root })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.root })
-      queryClient.invalidateQueries({ queryKey: queryKeys.deps.root })
+      // Clear all cached data from previous project
+      await clearProjectCaches(queryClient)
 
       // Optimistically cache the new roadmap and metadata
       queryClient.setQueryData(queryKeys.project.roadmap(projectPath), roadmap)
@@ -214,7 +231,7 @@ export function useOpenProject(
  * Shows a native file picker dialog to select and open a project.
  *
  * **Side effects (if not canceled):**
- * - Invalidates all project, task, and dependency queries
+ * - Cancels in-flight queries and removes all cached data from previous project
  * - Sets new roadmap in cache for immediate access
  *
  * @param options - Optional TanStack Query mutation options
@@ -248,21 +265,16 @@ export function useOpenProjectDialog(
     ...options,
     mutationFn: () => window.api.project.openDialog(),
     onSuccess: async (result, variables, context, meta) => {
-      // Only invalidate if user didn't cancel
+      // Only clear caches if user didn't cancel
       if (!result.canceled && result.roadmap) {
-        // Invalidate ALL queries from previous project
-        queryClient.invalidateQueries({ queryKey: queryKeys.project.root })
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks.root })
-        queryClient.invalidateQueries({ queryKey: queryKeys.deps.root })
+        // Clear all cached data from previous project
+        await clearProjectCaches(queryClient)
 
         // Optimistically cache metadata
         queryClient.setQueryData(queryKeys.project.metadata(), result.roadmap.metadata)
 
         // Show success toast
         toast.success('Project opened', result.roadmap.metadata.name)
-
-        // Note: We don't have the path here to cache the roadmap
-        // The roadmap will be fetched via other queries as needed
       }
 
       // Call user's onSuccess if provided
@@ -320,7 +332,7 @@ export function useSelectDirectory(
  *
  * **Side effects:**
  * - Creates new prt.json file via CLI
- * - Invalidates all project, task, and dependency queries
+ * - Cancels in-flight queries and removes all cached data from previous project
  * - Sets new roadmap in cache for immediate access
  *
  * @param options - Optional TanStack Query mutation options
@@ -358,13 +370,10 @@ export function useInitProject(
     ...options,
     mutationFn: (initOptions: InitOptions) => window.api.project.init(initOptions),
     onSuccess: async (roadmap, initOptions, context, meta) => {
-      // Invalidate ALL queries from previous project
-      queryClient.invalidateQueries({ queryKey: queryKeys.project.root })
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.root })
-      queryClient.invalidateQueries({ queryKey: queryKeys.deps.root })
+      // Clear all cached data from previous project
+      await clearProjectCaches(queryClient)
 
       // Optimistically cache the new roadmap and metadata
-      // Path is the directory + prt.json
       const projectPath = `${initOptions.path}/prt.json`
       queryClient.setQueryData(queryKeys.project.roadmap(projectPath), roadmap)
       queryClient.setQueryData(queryKeys.project.metadata(), roadmap.metadata)

@@ -888,7 +888,7 @@
       "notes": "",
       "passes-tests": false,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-9",
         "main-process",
@@ -896,7 +896,7 @@
       ],
       "title": "Handle project switching cleanup",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:21.522Z"
+      "updatedAt": "2026-02-15T23:45:07.346Z"
     },
     {
       "blocks": [],
