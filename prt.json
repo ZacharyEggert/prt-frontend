@@ -758,9 +758,9 @@
       "details": "Enhance task-detail.tsx with useTaskDeps(taskId). Show Depends On and Blocks lists with clickable task items. Include Add Dependency and Add Blocked buttons.",
       "id": "F-030",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-8",
         "renderer",
@@ -768,7 +768,7 @@
       ],
       "title": "Add dependency lists to task-detail panel",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:13.606Z"
+      "updatedAt": "2026-02-15T20:20:26.545Z"
     },
     {
       "blocks": [],
