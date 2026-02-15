@@ -908,16 +908,16 @@
       "details": "Create test mocks matching PrtAPI interface with vi.fn() stubs. Create setup file assigning mockApi to window.api. Register in vitest.config.ts. All methods return sensible defaults.",
       "id": "P-006",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-10",
         "testing"
       ],
       "title": "Create window.api mock setup and test utilities",
       "type": "planning",
-      "updatedAt": "2026-02-11T00:26:25.056Z"
+      "updatedAt": "2026-02-15T22:41:24.275Z"
     },
     {
       "blocks": [],
