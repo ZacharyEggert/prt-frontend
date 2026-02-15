@@ -692,9 +692,9 @@
       "details": "Create src/renderer/src/components/filter-bar.tsx. Status filter (toggle group), type filter (dropdown), priority filter (dropdown). Manages filter state locally, passes FilterCriteria to parent. Active filters shown as removable badges.",
       "id": "F-027",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-7",
         "renderer",
@@ -702,7 +702,7 @@
       ],
       "title": "Build filter-bar component",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:09.080Z"
+      "updatedAt": "2026-02-15T05:43:30.533Z"
     },
     {
       "blocks": [],
@@ -713,9 +713,9 @@
       "details": "Create src/renderer/src/components/search-bar.tsx. Text input with search icon and clear button. 300ms debounce before updating parent search query. Integrates with useTasks filter.search parameter.",
       "id": "F-028",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-7",
         "renderer",
@@ -723,7 +723,7 @@
       ],
       "title": "Build search-bar component with debounced input",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:09.519Z"
+      "updatedAt": "2026-02-15T05:43:31.226Z"
     },
     {
       "blocks": [],
@@ -736,9 +736,9 @@
       "details": "Update tasks page to render filter-bar and search-bar. Maintain filter/sort/search state. Pass combined ListOptions to useTasks(). Make task-list headers clickable for sort toggling (asc/desc).",
       "id": "F-029",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-7",
         "renderer",
@@ -746,7 +746,7 @@
       ],
       "title": "Integrate filters, search, and column sorting into tasks page",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:09.928Z"
+      "updatedAt": "2026-02-15T05:43:31.922Z"
     },
     {
       "blocks": [],

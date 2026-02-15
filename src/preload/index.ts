@@ -37,7 +37,7 @@ const api = {
     metadata: () => ipcRenderer.invoke('prt:project:metadata')
   },
   task: {
-    list: (options?: unknown): Promise<Task[]> => ipcRenderer.invoke('prt:task:list', options),
+    list: (options?: ListOptions): Promise<Task[]> => ipcRenderer.invoke('prt:task:list', options),
     get: (taskId: string): Promise<Task> => ipcRenderer.invoke('prt:task:get', taskId),
     add: (taskData: CreateTaskData): Promise<Task> => ipcRenderer.invoke('prt:task:add', taskData),
     update: (taskId: string, updates: Partial<Task>): Promise<Task> =>

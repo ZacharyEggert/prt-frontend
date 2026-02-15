@@ -9,7 +9,7 @@ import {
 } from '@renderer/components/ui/table'
 import { Badge } from '@renderer/components/ui/badge'
 import { Skeleton } from '@renderer/components/ui/skeleton'
-import { ListTodo } from 'lucide-react'
+import { ListTodo, ChevronUp, ChevronDown } from 'lucide-react'
 import { cn } from '@renderer/lib/utils'
 import {
   getStatusIcon,
@@ -23,12 +23,58 @@ interface TaskListProps {
   tasks: Task[]
   isLoading?: boolean
   onTaskClick?: (taskId: string) => void
+  sortBy?: 'created' | 'updated' | 'priority' | 'status' | 'id'
+  sortOrder?: 'asc' | 'desc'
+  onSortChange?: (field: 'priority' | 'id') => void
+}
+
+interface SortableHeaderProps {
+  label: string
+  field: 'priority' | 'id'
+  currentSort?: 'created' | 'updated' | 'priority' | 'status' | 'id'
+  currentOrder?: 'asc' | 'desc'
+  onClick: (field: 'priority' | 'id') => void
+  className?: string
+}
+
+function SortableHeader({
+  label,
+  field,
+  currentSort,
+  currentOrder,
+  onClick,
+  className
+}: SortableHeaderProps): React.JSX.Element {
+  const isActive = currentSort === field
+
+  return (
+    <TableHead
+      className={cn('cursor-pointer hover:bg-muted/50 select-none', className)}
+      onClick={() => onClick(field)}
+    >
+      <div className="flex items-center gap-1">
+        <span className={cn(isActive && 'font-semibold')}>{label}</span>
+        {isActive && (
+          <>
+            {currentOrder === 'asc' ? (
+              <ChevronUp className="size-4" />
+            ) : (
+              <ChevronDown className="size-4" />
+            )}
+          </>
+        )}
+      </div>
+    </TableHead>
+  )
 }
 
 export function TaskList({
   tasks,
   isLoading = false,
-  onTaskClick
+  onTaskClick,
+  sortBy,
+  sortOrder,
+  onSortChange
 }: TaskListProps): React.JSX.Element {
   // Loading state
   if (isLoading) {
@@ -65,8 +111,30 @@ export function TaskList({
         <TableHeader>
           <TableRow>
             <TableHead className="w-10"></TableHead>
-            <TableHead className="w-20">Priority</TableHead>
-            <TableHead className="w-24">ID</TableHead>
+            {onSortChange ? (
+              <SortableHeader
+                label="Priority"
+                field="priority"
+                currentSort={sortBy}
+                currentOrder={sortOrder}
+                onClick={onSortChange}
+                className="w-20"
+              />
+            ) : (
+              <TableHead className="w-20">Priority</TableHead>
+            )}
+            {onSortChange ? (
+              <SortableHeader
+                label="ID"
+                field="id"
+                currentSort={sortBy}
+                currentOrder={sortOrder}
+                onClick={onSortChange}
+                className="w-24"
+              />
+            ) : (
+              <TableHead className="w-24">ID</TableHead>
+            )}
             <TableHead>Title</TableHead>
             <TableHead className="w-24">Type</TableHead>
             <TableHead className="w-16 text-center">Tests</TableHead>

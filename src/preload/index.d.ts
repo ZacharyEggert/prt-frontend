@@ -81,7 +81,6 @@ interface ProjectValidationResult {
 
 /**
  * Options for filtering and sorting task lists.
- * Note: Not yet implemented in IPC handler. Placeholder for future feature.
  */
 interface ListOptions {
   status?: STATUS | STATUS[]
@@ -89,6 +88,7 @@ interface ListOptions {
   priority?: PRIORITY | PRIORITY[]
   tags?: string | string[]
   assignedTo?: string
+  search?: string
   sortBy?: 'created' | 'updated' | 'priority' | 'status' | 'id'
   sortOrder?: 'asc' | 'desc'
   limit?: number
