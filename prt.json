@@ -671,9 +671,9 @@
       "details": "Add shadcn/ui components: toggle, toggle-group, popover, command, dropdown-menu. Support filter bar and search functionality.",
       "id": "F-026",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-7",
         "renderer",
@@ -681,7 +681,7 @@
       ],
       "title": "Install filter-related shadcn/ui components",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:08.676Z"
+      "updatedAt": "2026-02-15T05:28:22.258Z"
     },
     {
       "blocks": [],
