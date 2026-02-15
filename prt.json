@@ -779,9 +779,9 @@
       "details": "Create dialog for adding dependencies with searchable task list (excluding self/already-linked). Support both depends-on and blocks relationships. Remove buttons with confirmation on each dependency item.",
       "id": "F-031",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-8",
         "renderer",
@@ -789,7 +789,7 @@
       ],
       "title": "Build add and remove dependency dialogs",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:14.011Z"
+      "updatedAt": "2026-02-15T20:34:02.770Z"
     },
     {
       "blocks": [],

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTask, useCompleteTask, usePassTest, useDeleteTask } from '@renderer/hooks/use-tasks'
-import { useTaskDeps } from '@renderer/hooks/use-deps'
+import { useTaskDeps, useRemoveDependency } from '@renderer/hooks/use-deps'
 import type { Task } from 'project-roadmap-tracking/dist/util/types'
 import {
   Sheet,
@@ -28,7 +28,7 @@ import { ScrollArea } from '@renderer/components/ui/scroll-area'
 import { Skeleton } from '@renderer/components/ui/skeleton'
 import { TaskForm } from '@renderer/components/task-form'
 import { AddDependencyDialog } from '@renderer/components/add-dependency-dialog'
-import { Edit, Check, TestTube, Trash2, AlertCircle, ArrowRight, Lock, Plus } from 'lucide-react'
+import { Edit, Check, TestTube, Trash2, AlertCircle, ArrowRight, Lock, Plus, X } from 'lucide-react'
 import {
   getStatusBadgeProps,
   getTypeBadgeProps,
@@ -38,6 +38,7 @@ import {
   formatDate,
   formatDateShort
 } from '@renderer/lib/task-utils'
+import { toast } from '@renderer/lib/toast'
 
 interface TaskDetailProps {
   taskId: string | null
@@ -50,30 +51,65 @@ interface DependencyItemProps {
   task: Task
   onClick?: () => void
   clickable?: boolean
+  onRemove?: () => void
+  isRemoving?: boolean
 }
 
 function DependencyItem({
   task,
   onClick,
-  clickable = true
+  clickable = true,
+  onRemove,
+  isRemoving = false
 }: DependencyItemProps): React.JSX.Element {
   if (clickable && onClick) {
     return (
-      <div className="flex items-center gap-2">
-        <ArrowRight className="size-3 text-muted-foreground" />
-        <Button variant="link" size="sm" className="h-auto p-0 text-sm" onClick={onClick}>
-          {task.id}: {task.title}
-        </Button>
+      <div className="flex items-center gap-2 justify-between group">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <ArrowRight className="size-3 text-muted-foreground" />
+          <Button
+            variant="link"
+            size="sm"
+            className="h-auto p-0 text-sm truncate"
+            onClick={onClick}
+          >
+            {task.id}: {task.title}
+          </Button>
+        </div>
+        {onRemove && (
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={onRemove}
+            disabled={isRemoving}
+            className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+          >
+            <X className="size-3" />
+          </Button>
+        )}
       </div>
     )
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <Lock className="size-3 text-muted-foreground" />
-      <span className="text-sm">
-        {task.id}: {task.title}
-      </span>
+    <div className="flex items-center gap-2 justify-between group">
+      <div className="flex items-center gap-2 flex-1 min-w-0">
+        <Lock className="size-3 text-muted-foreground" />
+        <span className="text-sm truncate">
+          {task.id}: {task.title}
+        </span>
+      </div>
+      {onRemove && (
+        <Button
+          variant="ghost"
+          size="icon-xs"
+          onClick={onRemove}
+          disabled={isRemoving}
+          className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+        >
+          <X className="size-3" />
+        </Button>
+      )}
     </div>
   )
 }
@@ -88,6 +124,12 @@ export function TaskDetail({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isAddDepDialogOpen, setIsAddDepDialogOpen] = useState(false)
   const [addDepType, setAddDepType] = useState<'depends-on' | 'blocks'>('depends-on')
+  const [isRemoveDepDialogOpen, setIsRemoveDepDialogOpen] = useState(false)
+  const [dependencyToRemove, setDependencyToRemove] = useState<{
+    taskId: string
+    taskTitle: string
+    type: 'depends-on' | 'blocks'
+  } | null>(null)
 
   // Query hooks
   const { data: task, isLoading: isTaskLoading, error: taskError } = useTask(taskId || '')
@@ -96,6 +138,16 @@ export function TaskDetail({
   const completeTask = useCompleteTask()
   const passTest = usePassTest()
   const deleteTask = useDeleteTask()
+  const removeDependency = useRemoveDependency({
+    onSuccess: (result) => {
+      toast.success('Dependency removed', `Updated ${result.updatedTasks.length} tasks`)
+      setIsRemoveDepDialogOpen(false)
+      setDependencyToRemove(null)
+    },
+    onError: (error) => {
+      toast.error('Failed to remove dependency', error.message)
+    }
+  })
 
   // Dependency hooks
   const { data: deps } = useTaskDeps(taskId || '')
@@ -160,6 +212,29 @@ export function TaskDetail({
   const handleAddBlocked = (): void => {
     setAddDepType('blocks')
     setIsAddDepDialogOpen(true)
+  }
+
+  const handleRemoveDependency = (
+    depTaskId: string,
+    depTaskTitle: string,
+    type: 'depends-on' | 'blocks'
+  ): void => {
+    setDependencyToRemove({
+      taskId: depTaskId,
+      taskTitle: depTaskTitle,
+      type
+    })
+    setIsRemoveDepDialogOpen(true)
+  }
+
+  const handleConfirmRemoveDependency = async (): Promise<void> => {
+    if (!taskId || !dependencyToRemove) return
+
+    await removeDependency.mutateAsync({
+      fromTaskId: taskId,
+      toTaskId: dependencyToRemove.taskId,
+      type: dependencyToRemove.type
+    })
   }
 
   // Loading state
@@ -248,7 +323,11 @@ export function TaskDetail({
   // View mode: Show task details
   const isCompleted = task.status === 'completed'
   const testsPassing = task['passes-tests']
-  const anyMutationPending = completeTask.isPending || passTest.isPending || deleteTask.isPending
+  const anyMutationPending =
+    completeTask.isPending ||
+    passTest.isPending ||
+    deleteTask.isPending ||
+    removeDependency.isPending
 
   return (
     <>
@@ -362,6 +441,10 @@ export function TaskDetail({
                         task={depTask}
                         onClick={() => handleDependencyClick(depTask.id)}
                         clickable={true}
+                        onRemove={() =>
+                          handleRemoveDependency(depTask.id, depTask.title, 'depends-on')
+                        }
+                        isRemoving={removeDependency.isPending}
                       />
                     ))}
                   </div>
@@ -390,7 +473,15 @@ export function TaskDetail({
                 {deps?.blocks && deps.blocks.length > 0 ? (
                   <div className="space-y-1">
                     {deps.blocks.map((blockTask) => (
-                      <DependencyItem key={blockTask.id} task={blockTask} clickable={false} />
+                      <DependencyItem
+                        key={blockTask.id}
+                        task={blockTask}
+                        clickable={false}
+                        onRemove={() =>
+                          handleRemoveDependency(blockTask.id, blockTask.title, 'blocks')
+                        }
+                        isRemoving={removeDependency.isPending}
+                      />
                     ))}
                   </div>
                 ) : (
@@ -510,6 +601,30 @@ export function TaskDetail({
           }
         />
       )}
+
+      {/* Remove Dependency Confirmation Dialog */}
+      <AlertDialog open={isRemoveDepDialogOpen} onOpenChange={setIsRemoveDepDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Dependency?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {dependencyToRemove && (
+                <>
+                  {dependencyToRemove.type === 'depends-on'
+                    ? `Remove dependency on "${dependencyToRemove.taskTitle}"? This will also remove the reverse 'blocks' relationship.`
+                    : `Remove blocking relationship with "${dependencyToRemove.taskTitle}"? This will also remove the reverse 'depends-on' relationship.`}
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmRemoveDependency} variant="destructive">
+              {removeDependency.isPending ? 'Removing...' : 'Remove Dependency'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }
