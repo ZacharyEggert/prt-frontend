@@ -822,9 +822,9 @@
       "details": "Create src/renderer/src/components/dependency-graph.tsx. Uses dagre (~30KB) for DAG layout + SVG rendering. useDependencyGraph() for data. Nodes as rectangles with task ID/title, edges as arrows. Color-coded by status. Clickable nodes.",
       "id": "F-033",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "low",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-8",
         "renderer",
@@ -832,7 +832,7 @@
       ],
       "title": "Build dependency-graph visualization with dagre",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:14.825Z"
+      "updatedAt": "2026-02-15T22:21:35.689Z"
     },
     {
       "blocks": [],

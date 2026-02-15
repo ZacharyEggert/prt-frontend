@@ -19,6 +19,7 @@ import { Plus, List, CheckCircle, AlertCircle } from 'lucide-react'
 import { toast } from '@renderer/lib/toast'
 import { CreateTaskDialog } from '@renderer/components/create-task-dialog'
 import { ValidationPanel } from '@renderer/components/validation-panel'
+import { DependencyGraph } from '@renderer/components/dependency-graph'
 import type { ProjectValidationResult } from '../../../preload/index'
 
 export function DashboardView(): React.JSX.Element {
@@ -124,6 +125,20 @@ export function DashboardView(): React.JSX.Element {
           <ValidationPanel validationResult={validationResult} onTaskClick={handleTaskIdClick} />
         </div>
       )}
+
+      {/* Dependency Graph */}
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Dependency Graph</h2>
+        <Card>
+          <CardContent className="pt-6">
+            <DependencyGraph
+              height={500}
+              onTaskClick={handleTaskIdClick}
+              showIsolatedTasks={false}
+            />
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Quick Actions */}
       <div>
