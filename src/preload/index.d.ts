@@ -105,7 +105,6 @@ interface DependencyInfo {
 
 /**
  * File change event structure for file watching.
- * Note: File watching not yet implemented.
  */
 interface FileChangeEvent {
   type: 'created' | 'modified' | 'deleted'
@@ -180,7 +179,6 @@ interface DepsAPI {
 
 /**
  * File watching API for detecting external changes.
- * Note: Not yet implemented.
  */
 interface FileWatchAPI {
   /**

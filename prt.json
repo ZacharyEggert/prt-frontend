@@ -865,9 +865,9 @@
       "details": "In App.tsx or dedicated provider, useEffect calling window.api.onFileChanged to invalidate all queries via queryClient.invalidateQueries(). Return cleanup unsubscribe function.",
       "id": "F-035",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-9",
         "renderer",
@@ -875,7 +875,7 @@
       ],
       "title": "Wire file-change listener in renderer",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:21.121Z"
+      "updatedAt": "2026-02-15T23:28:58.714Z"
     },
     {
       "blocks": [],

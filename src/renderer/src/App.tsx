@@ -5,8 +5,11 @@ import { WelcomeView } from '@renderer/pages/welcome'
 import { DashboardView } from '@renderer/pages/dashboard'
 import { TasksView } from '@renderer/pages/tasks'
 import { NavigationProvider, useNavigation } from '@renderer/hooks/use-navigation'
+import { useFileChangeListener } from '@renderer/hooks/use-file-change-listener'
 
 function App(): React.JSX.Element {
+  useFileChangeListener()
+
   return (
     <TooltipProvider>
       <NavigationProvider>

@@ -103,5 +103,6 @@ export type {
   DepUpdate,
   DepUpdateResult,
   SerializableDependencyGraph,
-  DependencyInfo
+  DependencyInfo,
+  FileChangeEvent
 }

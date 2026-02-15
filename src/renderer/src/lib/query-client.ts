@@ -10,7 +10,7 @@ import { QueryClient } from '@tanstack/react-query'
  *
  * Exported for:
  * - QueryClientProvider integration in main.tsx
- * - Cache invalidation from file-change listeners (future)
+ * - Cache invalidation from file-change listeners
  */
 export const queryClient = new QueryClient({
   defaultOptions: {
