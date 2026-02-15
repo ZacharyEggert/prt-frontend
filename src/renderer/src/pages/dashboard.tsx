@@ -18,6 +18,8 @@ import { useNavigation } from '@renderer/hooks/use-navigation'
 import { Plus, List, CheckCircle, AlertCircle } from 'lucide-react'
 import { toast } from '@renderer/lib/toast'
 import { CreateTaskDialog } from '@renderer/components/create-task-dialog'
+import { ValidationPanel } from '@renderer/components/validation-panel'
+import type { ProjectValidationResult } from '../../../preload/index'
 
 export function DashboardView(): React.JSX.Element {
   const { navigate } = useNavigation()
@@ -25,17 +27,29 @@ export function DashboardView(): React.JSX.Element {
   const { data: metadata, isLoading: metadataLoading } = useProjectMetadata()
   const { refetch: validateProject, isFetching: isValidating } = useProjectValidation()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [validationResult, setValidationResult] = useState<ProjectValidationResult | null>(null)
 
   const isLoading = statsLoading || metadataLoading
 
   const handleValidate = (): void => {
     validateProject().then((result) => {
-      if (result.data?.success) {
-        toast.success('Validation Passed', 'Project structure is valid')
-      } else if (result.data?.errors) {
-        toast.error('Validation Failed', result.data.errors)
+      if (result.data) {
+        setValidationResult(result.data)
+        if (result.data.success) {
+          toast.success('Validation Passed', 'Project structure is valid')
+        } else if (result.data.errors) {
+          toast.error('Validation Failed', result.data.errors)
+        }
       }
     })
+  }
+
+  const handleTaskIdClick = (
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _taskId: string
+  ): void => {
+    // Navigate to tasks page (task pre-selection is a future enhancement)
+    navigate('tasks')
   }
 
   const handleAddTask = (): void => {
@@ -102,6 +116,14 @@ export function DashboardView(): React.JSX.Element {
         <h2 className="text-xl font-semibold mb-4">Statistics</h2>
         <ProjectStats stats={stats} />
       </div>
+
+      {/* Validation Status */}
+      {validationResult && (
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Validation Status</h2>
+          <ValidationPanel validationResult={validationResult} onTaskClick={handleTaskIdClick} />
+        </div>
+      )}
 
       {/* Quick Actions */}
       <div>
