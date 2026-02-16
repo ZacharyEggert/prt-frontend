@@ -73,8 +73,8 @@ jobs:
             build_command: bun run build && bunx electron-builder --linux AppImage --publish never
             artifact_glob: dist/prt-frontend-*.AppImage
           - os: macos-latest
-            build_command: bun run build && bunx electron-builder --mac zip --publish never
-            artifact_glob: dist/prt-frontend-*-mac.zip
+            build_command: bun run build && bunx electron-builder --mac dmg --publish never
+            artifact_glob: dist/prt-frontend-*.dmg
           - os: windows-latest
             build_command: bun run build && bunx electron-builder --win nsis --publish never
             artifact_glob: dist/prt-frontend-*-setup.exe
@@ -124,7 +124,7 @@ jobs:
           prerelease: ${{ contains(needs.find-release-tag.outputs.release_tag, '-') }}
           files: |
             release-assets/prt-frontend-*-setup.exe
-            release-assets/prt-frontend-*-mac.zip
+            release-assets/prt-frontend-*.dmg
             release-assets/prt-frontend-*.AppImage
           fail_on_unmatched_files: true
         env:
