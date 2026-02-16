@@ -1,93 +1,135 @@
 # prt-frontend
 
-A desktop GUI for [project-roadmap-tracking](https://github.com/ZacharyEggert/project-roadmap-tracking) (PRT), built with Electron, React, and TypeScript. Provides a visual interface for all PRT task management operations — creating, viewing, updating, completing, and validating project roadmaps — without needing the command line.
+`prt-frontend` is a desktop GUI for
+[project-roadmap-tracking](https://github.com/ZacharyEggert/project-roadmap-tracking) (PRT).
+It lets you manage `prt.json` roadmaps visually with Dashboard and Tasks views instead of using
+only the CLI.
 
-## Tech Stack
+## Install (Prebuilt App)
 
-| Layer            | Technology                             |
-| ---------------- | -------------------------------------- |
-| Desktop runtime  | Electron 39                            |
-| Build tooling    | electron-vite 5, Vite 7                |
-| Frontend         | React 19, TypeScript 5.9               |
-| State management | TanStack Query                         |
-| UI components    | shadcn/ui + Tailwind CSS               |
-| PRT integration  | Direct service imports in main process |
-| Testing          | Vitest + React Testing Library         |
-| Package manager  | Bun                                    |
+Download the latest release from:
 
-## Prerequisites
+- <https://github.com/ZacharyEggert/prt-frontend/releases/latest>
 
-- [Node.js](https://nodejs.org/) >= 18.0.0
-- [Bun](https://bun.sh/) >= 1.0
-- [project-roadmap-tracking](https://www.npmjs.com/package/project-roadmap-tracking) ^0.2 (peer dependency)
+Choose your platform artifact:
 
-## Getting Started
+- macOS: `prt-frontend-<version>.dmg`
+- Windows: `prt-frontend-<version>-setup.exe`
+- Linux: `prt-frontend-<version>.AppImage`
 
-### Install
+### macOS install
+
+1. Open the `.dmg`.
+2. Drag `prt-frontend.app` to `/Applications`.
+
+### Windows install
+
+1. Run `prt-frontend-<version>-setup.exe`.
+2. Complete the NSIS installer flow.
+
+### Linux install
+
+1. Download `prt-frontend-<version>.AppImage`.
+2. Mark executable and run:
+
+```bash
+chmod +x ./prt-frontend-<version>.AppImage
+./prt-frontend-<version>.AppImage
+```
+
+## macOS Unsigned App Note (Important)
+
+macOS builds are currently **unsigned and not notarized** (`mac.identity: null`, `notarize: false`).
+If macOS quarantines the app after download, run:
+
+```bash
+xattr -dr com.apple.quarantine "/Applications/prt-frontend.app"
+open "/Applications/prt-frontend.app"
+```
+
+If launch is still blocked:
+
+1. Right-click `prt-frontend.app` in Finder and click `Open`.
+2. Or go to `System Settings -> Privacy & Security` and click `Open Anyway`.
+
+## Build Locally (macOS Alternative)
+
+If you prefer a local build instead of opening a downloaded unsigned package:
 
 ```bash
 bun install
+bun run build:mac
+open dist/mac*/prt-frontend.app
 ```
 
-### Development
+## Usage
+
+1. Launch the app.
+2. On the Welcome view, choose:
+   - `Open Project` to open an existing project directory containing `prt.json`.
+   - `Create New Project` to initialize a new roadmap in a chosen directory.
+3. Use `Dashboard` for:
+   - project metadata and progress
+   - roadmap statistics
+   - validation results
+   - dependency graph visualization
+4. Use `Tasks` for:
+   - create/edit/delete tasks
+   - complete tasks and mark `passes-tests`
+   - filter, search, and sort task lists
+   - add/remove dependencies between tasks
+5. Save from the app menu: `File -> Save` (`Cmd/Ctrl+S`).
+
+When `prt.json` changes externally (for example from CLI usage), the app watches the file and
+refreshes cached data.
+
+## Operational Note About `prt` CLI
+
+Creating a new project from the GUI calls `prt init` from the main process (shell execution).
+That means the `prt` command must be available on `PATH`.
+
+- Creating projects in-app: requires `prt` CLI on `PATH`
+- Opening/managing an existing `prt.json`: does not require running CLI commands manually
+
+Install PRT CLI from:
+
+- <https://www.npmjs.com/package/project-roadmap-tracking>
+
+## Development Setup
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) >= 18
+- [Bun](https://bun.sh/) >= 1.0
+- `project-roadmap-tracking` available (peer dependency `^0.2`)
+
+### Local dev
 
 ```bash
+bun install
 bun run dev
 ```
 
-This starts electron-vite in development mode with hot module replacement for the renderer process.
+### Scripts
 
-### Build
+| Script                | Description                                    |
+| --------------------- | ---------------------------------------------- |
+| `bun run dev`         | Start development mode with HMR                |
+| `bun run build`       | Typecheck and build production output          |
+| `bun run start`       | Preview production build                       |
+| `bun run typecheck`   | Typecheck main + preload + renderer            |
+| `bun run typecheck:node` | Typecheck main + preload only               |
+| `bun run typecheck:web`  | Typecheck renderer only                     |
+| `bun run lint`        | Run ESLint                                     |
+| `bun run format`      | Run Prettier                                   |
+| `bun run test`        | Run Vitest                                     |
+| `bun run build:mac`   | Build macOS artifacts via electron-builder     |
+| `bun run build:win`   | Build Windows NSIS installer                   |
+| `bun run build:linux` | Build Linux artifacts (AppImage/snap/deb)      |
 
-```bash
-# macOS
-bun run build:mac
+## Architecture
 
-# Windows
-bun run build:win
-
-# Linux
-bun run build:linux
-```
-
-## Project Structure
-
-```
-src/
-├── main/                  # Electron main process
-│   └── index.ts           # Window creation, IPC handlers, PRT service integration
-├── preload/               # Context bridge (main ↔ renderer)
-│   ├── index.ts           # Exposes typed IPC API to renderer
-│   └── index.d.ts         # Type definitions for exposed API
-└── renderer/              # React frontend
-    ├── index.html         # HTML entry point
-    └── src/
-        ├── main.tsx       # React root
-        ├── App.tsx        # Root component
-        ├── assets/        # CSS, images, SVGs
-        └── components/    # React components
-```
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed architectural documentation.
-
-## Scripts
-
-| Script                | Description                                     |
-| --------------------- | ----------------------------------------------- |
-| `bun run dev`         | Start in development mode with HMR              |
-| `bun run build`       | Typecheck and build for production              |
-| `bun run start`       | Preview the production build                    |
-| `bun run typecheck`   | Run TypeScript type checking (main + renderer)  |
-| `bun run lint`        | Lint with ESLint                                |
-| `bun run format`      | Format with Prettier                            |
-| `bun run build:mac`   | Build macOS distributable (DMG, ZIP)            |
-| `bun run build:win`   | Build Windows distributable (NSIS)              |
-| `bun run build:linux` | Build Linux distributable (AppImage, snap, deb) |
-
-## IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- Debug configurations for main and renderer processes are included in `.vscode/launch.json`
+For architecture and IPC API details, see [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## License
 
