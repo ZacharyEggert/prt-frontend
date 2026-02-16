@@ -1116,17 +1116,17 @@
       ],
       "details": "Run bun run build:mac. Verify built app launches, can open a project, all features work. Check PRT package bundled correctly. Verify CSP allows required resources. Check app size.",
       "id": "P-007",
-      "notes": "",
-      "passes-tests": false,
+      "notes": "P-007 verification complete (2026-02-16). Required gate sequence passed: typecheck, lint, format, test --run (206/206), build. build:mac succeeded and artifacts generated (DMG 112M, ZIP 113M, .app 299M). Checksums: DMG 800d2171b9a69eaf5b922095f5b5d3ee82b6c9de9fa5ad02e5168e05d232beca, ZIP 209276a13951a19d6431cf342de12c6d29d5c2fb0a8a48c4634c0cd1843439b6. Info.plist verified CFBundleIdentifier=com.prt.frontend and CFBundleName=prt-frontend. Packaged CSP verified in app.asar renderer index (default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:). Bundled PRT logic verified in packaged main (no unresolved project-roadmap-tracking import; TaskService/RoadmapService/readRoadmapFile/writeRoadmapFile present). Packaged runtime smoke passed via CDP against app launch with /tmp fixtures: open project, stats, deps graph, validation, task CRUD, dependency add/remove, save-current, project switch cleanup. Full evidence: docs/release/p-007-macos-build-verification.md",
+      "passes-tests": true,
       "priority": "high",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-11",
         "build"
       ],
       "title": "Production build verification on macOS",
       "type": "planning",
-      "updatedAt": "2026-02-11T00:26:33.029Z"
+      "updatedAt": "2026-02-16T02:42:21.363Z"
     },
     {
       "blocks": [],
