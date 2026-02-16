@@ -263,7 +263,9 @@ export function TaskList({
                     </Badge>
                   </div>
 
-                  <p className="mt-2 text-sm font-medium leading-snug break-words">{task.title}</p>
+                  <p className="mt-2 text-sm font-medium leading-snug wrap-break-word">
+                    {task.title}
+                  </p>
 
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     <Badge variant={typeBadge.variant} className={cn(typeBadge.className)}>
@@ -291,7 +293,9 @@ export function TaskList({
                   </Badge>
                 </div>
 
-                <p className="mt-2 text-sm font-medium leading-snug break-words">{task.title}</p>
+                <p className="mt-2 text-sm font-medium leading-snug wrap-break-word">
+                  {task.title}
+                </p>
 
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   <Badge variant={typeBadge.variant} className={cn(typeBadge.className)}>

@@ -26,8 +26,9 @@ export function TasksView(): React.JSX.Element {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [sortBy, setSortBy] = useState<'created' | 'updated' | 'priority' | 'status' | 'id'>()
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const activeTaskId = selectedTaskId?.trim() ? selectedTaskId : null
 
-  const isDetailOpen = selectedTaskId !== null
+  const isDetailOpen = activeTaskId !== null
 
   // Combine filters, search, and sorting into ListOptions
   const listOptions: ListOptions = {
@@ -166,12 +167,14 @@ export function TasksView(): React.JSX.Element {
       <CreateTaskDialog open={isCreateDialogOpen} onOpenChange={handleCreateDialogOpenChange} />
 
       {/* Task detail panel */}
-      <TaskDetail
-        taskId={selectedTaskId}
-        open={isDetailOpen}
-        onOpenChange={handleDetailOpenChange}
-        onTaskChange={setSelectedTaskId}
-      />
+      {activeTaskId && (
+        <TaskDetail
+          taskId={activeTaskId}
+          open={isDetailOpen}
+          onOpenChange={handleDetailOpenChange}
+          onTaskChange={setSelectedTaskId}
+        />
+      )}
     </div>
   )
 }
