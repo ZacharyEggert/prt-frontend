@@ -71,10 +71,13 @@ jobs:
         include:
           - os: ubuntu-latest
             script: build:linux
+            artifact_glob: dist/prt-frontend-*.AppImage
           - os: macos-latest
             script: build:mac
+            artifact_glob: dist/prt-frontend-*-mac.zip
           - os: windows-latest
             script: build:win
+            artifact_glob: dist/prt-frontend-*-setup.exe
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -91,6 +94,13 @@ jobs:
       - name: Run build script
         run: bun run ${{ matrix.script }}
 
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.os }}
+          path: ${{ matrix.artifact_glob }}
+          if-no-files-found: error
+
   release:
     needs:
       - find-release-tag
@@ -98,6 +108,13 @@ jobs:
     if: needs.find-release-tag.outputs.should_release == 'true'
     runs-on: ubuntu-latest
     steps:
+      - name: Download built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          merge-multiple: true
+          path: release-assets
+
       - name: Create GitHub release from source
         uses: softprops/action-gh-release@v2
         with:
@@ -105,5 +122,10 @@ jobs:
           target_commitish: ${{ needs.find-release-tag.outputs.target_sha }}
           generate_release_notes: true
           prerelease: ${{ contains(needs.find-release-tag.outputs.release_tag, '-') }}
+          files: |
+            release-assets/prt-frontend-*-setup.exe
+            release-assets/prt-frontend-*-mac.zip
+            release-assets/prt-frontend-*.AppImage
+          fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
