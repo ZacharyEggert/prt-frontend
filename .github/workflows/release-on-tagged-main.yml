@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    tags:
+      - 'v*.*.*'
+      - '*.*.*'
 
 permissions:
   contents: write
@@ -14,29 +17,46 @@ jobs:
     outputs:
       should_release: ${{ steps.tag.outputs.should_release }}
       release_tag: ${{ steps.tag.outputs.release_tag }}
+      target_sha: ${{ steps.tag.outputs.target_sha }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          fetch-tags: true
 
-      - name: Find release tag on pushed commit
+      - name: Resolve release tag and commit
         id: tag
         shell: bash
         run: |
           release_tag=''
+          target_sha=''
           semver_pattern='^v?[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$'
 
-          while IFS= read -r tag; do
-            if [[ "$tag" =~ $semver_pattern ]]; then
-              release_tag="$tag"
+          if [[ "${GITHUB_REF_TYPE}" == 'tag' ]]; then
+            candidate_tag="${GITHUB_REF_NAME}"
+            if [[ "$candidate_tag" =~ $semver_pattern ]]; then
+              tagged_sha="$(git rev-list -n 1 "$candidate_tag")"
+              git fetch origin main --depth=1
+              if git merge-base --is-ancestor "$tagged_sha" origin/main; then
+                release_tag="$candidate_tag"
+                target_sha="$tagged_sha"
+              fi
             fi
-          done < <(git tag --points-at "$GITHUB_SHA")
+          else
+            while IFS= read -r tag; do
+              if [[ "$tag" =~ $semver_pattern ]]; then
+                release_tag="$tag"
+                target_sha="$GITHUB_SHA"
+              fi
+            done < <(git tag --points-at "$GITHUB_SHA")
+          fi
 
           if [[ -n "$release_tag" ]]; then
             echo "should_release=true" >> "$GITHUB_OUTPUT"
             echo "release_tag=$release_tag" >> "$GITHUB_OUTPUT"
-            echo "Release tag detected: $release_tag"
+            echo "target_sha=$target_sha" >> "$GITHUB_OUTPUT"
+            echo "Release tag detected: $release_tag at $target_sha"
           else
             echo "should_release=false" >> "$GITHUB_OUTPUT"
             echo 'No SemVer release tag found on the pushed commit.'
@@ -59,6 +79,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.find-release-tag.outputs.target_sha }}
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -80,7 +102,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.find-release-tag.outputs.release_tag }}
-          target_commitish: ${{ github.sha }}
+          target_commitish: ${{ needs.find-release-tag.outputs.target_sha }}
           generate_release_notes: true
           prerelease: ${{ contains(needs.find-release-tag.outputs.release_tag, '-') }}
         env:
