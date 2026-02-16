@@ -6,6 +6,8 @@ import { DashboardView } from '@renderer/pages/dashboard'
 import { TasksView } from '@renderer/pages/tasks'
 import { NavigationProvider, useNavigation } from '@renderer/hooks/use-navigation'
 import { useFileChangeListener } from '@renderer/hooks/use-file-change-listener'
+import { useAppMenuCommands } from '@renderer/hooks/use-app-menu-commands'
+import { useWindowTitle } from '@renderer/hooks/use-window-title'
 
 function App(): React.JSX.Element {
   useFileChangeListener()
@@ -22,6 +24,8 @@ function App(): React.JSX.Element {
 
 function AppContent(): React.JSX.Element {
   const { currentView } = useNavigation()
+  useAppMenuCommands()
+  useWindowTitle()
 
   return (
     <Layout>

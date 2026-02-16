@@ -150,6 +150,33 @@ export function registerProjectHandlers(): void {
   )
 
   /**
+   * Handler: prt:project:save-current
+   * Reads and re-writes the current roadmap file.
+   */
+  ipcMain.handle(
+    'prt:project:save-current',
+    wrapHandler(async () => {
+      if (!currentProjectPath) {
+        throw new Error('No project is currently open. Please open a project before saving.')
+      }
+
+      const roadmap = await readRoadmapFile(currentProjectPath)
+
+      if (!roadmap) {
+        throw new Error('Failed to load roadmap for save.')
+      }
+
+      suppressNextChange()
+      await writeRoadmapFile(currentProjectPath, roadmap)
+
+      return {
+        success: true,
+        path: currentProjectPath
+      }
+    })
+  )
+
+  /**
    * Handler: prt:project:validate
    * Validates the current roadmap and returns any errors
    */

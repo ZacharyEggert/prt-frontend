@@ -34,6 +34,8 @@ interface SaveResult {
   path: string
 }
 
+type MenuCommand = 'new-project' | 'open-project' | 'save-project'
+
 interface CreateTaskData {
   title: string
   details: string
@@ -126,6 +128,8 @@ interface ProjectAPI {
   init: (options: InitOptions) => Promise<Roadmap>
   /** Saves roadmap to disk */
   save: (roadmap: Roadmap) => Promise<SaveResult>
+  /** Saves currently open roadmap from disk state */
+  saveCurrent: () => Promise<SaveResult>
   /** Validates roadmap structure and returns errors */
   validate: () => Promise<ProjectValidationResult>
   /** Generates statistics for current roadmap */
@@ -190,6 +194,17 @@ interface FileWatchAPI {
 }
 
 /**
+ * Menu command API emitted from main process.
+ */
+interface MenuAPI {
+  /**
+   * Subscribes to app menu commands (File > New/Open/Save).
+   * @returns Cleanup function to unsubscribe.
+   */
+  subscribe: (callback: (command: MenuCommand) => void) => () => void
+}
+
+/**
  * Complete API surface exposed to renderer via window.api
  */
 interface PrtAPI {
@@ -197,6 +212,7 @@ interface PrtAPI {
   task: TaskAPI
   deps: DepsAPI
   onFileChanged: FileWatchAPI
+  menu: MenuAPI
 }
 
 declare global {
@@ -213,6 +229,7 @@ export type {
   TaskAPI,
   DepsAPI,
   FileWatchAPI,
+  MenuAPI,
   // Helper types
   InitOptions,
   OpenDialogResult,
@@ -226,5 +243,6 @@ export type {
   ProjectValidationResult,
   ListOptions,
   DependencyInfo,
-  FileChangeEvent
+  FileChangeEvent,
+  MenuCommand
 }

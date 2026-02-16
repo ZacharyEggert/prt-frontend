@@ -11,6 +11,7 @@ import type {
   DirectorySelectResult,
   SaveResult,
   ProjectValidationResult,
+  MenuCommand,
   CreateTaskData,
   TaskDeleteResult,
   DepUpdate,
@@ -33,6 +34,7 @@ const api = {
       ipcRenderer.invoke('prt:project:init', options),
     save: (roadmap: Roadmap): Promise<SaveResult> =>
       ipcRenderer.invoke('prt:project:save', roadmap),
+    saveCurrent: (): Promise<SaveResult> => ipcRenderer.invoke('prt:project:save-current'),
     validate: () => ipcRenderer.invoke('prt:project:validate'),
     stats: () => ipcRenderer.invoke('prt:project:stats'),
     metadata: () => ipcRenderer.invoke('prt:project:metadata')
@@ -71,6 +73,17 @@ const api = {
         ipcRenderer.removeListener('prt:file:changed', handler)
       }
     }
+  },
+  menu: {
+    subscribe: (callback: (command: MenuCommand) => void): (() => void) => {
+      const handler = (_ipcEvent: Electron.IpcRendererEvent, command: MenuCommand): void => {
+        callback(command)
+      }
+      ipcRenderer.on('prt:menu:command', handler)
+      return () => {
+        ipcRenderer.removeListener('prt:menu:command', handler)
+      }
+    }
   }
 }
 
@@ -98,6 +111,7 @@ export type {
   DirectorySelectResult,
   SaveResult,
   ProjectValidationResult,
+  MenuCommand,
   CreateTaskData,
   TaskDeleteResult,
   DepUpdate,

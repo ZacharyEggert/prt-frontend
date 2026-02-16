@@ -146,6 +146,28 @@ describe('project IPC handlers', () => {
     })
   })
 
+  describe('prt:project:save-current', () => {
+    it('reads and writes the current roadmap to disk', async () => {
+      await openProject()
+      const handler = await getHandler('prt:project:save-current')
+
+      const result = await handler({})
+
+      expect(suppressNextChange).toHaveBeenCalled()
+      expect(writeRoadmapFile).toHaveBeenCalledWith('/test/project/prt.json', mockRoadmap)
+      expect(result).toEqual({ success: true, path: '/test/project/prt.json' })
+    })
+
+    it('throws when no project is open', async () => {
+      vi.resetModules()
+      const mod = await import('../../../src/main/ipc/project.ipc')
+      mod.registerProjectHandlers()
+      const handler = mockHandlers.get('prt:project:save-current')!
+
+      await expect(handler({})).rejects.toThrow('No project is currently open')
+    })
+  })
+
   describe('prt:project:validate', () => {
     it('returns success when no validation errors', async () => {
       await openProject()

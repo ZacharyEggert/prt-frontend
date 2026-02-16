@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@renderer/components/ui/button'
 import {
   Card,
@@ -14,6 +14,10 @@ import {
 } from '@renderer/hooks/use-project'
 import { useNavigation } from '@renderer/hooks/use-navigation'
 import { toast } from '@renderer/lib/toast'
+import {
+  MENU_NEW_PROJECT_DIRECTORY_EVENT,
+  type MenuNewProjectDirectoryEventDetail
+} from '@renderer/lib/menu-events'
 
 export function WelcomeView(): React.JSX.Element {
   const { navigate } = useNavigation()
@@ -27,6 +31,25 @@ export function WelcomeView(): React.JSX.Element {
   const [projectName, setProjectName] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
   const [withSampleTasks, setWithSampleTasks] = useState(false)
+
+  useEffect(() => {
+    const handleMenuDirectoryEvent = (event: Event): void => {
+      const customEvent = event as CustomEvent<MenuNewProjectDirectoryEventDetail>
+      const path = customEvent.detail?.path
+      if (!path) return
+
+      setProjectPath(path)
+      setProjectName('')
+      setProjectDescription('')
+      setWithSampleTasks(false)
+      setShowNewProjectForm(true)
+    }
+
+    window.addEventListener(MENU_NEW_PROJECT_DIRECTORY_EVENT, handleMenuDirectoryEvent)
+    return () => {
+      window.removeEventListener(MENU_NEW_PROJECT_DIRECTORY_EVENT, handleMenuDirectoryEvent)
+    }
+  }, [])
 
   const handleOpenProject = (): void => {
     openDialog.mutate(undefined, {

@@ -1,6 +1,6 @@
 import { vi, type Mock } from 'vitest'
 import { STATUS } from 'project-roadmap-tracking/dist/util/types'
-import type { ProjectAPI, TaskAPI, DepsAPI } from '../../../src/preload/index.d'
+import type { ProjectAPI, TaskAPI, DepsAPI, MenuAPI } from '../../../src/preload/index.d'
 import {
   createRoadmap,
   createTask,
@@ -25,6 +25,7 @@ export interface MockPrtAPI {
   task: MockedObject<TaskAPI>
   deps: MockedObject<DepsAPI>
   onFileChanged: { subscribe: MockedFn }
+  menu: MockedObject<MenuAPI>
 }
 
 function createMockApi(): MockPrtAPI {
@@ -35,6 +36,7 @@ function createMockApi(): MockPrtAPI {
       selectDirectory: vi.fn().mockResolvedValue(createDirectorySelectResult()),
       init: vi.fn().mockResolvedValue(createRoadmap()),
       save: vi.fn().mockResolvedValue(createSaveResult()),
+      saveCurrent: vi.fn().mockResolvedValue(createSaveResult()),
       validate: vi.fn().mockResolvedValue(createValidationResult()),
       stats: vi.fn().mockResolvedValue(createStats()),
       metadata: vi.fn().mockResolvedValue(createMetadata())
@@ -59,6 +61,9 @@ function createMockApi(): MockPrtAPI {
     },
     onFileChanged: {
       subscribe: vi.fn().mockReturnValue(() => {})
+    },
+    menu: {
+      subscribe: vi.fn().mockReturnValue(() => {})
     }
   }
 }
@@ -82,6 +87,7 @@ export function resetMockApi(): void {
   mockApi.project.selectDirectory.mockReset().mockResolvedValue(createDirectorySelectResult())
   mockApi.project.init.mockReset().mockResolvedValue(createRoadmap())
   mockApi.project.save.mockReset().mockResolvedValue(createSaveResult())
+  mockApi.project.saveCurrent.mockReset().mockResolvedValue(createSaveResult())
   mockApi.project.validate.mockReset().mockResolvedValue(createValidationResult())
   mockApi.project.stats.mockReset().mockResolvedValue(createStats())
   mockApi.project.metadata.mockReset().mockResolvedValue(createMetadata())
@@ -106,4 +112,7 @@ export function resetMockApi(): void {
 
   // File watching
   mockApi.onFileChanged.subscribe.mockReset().mockReturnValue(() => {})
+
+  // Menu commands
+  mockApi.menu.subscribe.mockReset().mockReturnValue(() => {})
 }

@@ -1071,9 +1071,9 @@
       "details": "Create proper Electron menu in src/main/index.ts. File (Open/New/Save/Quit), Edit (Undo/Cut/Copy/Paste), View (DevTools/Reload), Help (About). Wire menu items to IPC calls.",
       "id": "I-005",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "low",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-11",
         "main-process",
@@ -1081,7 +1081,7 @@
       ],
       "title": "Create Electron application menu",
       "type": "improvement",
-      "updatedAt": "2026-02-11T00:26:32.215Z"
+      "updatedAt": "2026-02-16T01:11:08.448Z"
     },
     {
       "blocks": [],
@@ -1092,16 +1092,16 @@
       "details": "Dynamic window title showing project name. Update index.html title from Electron to PRT. Set app icons for all platforms. Change electron-builder.yml appId to com.prt.frontend.",
       "id": "I-006",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "low",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-11",
         "polish"
       ],
       "title": "Update window title, app metadata, and appId",
       "type": "improvement",
-      "updatedAt": "2026-02-11T00:26:32.622Z"
+      "updatedAt": "2026-02-16T01:11:12.103Z"
     },
     {
       "blocks": [],

@@ -9,6 +9,10 @@ import {
   createRoadmap,
   createDirectorySelectResult
 } from '../mocks/factories'
+import {
+  MENU_NEW_PROJECT_DIRECTORY_EVENT,
+  type MenuNewProjectDirectoryEventDetail
+} from '@renderer/lib/menu-events'
 
 // Mock toast
 vi.mock('@renderer/lib/toast', () => ({
@@ -172,6 +176,29 @@ describe('WelcomeView', () => {
 
     await waitFor(() => {
       expect(mockApi.project.openDialog).toHaveBeenCalled()
+    })
+  })
+
+  it('opens the create form when menu new-project directory event is dispatched', async () => {
+    const { wrapper: Wrapper } = createWrapper()
+
+    render(
+      <Wrapper>
+        <WelcomeView />
+      </Wrapper>
+    )
+
+    const event = new CustomEvent<MenuNewProjectDirectoryEventDetail>(
+      MENU_NEW_PROJECT_DIRECTORY_EVENT,
+      {
+        detail: { path: '/menu/path' }
+      }
+    )
+    window.dispatchEvent(event)
+
+    await waitFor(() => {
+      expect(screen.getByText('Location: /menu/path')).toBeInTheDocument()
+      expect(screen.getByLabelText('Project Name')).toBeInTheDocument()
     })
   })
 })
