@@ -7,6 +7,21 @@ import { mockApi } from '../mocks/mock-api'
 import { createTask } from '../mocks/factories'
 import { STATUS, TASK_TYPE, PRIORITY } from 'project-roadmap-tracking/dist/util/types'
 
+const defaultMatchMedia = window.matchMedia
+
+function setMobileViewport(isMobile: boolean): void {
+  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+    matches: query === '(max-width: 767px)' ? isMobile : false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn()
+  }))
+}
+
 // Mock toast
 vi.mock('@renderer/lib/toast', () => ({
   toast: {
@@ -47,6 +62,7 @@ describe('TasksView', () => {
 
   afterEach(() => {
     cleanup()
+    window.matchMedia = defaultMatchMedia
   })
 
   it('renders Tasks heading and Add Task button', async () => {
@@ -267,5 +283,41 @@ describe('TasksView', () => {
     }
 
     expect(taskRow).toHaveFocus()
+  })
+
+  it('restores focus to mobile task card trigger after closing details', async () => {
+    setMobileViewport(true)
+    const user = userEvent.setup()
+    const task = createTask({
+      id: 'F-111',
+      title: 'Mobile Focus Task',
+      type: TASK_TYPE.Feature,
+      status: STATUS.NotStarted,
+      priority: PRIORITY.Medium
+    })
+    mockApi.task.list.mockResolvedValue([task])
+    mockApi.task.get.mockResolvedValue(task)
+
+    const { wrapper: Wrapper } = createWrapper()
+
+    render(
+      <Wrapper>
+        <TasksView />
+      </Wrapper>
+    )
+
+    const taskCardTrigger = await screen.findByRole('button', {
+      name: 'Open task F-111: Mobile Focus Task'
+    })
+
+    await user.click(taskCardTrigger)
+    expect(await screen.findByText('F-111: Mobile Focus Task')).toBeInTheDocument()
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => {
+      expect(screen.queryByText('F-111: Mobile Focus Task')).not.toBeInTheDocument()
+      expect(taskCardTrigger).toHaveFocus()
+    })
   })
 })

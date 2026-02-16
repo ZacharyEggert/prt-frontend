@@ -112,8 +112,8 @@ export function TasksView(): React.JSX.Element {
     const copy = getErrorCopy('tasksLoad')
 
     return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-semibold">Tasks</h1>
+      <div className="space-y-5 md:space-y-6">
+        <h1 className="text-2xl md:text-3xl font-semibold">Tasks</h1>
         <FeedbackState
           variant="error"
           title={copy.title}
@@ -126,11 +126,15 @@ export function TasksView(): React.JSX.Element {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 md:space-y-6">
       {/* Header with actions */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">Tasks</h1>
-        <Button onClick={handleAddTask} data-create-task-trigger="true">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-2xl md:text-3xl font-semibold">Tasks</h1>
+        <Button
+          onClick={handleAddTask}
+          data-create-task-trigger="true"
+          className="w-full sm:w-auto"
+        >
           <Plus className="size-4 mr-2" />
           Add Task
         </Button>

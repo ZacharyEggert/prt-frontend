@@ -5,9 +5,26 @@ import { TaskList } from '@renderer/components/task-list'
 import { createTask } from '../mocks/factories'
 import { STATUS, TASK_TYPE, PRIORITY } from 'project-roadmap-tracking/dist/util/types'
 
+const defaultMatchMedia = window.matchMedia
+
+function setMobileViewport(isMobile: boolean): void {
+  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+    matches: query === '(max-width: 767px)' ? isMobile : false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn()
+  }))
+}
+
 describe('TaskList', () => {
   afterEach(() => {
     cleanup()
+    vi.restoreAllMocks()
+    window.matchMedia = defaultMatchMedia
   })
 
   it('renders loading skeleton when isLoading is true', () => {
@@ -173,5 +190,51 @@ describe('TaskList', () => {
 
     expect(onTaskClick).toHaveBeenNthCalledWith(1, 'F-010')
     expect(onTaskClick).toHaveBeenNthCalledWith(2, 'F-010')
+  })
+
+  it('renders stacked mobile cards instead of a table on small screens', () => {
+    setMobileViewport(true)
+    const tasks = [
+      createTask({
+        id: 'F-001',
+        title: 'Mobile Card Task',
+        type: TASK_TYPE.Feature,
+        status: STATUS.InProgress,
+        priority: PRIORITY.High,
+        'depends-on': ['F-002', 'F-003']
+      })
+    ]
+
+    render(<TaskList tasks={tasks} />)
+
+    expect(screen.queryByRole('table')).not.toBeInTheDocument()
+    expect(screen.getByText('Mobile Card Task')).toBeInTheDocument()
+    expect(screen.getByText('Deps: 2')).toBeInTheDocument()
+  })
+
+  it('renders mobile sort controls and triggers sort changes', async () => {
+    setMobileViewport(true)
+    const user = userEvent.setup()
+    const onSortChange = vi.fn()
+
+    render(<TaskList tasks={[createTask()]} onSortChange={onSortChange} />)
+
+    await user.click(screen.getByRole('button', { name: 'Sort by Priority' }))
+    await user.click(screen.getByRole('button', { name: 'Sort by ID' }))
+
+    expect(onSortChange).toHaveBeenNthCalledWith(1, 'priority')
+    expect(onSortChange).toHaveBeenNthCalledWith(2, 'id')
+  })
+
+  it('opens task details when a mobile card is clicked', async () => {
+    setMobileViewport(true)
+    const user = userEvent.setup()
+    const onTaskClick = vi.fn()
+    const tasks = [createTask({ id: 'F-022', title: 'Tap Card Task' })]
+
+    render(<TaskList tasks={tasks} onTaskClick={onTaskClick} />)
+
+    await user.click(screen.getByRole('button', { name: 'Open task F-022: Tap Card Task' }))
+    expect(onTaskClick).toHaveBeenCalledWith('F-022')
   })
 })

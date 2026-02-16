@@ -108,13 +108,13 @@ export function WelcomeView(): React.JSX.Element {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-semibold">Welcome to PRT</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl md:text-3xl font-semibold">Welcome to PRT</h1>
+        <p className="text-sm md:text-base text-muted-foreground">
           Open an existing project or create a new one to get started with project roadmap tracking.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Open Existing Project Card */}
         <Card>
           <CardHeader>
@@ -150,7 +150,7 @@ export function WelcomeView(): React.JSX.Element {
               </Button>
             ) : (
               <form onSubmit={handleCreateProject} className="space-y-4">
-                <div className="text-xs text-muted-foreground truncate" title={projectPath}>
+                <div className="text-xs text-muted-foreground break-all" title={projectPath}>
                   Location: {projectPath}
                 </div>
 
@@ -197,8 +197,12 @@ export function WelcomeView(): React.JSX.Element {
                   </label>
                 </div>
 
-                <div className="flex gap-2 pt-2">
-                  <Button type="submit" disabled={initProject.isPending} className="flex-1">
+                <div className="flex flex-col-reverse sm:flex-row gap-2 pt-2">
+                  <Button
+                    type="submit"
+                    disabled={initProject.isPending}
+                    className="w-full sm:flex-1"
+                  >
                     {initProject.isPending ? 'Creating...' : 'Create Project'}
                   </Button>
                   <Button
@@ -206,6 +210,7 @@ export function WelcomeView(): React.JSX.Element {
                     onClick={handleCancelCreate}
                     variant="outline"
                     disabled={initProject.isPending}
+                    className="w-full sm:w-auto"
                   >
                     Cancel
                   </Button>

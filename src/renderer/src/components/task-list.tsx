@@ -12,6 +12,7 @@ import { Badge } from '@renderer/components/ui/badge'
 import { Skeleton } from '@renderer/components/ui/skeleton'
 import { ListTodo, ChevronUp, ChevronDown, Plus } from 'lucide-react'
 import { cn } from '@renderer/lib/utils'
+import { useMediaQuery } from '@renderer/hooks/use-media-query'
 import {
   getStatusIcon,
   getPriorityBadgeProps,
@@ -38,6 +39,14 @@ interface SortableHeaderProps {
   currentOrder?: 'asc' | 'desc'
   onClick: (field: 'priority' | 'id') => void
   className?: string
+}
+
+interface MobileSortButtonProps {
+  label: string
+  field: 'priority' | 'id'
+  currentSort?: 'created' | 'updated' | 'priority' | 'status' | 'id'
+  currentOrder?: 'asc' | 'desc'
+  onClick: (field: 'priority' | 'id') => void
 }
 
 function SortableHeader({
@@ -75,6 +84,36 @@ function SortableHeader({
   )
 }
 
+function MobileSortButton({
+  label,
+  field,
+  currentSort,
+  currentOrder,
+  onClick
+}: MobileSortButtonProps): React.JSX.Element {
+  const isActive = currentSort === field
+
+  return (
+    <Button
+      type="button"
+      size="sm"
+      variant={isActive ? 'default' : 'outline'}
+      className="flex-1 justify-between"
+      aria-label={`Sort by ${label}`}
+      onClick={() => onClick(field)}
+    >
+      <span>{label}</span>
+      {isActive ? (
+        currentOrder === 'asc' ? (
+          <ChevronUp className="size-4" />
+        ) : (
+          <ChevronDown className="size-4" />
+        )
+      ) : null}
+    </Button>
+  )
+}
+
 export function TaskList({
   tasks,
   isLoading = false,
@@ -84,6 +123,7 @@ export function TaskList({
   sortOrder,
   onSortChange
 }: TaskListProps): React.JSX.Element {
+  const isMobile = useMediaQuery('(max-width: 767px)')
   const isInteractive = Boolean(onTaskClick)
   const [focusedRowId, setFocusedRowId] = useState<string | null>(null)
   const rowRefs = useRef<Array<HTMLTableRowElement | null>>([])
@@ -167,6 +207,108 @@ export function TaskList({
     if (onTaskClick) {
       onTaskClick(taskId)
     }
+  }
+
+  if (isMobile) {
+    return (
+      <div className="space-y-3">
+        {onSortChange ? (
+          <div className="rounded-md border p-2">
+            <p className="mb-2 text-xs font-medium text-muted-foreground">Sort tasks</p>
+            <div className="flex gap-2">
+              <MobileSortButton
+                label="Priority"
+                field="priority"
+                currentSort={sortBy}
+                currentOrder={sortOrder}
+                onClick={onSortChange}
+              />
+              <MobileSortButton
+                label="ID"
+                field="id"
+                currentSort={sortBy}
+                currentOrder={sortOrder}
+                onClick={onSortChange}
+              />
+            </div>
+          </div>
+        ) : null}
+
+        <div className="space-y-2">
+          {tasks.map((task) => {
+            const priorityBadge = getPriorityBadgeProps(task.priority)
+            const typeBadge = getTypeBadgeProps(task.type)
+            const dependencyCount = task['depends-on']?.length || 0
+
+            if (isInteractive) {
+              return (
+                <button
+                  key={task.id}
+                  type="button"
+                  className={cn(
+                    'w-full rounded-md border p-3 text-left transition-colors',
+                    'hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+                  )}
+                  onClick={() => handleRowClick(task.id)}
+                  aria-label={`Open task ${task.id}: ${task.title}`}
+                  data-task-row-id={task.id}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      {getStatusIcon(task.status)}
+                      <span className="font-mono text-xs text-muted-foreground">{task.id}</span>
+                    </div>
+                    <Badge variant={priorityBadge.variant} className={cn(priorityBadge.className)}>
+                      {formatLabel(task.priority)}
+                    </Badge>
+                  </div>
+
+                  <p className="mt-2 text-sm font-medium leading-snug break-words">{task.title}</p>
+
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <Badge variant={typeBadge.variant} className={cn(typeBadge.className)}>
+                      {formatLabel(task.type)}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                      {getTestIcon(task['passes-tests'])}
+                      Tests
+                    </span>
+                    <span className="text-xs text-muted-foreground">Deps: {dependencyCount}</span>
+                  </div>
+                </button>
+              )
+            }
+
+            return (
+              <div key={task.id} className="rounded-md border p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    {getStatusIcon(task.status)}
+                    <span className="font-mono text-xs text-muted-foreground">{task.id}</span>
+                  </div>
+                  <Badge variant={priorityBadge.variant} className={cn(priorityBadge.className)}>
+                    {formatLabel(task.priority)}
+                  </Badge>
+                </div>
+
+                <p className="mt-2 text-sm font-medium leading-snug break-words">{task.title}</p>
+
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <Badge variant={typeBadge.variant} className={cn(typeBadge.className)}>
+                    {formatLabel(task.type)}
+                  </Badge>
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                    {getTestIcon(task['passes-tests'])}
+                    Tests
+                  </span>
+                  <span className="text-xs text-muted-foreground">Deps: {dependencyCount}</span>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
   }
 
   return (

@@ -75,7 +75,7 @@ function DependencyItem({
             type="button"
             variant="link"
             size="sm"
-            className="h-auto p-0 text-sm truncate"
+            className="h-auto p-0 text-[13px] md:text-sm truncate"
             onClick={onClick}
           >
             {task.id}: {task.title}
@@ -102,7 +102,7 @@ function DependencyItem({
     <div className="flex items-center gap-2 justify-between group">
       <div className="flex items-center gap-2 flex-1 min-w-0">
         <Lock className="size-3 text-muted-foreground" />
-        <span className="text-sm truncate">
+        <span className="text-[13px] md:text-sm truncate">
           {task.id}: {task.title}
         </span>
       </div>
@@ -261,7 +261,7 @@ export function TaskDetail({
   if (isTaskLoading) {
     return (
       <Sheet open={open} onOpenChange={handleOpenChange}>
-        <SheetContent>
+        <SheetContent className="w-full sm:max-w-sm">
           <SheetHeader>
             <SheetTitle className="sr-only">Loading task details</SheetTitle>
             <SheetDescription className="sr-only">
@@ -286,7 +286,7 @@ export function TaskDetail({
 
     return (
       <Sheet open={open} onOpenChange={handleOpenChange}>
-        <SheetContent>
+        <SheetContent className="w-full sm:max-w-sm">
           <SheetHeader>
             <SheetTitle>Error Loading Task</SheetTitle>
             <SheetDescription className="sr-only">
@@ -312,7 +312,7 @@ export function TaskDetail({
   if (!taskId || !task) {
     return (
       <Sheet open={open} onOpenChange={handleOpenChange}>
-        <SheetContent>
+        <SheetContent className="w-full sm:max-w-sm">
           <SheetHeader>
             <SheetTitle>No Task Selected</SheetTitle>
             <SheetDescription className="sr-only">
@@ -333,7 +333,7 @@ export function TaskDetail({
   if (isEditMode) {
     return (
       <Sheet open={open} onOpenChange={handleOpenChange}>
-        <SheetContent className="sm:max-w-lg">
+        <SheetContent className="w-full sm:max-w-lg">
           <SheetHeader>
             <SheetTitle>Edit Task</SheetTitle>
             <SheetDescription>Modify task details below</SheetDescription>
@@ -367,12 +367,12 @@ export function TaskDetail({
   return (
     <>
       <Sheet open={open} onOpenChange={handleOpenChange}>
-        <SheetContent className="flex flex-col">
+        <SheetContent className="flex w-full flex-col sm:max-w-sm">
           <SheetHeader>
-            <SheetTitle className="text-lg">
+            <SheetTitle className="text-base md:text-lg break-words pr-8">
               {task.id}: {task.title}
             </SheetTitle>
-            <SheetDescription>
+            <SheetDescription className="text-xs md:text-sm">
               {formatLabel(task.type)} • {formatLabel(task.status)}
             </SheetDescription>
           </SheetHeader>
@@ -399,16 +399,16 @@ export function TaskDetail({
 
               {/* Details */}
               <div className="space-y-2">
-                <h3 className="text-sm font-semibold">Details</h3>
-                <p className="text-sm whitespace-pre-wrap">{task.details}</p>
+                <h3 className="text-xs md:text-sm font-semibold">Details</h3>
+                <p className="text-[13px] md:text-sm whitespace-pre-wrap">{task.details}</p>
               </div>
 
               <Separator />
 
               {/* Metadata Grid */}
               <div className="space-y-2">
-                <h3 className="text-sm font-semibold">Metadata</h3>
-                <dl className="grid grid-cols-2 gap-2 text-sm">
+                <h3 className="text-xs md:text-sm font-semibold">Metadata</h3>
+                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[13px] md:text-sm">
                   <dt className="text-muted-foreground">Created:</dt>
                   <dd>{formatDate(task.createdAt)}</dd>
 
@@ -439,7 +439,7 @@ export function TaskDetail({
                 <>
                   <Separator />
                   <div className="space-y-2">
-                    <h3 className="text-sm font-semibold">Tags</h3>
+                    <h3 className="text-xs md:text-sm font-semibold">Tags</h3>
                     <div className="flex flex-wrap gap-2">
                       {task.tags.map((tag) => (
                         <Badge key={tag} variant="outline">
@@ -455,7 +455,7 @@ export function TaskDetail({
               <Separator />
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold">
+                  <h3 className="text-xs md:text-sm font-semibold">
                     Dependencies {dependenciesReady ? `(${deps?.dependsOn.length ?? 0})` : '(...)'}
                   </h3>
                   <Button
@@ -508,7 +508,7 @@ export function TaskDetail({
               <Separator />
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold">
+                  <h3 className="text-xs md:text-sm font-semibold">
                     Blocks {dependenciesReady ? `(${deps?.blocks.length ?? 0})` : '(...)'}
                   </h3>
                   <Button
@@ -561,8 +561,8 @@ export function TaskDetail({
                 <>
                   <Separator />
                   <div className="space-y-2">
-                    <h3 className="text-sm font-semibold">Notes</h3>
-                    <p className="text-sm whitespace-pre-wrap text-muted-foreground">
+                    <h3 className="text-xs md:text-sm font-semibold">Notes</h3>
+                    <p className="text-[13px] md:text-sm whitespace-pre-wrap text-muted-foreground">
                       {task.notes}
                     </p>
                   </div>
@@ -574,10 +574,10 @@ export function TaskDetail({
                 <>
                   <Separator />
                   <div className="space-y-2">
-                    <h3 className="text-sm font-semibold">GitHub References</h3>
+                    <h3 className="text-xs md:text-sm font-semibold">GitHub References</h3>
                     <div className="space-y-1">
                       {task['github-refs'].map((ref) => (
-                        <div key={ref} className="text-sm font-mono">
+                        <div key={ref} className="text-[13px] md:text-sm font-mono break-all">
                           {ref}
                         </div>
                       ))}
@@ -590,10 +590,10 @@ export function TaskDetail({
 
           <SheetFooter className="flex-col gap-2">
             {/* Action Buttons Row 1 */}
-            <div className="flex gap-2 w-full">
+            <div className="flex w-full flex-col gap-2 sm:flex-row">
               <Button
                 variant="outline"
-                className="flex-1"
+                className="w-full sm:flex-1"
                 onClick={handleEdit}
                 disabled={anyMutationPending}
               >
@@ -603,7 +603,7 @@ export function TaskDetail({
 
               <Button
                 variant={isCompleted ? 'outline' : 'default'}
-                className="flex-1"
+                className="w-full sm:flex-1"
                 onClick={handleComplete}
                 disabled={isCompleted || anyMutationPending}
               >
@@ -613,10 +613,10 @@ export function TaskDetail({
             </div>
 
             {/* Action Buttons Row 2 */}
-            <div className="flex gap-2 w-full">
+            <div className="flex w-full flex-col gap-2 sm:flex-row">
               <Button
                 variant={testsPassing ? 'outline' : 'secondary'}
-                className="flex-1"
+                className="w-full sm:flex-1"
                 onClick={handlePassTest}
                 disabled={testsPassing || anyMutationPending}
               >
@@ -626,7 +626,11 @@ export function TaskDetail({
 
               <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                 <AlertDialogTrigger asChild>
-                  <Button variant="destructive" className="flex-1" disabled={anyMutationPending}>
+                  <Button
+                    variant="destructive"
+                    className="w-full sm:flex-1"
+                    disabled={anyMutationPending}
+                  >
                     <Trash2 className="size-4 mr-2" />
                     Delete
                   </Button>

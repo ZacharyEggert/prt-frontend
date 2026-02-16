@@ -98,16 +98,17 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-3 flex-wrap">
+      <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center">
         {/* Status Filter */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-muted-foreground">Status:</span>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <span className="text-xs sm:text-sm font-medium text-muted-foreground">Status:</span>
           <ToggleGroup
             type="multiple"
             value={statusArray}
             onValueChange={handleStatusChange}
             variant="outline"
             size="sm"
+            className="w-full flex-wrap justify-start md:w-auto"
           >
             <ToggleGroupItem value={STATUS.NotStarted}>
               {formatLabel(STATUS.NotStarted)}
@@ -122,11 +123,16 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
         </div>
 
         {/* Type Filter */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-muted-foreground">Type:</span>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <span className="text-xs sm:text-sm font-medium text-muted-foreground">Type:</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button type="button" variant="outline" size="sm">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="w-full justify-between md:w-auto"
+              >
                 <Filter className="size-4 mr-2" />
                 {typeArray.length > 0 ? `${typeArray.length} selected` : 'All types'}
                 <ChevronDown className="size-4 ml-2" />
@@ -170,11 +176,16 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
         </div>
 
         {/* Priority Filter */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-muted-foreground">Priority:</span>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <span className="text-xs sm:text-sm font-medium text-muted-foreground">Priority:</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button type="button" variant="outline" size="sm">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="w-full justify-between md:w-auto"
+              >
                 <Filter className="size-4 mr-2" />
                 {priorityValue ? formatLabel(priorityValue) : 'All priorities'}
                 <ChevronDown className="size-4 ml-2" />
@@ -215,8 +226,10 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
 
       {/* Active Filter Badges */}
       {hasActiveFilters && (
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm font-medium text-muted-foreground">Active filters:</span>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:flex-wrap">
+          <span className="text-xs sm:text-sm font-medium text-muted-foreground">
+            Active filters:
+          </span>
 
           {/* Status Badges */}
           {statusArray.map((status) => {
@@ -225,7 +238,7 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
               <Badge
                 key={status}
                 variant={badgeProps.variant}
-                className={cn(badgeProps.className, 'gap-1')}
+                className={cn(badgeProps.className, 'gap-1 text-xs sm:text-sm')}
               >
                 Status: {formatLabel(status)}
                 <button
@@ -247,7 +260,7 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
               <Badge
                 key={type}
                 variant={badgeProps.variant}
-                className={cn(badgeProps.className, 'gap-1')}
+                className={cn(badgeProps.className, 'gap-1 text-xs sm:text-sm')}
               >
                 Type: {formatLabel(type)}
                 <button
@@ -266,7 +279,10 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
           {priorityValue && (
             <Badge
               variant={getPriorityBadgeProps(priorityValue).variant}
-              className={cn(getPriorityBadgeProps(priorityValue).className, 'gap-1')}
+              className={cn(
+                getPriorityBadgeProps(priorityValue).className,
+                'gap-1 text-xs sm:text-sm'
+              )}
             >
               Priority: {formatLabel(priorityValue)}
               <button

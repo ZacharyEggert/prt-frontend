@@ -21,14 +21,14 @@ export function ThemeToggle(): React.JSX.Element {
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium text-sidebar-foreground/70">Theme</p>
+      <p className="sr-only text-xs font-medium text-sidebar-foreground/70 md:not-sr-only">Theme</p>
 
       <ToggleGroup
         type="single"
         value={theme}
         variant="outline"
         size="sm"
-        className="w-full"
+        className="w-full justify-center"
         aria-label="Theme mode"
         onValueChange={(value): void => {
           if (value === 'light' || value === 'dark' || value === 'system') {
@@ -40,16 +40,16 @@ export function ThemeToggle(): React.JSX.Element {
           <ToggleGroupItem
             key={option.value}
             value={option.value}
-            className="flex-1 justify-center gap-1.5"
+            className="flex-1 justify-center gap-0 px-1 md:gap-1.5 md:px-3"
             aria-label={`${option.label} theme`}
           >
             <option.icon className="size-3.5" />
-            <span>{option.label}</span>
+            <span className="hidden md:inline">{option.label}</span>
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
 
-      <p className="text-[11px] text-center text-sidebar-foreground/60">
+      <p className="hidden text-center text-[11px] text-sidebar-foreground/60 md:block">
         {theme === 'system' ? `System (${toTitleCase(resolvedTheme)})` : toTitleCase(theme)}
       </p>
     </div>

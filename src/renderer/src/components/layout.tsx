@@ -26,9 +26,9 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
     <div className="flex h-screen bg-background">
       {/* Sidebar */}
-      <aside className="w-64 flex flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
+      <aside className="w-16 md:w-64 flex shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
         {/* Project Indicator */}
-        <div className="p-4 border-b border-sidebar-border">
+        <div className="hidden border-b border-sidebar-border p-4 md:block">
           {isLoading ? (
             <ProjectIndicatorSkeleton />
           ) : (
@@ -37,24 +37,26 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 py-4" aria-label="Main navigation">
-          <ul className="space-y-1">
+        <nav className="flex-1 py-3 md:py-4" aria-label="Main navigation">
+          <ul className="space-y-1 px-1 md:px-0">
             {NAV_ITEMS.map((item) => (
               <li key={item.id}>
                 <button
                   type="button"
                   onClick={() => navigate(item.id)}
+                  aria-label={item.label}
                   aria-current={currentView === item.id ? 'page' : undefined}
                   className={cn(
-                    'flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors',
+                    'flex w-full items-center justify-center gap-0 px-0 py-2.5 text-sm transition-colors md:justify-start md:gap-3 md:px-4',
                     'border-l-2 outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
                     currentView === item.id
                       ? 'bg-sidebar-accent text-sidebar-accent-foreground border-sidebar-primary font-medium'
                       : 'border-transparent text-sidebar-foreground hover:bg-sidebar-accent/50'
                   )}
+                  title={item.label}
                 >
                   <item.icon className="size-5 shrink-0" />
-                  <span>{item.label}</span>
+                  <span className="hidden md:inline">{item.label}</span>
                 </button>
               </li>
             ))}
@@ -62,16 +64,18 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 space-y-3 border-t border-sidebar-border">
+        <div className="border-t border-sidebar-border p-2 md:p-4">
           <ThemeToggle />
-          <p className="text-xs text-sidebar-foreground/60 text-center">PRT Frontend</p>
+          <p className="mt-3 hidden text-center text-xs text-sidebar-foreground/60 md:block">
+            PRT Frontend
+          </p>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
-          <div className="p-6">{children}</div>
+          <div className="p-4 md:p-6">{children}</div>
         </ScrollArea>
       </main>
     </div>

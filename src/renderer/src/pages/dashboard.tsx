@@ -82,7 +82,7 @@ export function DashboardView(): React.JSX.Element {
     const copy = getErrorCopy('dashboardLoad')
 
     return (
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-5 md:space-y-6">
         <FeedbackState
           variant="error"
           title={copy.title}
@@ -104,11 +104,11 @@ export function DashboardView(): React.JSX.Element {
     stats.totalTasks > 0 ? Math.round((stats.byStatus.completed / stats.totalTasks) * 100) : 0
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-5 md:space-y-6">
       {/* Project Header */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-semibold">{metadata.name}</h1>
-        <p className="text-muted-foreground">{metadata.description}</p>
+        <h1 className="text-2xl md:text-3xl font-semibold break-words">{metadata.name}</h1>
+        <p className="text-sm md:text-base text-muted-foreground">{metadata.description}</p>
       </div>
 
       {/* Completion Progress Card */}
@@ -143,21 +143,21 @@ export function DashboardView(): React.JSX.Element {
 
       {/* Stats Grid - Reuse existing ProjectStats component */}
       <div>
-        <h2 className="text-xl font-semibold mb-4">Statistics</h2>
+        <h2 className="mb-3 text-lg md:mb-4 md:text-xl font-semibold">Statistics</h2>
         <ProjectStats stats={stats} />
       </div>
 
       {/* Validation Status */}
       {validationResult && (
         <div>
-          <h2 className="text-xl font-semibold mb-4">Validation Status</h2>
+          <h2 className="mb-3 text-lg md:mb-4 md:text-xl font-semibold">Validation Status</h2>
           <ValidationPanel validationResult={validationResult} onTaskClick={handleTaskIdClick} />
         </div>
       )}
 
       {/* Dependency Graph */}
       <div>
-        <h2 className="text-xl font-semibold mb-4">Dependency Graph</h2>
+        <h2 className="mb-3 text-lg md:mb-4 md:text-xl font-semibold">Dependency Graph</h2>
         <Card>
           <CardContent className="pt-6">
             <DependencyGraph
@@ -172,9 +172,12 @@ export function DashboardView(): React.JSX.Element {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+        <h2 className="mb-3 text-lg md:mb-4 md:text-xl font-semibold">Quick Actions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Button onClick={handleAddTask} className="h-auto py-4 flex flex-col items-center gap-2">
+          <Button
+            onClick={handleAddTask}
+            className="h-auto py-3 md:py-4 flex flex-col items-center gap-2"
+          >
             <Plus className="size-5" />
             <span>Add Task</span>
           </Button>
@@ -182,7 +185,7 @@ export function DashboardView(): React.JSX.Element {
           <Button
             onClick={handleViewTasks}
             variant="outline"
-            className="h-auto py-4 flex flex-col items-center gap-2"
+            className="h-auto py-3 md:py-4 flex flex-col items-center gap-2"
           >
             <List className="size-5" />
             <span>View Tasks</span>
@@ -192,7 +195,7 @@ export function DashboardView(): React.JSX.Element {
             onClick={handleValidate}
             disabled={isValidating}
             variant="outline"
-            className="h-auto py-4 flex flex-col items-center gap-2"
+            className="h-auto py-3 md:py-4 flex flex-col items-center gap-2"
           >
             <CheckCircle className="size-5" />
             <span>{isValidating ? 'Validating...' : 'Validate'}</span>
@@ -208,7 +211,7 @@ export function DashboardView(): React.JSX.Element {
 
 function DashboardSkeleton(): React.JSX.Element {
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-5 md:space-y-6">
       {/* Header Skeleton */}
       <div className="space-y-2">
         <Skeleton className="h-9 w-64" />
