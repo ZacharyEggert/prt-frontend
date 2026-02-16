@@ -88,6 +88,18 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
+      - name: Install Snapcraft
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo snap install snapcraft --classic
+
+      - name: Install build dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install -y libarchive-tools fuse
+
+      - name: Clean npm cache
+        if: matrix.os == 'ubuntu-latest'
+        run: npm cache clean --force
+
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
