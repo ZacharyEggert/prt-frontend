@@ -73,7 +73,7 @@ export function Node({
         onKeyDown={handleKeyDown}
         tabIndex={0}
         role="button"
-        aria-label={`Task ${task.id}: ${task.title}, Status: ${task.status}`}
+        aria-label={`Open task ${task.id}: ${task.title}. Status ${task.status}. Press Enter to open task details.`}
         className="cursor-pointer outline-none focus:outline-none"
         style={{
           transformOrigin: `${width / 2}px ${height / 2}px`,

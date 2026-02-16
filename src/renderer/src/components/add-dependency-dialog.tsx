@@ -55,10 +55,12 @@ export function AddDependencyDialog({
     type === 'depends-on'
       ? 'Select a task that this task depends on'
       : 'Select a task that this task blocks'
+  const searchLabel =
+    type === 'depends-on' ? 'Search tasks to add as dependencies' : 'Search tasks to add as blocked'
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange} title={title} description={description}>
-      <CommandInput placeholder="Search tasks..." />
+      <CommandInput placeholder="Search tasks..." aria-label={searchLabel} />
       <CommandList>
         <CommandEmpty>No tasks found.</CommandEmpty>
         <CommandGroup>

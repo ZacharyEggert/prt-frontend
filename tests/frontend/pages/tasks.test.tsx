@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
-import { render, screen, cleanup } from '@testing-library/react'
+import { render, screen, cleanup, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TasksView } from '@renderer/pages/tasks'
 import { mockApi } from '../mocks/mock-api'
@@ -142,5 +143,105 @@ describe('TasksView', () => {
 
     const errorMsg = await screen.findByText(/Failed to load tasks/)
     expect(errorMsg).toBeInTheDocument()
+  })
+
+  it('closes create dialog with Escape and returns focus to Add Task trigger', async () => {
+    const user = userEvent.setup()
+    mockApi.task.list.mockResolvedValue([])
+
+    const { wrapper: Wrapper } = createWrapper()
+
+    render(
+      <Wrapper>
+        <TasksView />
+      </Wrapper>
+    )
+
+    const addTaskButton = screen.getByRole('button', { name: 'Add Task' })
+    addTaskButton.focus()
+    await user.keyboard('{Enter}')
+
+    expect(await screen.findByRole('heading', { name: 'Create New Task' })).toBeInTheDocument()
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => {
+      expect(screen.queryByRole('heading', { name: 'Create New Task' })).not.toBeInTheDocument()
+      expect(addTaskButton).toHaveFocus()
+    })
+  })
+
+  it('closes task detail sheet with Escape and returns focus to the originating row', async () => {
+    const user = userEvent.setup()
+    const task = createTask({
+      id: 'F-001',
+      title: 'Focus Task',
+      type: TASK_TYPE.Feature,
+      status: STATUS.NotStarted,
+      priority: PRIORITY.High
+    })
+    mockApi.task.list.mockResolvedValue([task])
+    mockApi.task.get.mockResolvedValue(task)
+
+    const { wrapper: Wrapper } = createWrapper()
+
+    render(
+      <Wrapper>
+        <TasksView />
+      </Wrapper>
+    )
+
+    const taskRow = await screen.findByLabelText('Open task F-001: Focus Task')
+    taskRow.focus()
+    await user.keyboard('{Enter}')
+
+    expect(await screen.findByText('F-001: Focus Task')).toBeInTheDocument()
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => {
+      expect(screen.queryByText('F-001: Focus Task')).not.toBeInTheDocument()
+      expect(taskRow).toHaveFocus()
+    })
+  })
+
+  it('maintains logical tab order through task controls', async () => {
+    const user = userEvent.setup()
+    const task = createTask({
+      id: 'F-010',
+      title: 'Tab Order Task',
+      type: TASK_TYPE.Feature,
+      status: STATUS.NotStarted,
+      priority: PRIORITY.Medium
+    })
+    mockApi.task.list.mockResolvedValue([task])
+    mockApi.task.get.mockResolvedValue(task)
+
+    const { wrapper: Wrapper } = createWrapper()
+
+    render(
+      <Wrapper>
+        <TasksView />
+      </Wrapper>
+    )
+
+    const addTaskButton = screen.getByRole('button', { name: 'Add Task' })
+    const searchInput = screen.getByRole('textbox', {
+      name: 'Search tasks by title or description'
+    })
+    const taskRow = await screen.findByLabelText('Open task F-010: Tab Order Task')
+
+    await user.tab()
+    expect(addTaskButton).toHaveFocus()
+
+    await user.tab()
+    expect(searchInput).toHaveFocus()
+
+    for (let i = 0; i < 8; i += 1) {
+      await user.tab()
+      if (taskRow === document.activeElement) break
+    }
+
+    expect(taskRow).toHaveFocus()
   })
 })

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { TaskList } from '@renderer/components/task-list'
 import { TaskDetail } from '@renderer/components/task-detail'
 import { FilterBar } from '@renderer/components/filter-bar'
@@ -13,6 +13,9 @@ import type { ListOptions } from '../../../preload/index'
 export function TasksView(): React.JSX.Element {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
+  const createDialogFocusReturnRef = useRef<HTMLElement | null>(null)
+  const detailSheetFocusReturnRef = useRef<HTMLElement | null>(null)
+  const detailSheetFocusTaskIdRef = useRef<string | null>(null)
   const [filters, setFilters] = useState<{
     status?: STATUS | STATUS[]
     type?: TASK_TYPE | TASK_TYPE[]
@@ -37,15 +40,55 @@ export function TasksView(): React.JSX.Element {
   const { data: tasks, isLoading, error } = useTasks(listOptions)
 
   const handleAddTask = (): void => {
+    const activeElement = document.activeElement
+    createDialogFocusReturnRef.current = activeElement instanceof HTMLElement ? activeElement : null
     setIsCreateDialogOpen(true)
   }
 
   const handleTaskClick = (taskId: string): void => {
+    const activeElement = document.activeElement
+    detailSheetFocusReturnRef.current = activeElement instanceof HTMLElement ? activeElement : null
+    detailSheetFocusTaskIdRef.current = taskId
     setSelectedTaskId(taskId)
   }
 
   const handleDetailClose = (): void => {
     setSelectedTaskId(null)
+  }
+
+  const handleCreateDialogOpenChange = (open: boolean): void => {
+    setIsCreateDialogOpen(open)
+
+    if (!open) {
+      const returnTarget =
+        createDialogFocusReturnRef.current ??
+        (document.querySelector('[data-create-task-trigger="true"]') as HTMLElement | null)
+
+      createDialogFocusReturnRef.current = null
+      requestAnimationFrame(() => {
+        returnTarget?.focus()
+      })
+    }
+  }
+
+  const handleDetailOpenChange = (open: boolean): void => {
+    if (open) return
+
+    const returnTarget =
+      detailSheetFocusReturnRef.current ??
+      (detailSheetFocusTaskIdRef.current
+        ? (document.querySelector(
+            `[data-task-row-id="${detailSheetFocusTaskIdRef.current}"]`
+          ) as HTMLElement | null)
+        : null)
+
+    detailSheetFocusReturnRef.current = null
+    detailSheetFocusTaskIdRef.current = null
+    handleDetailClose()
+
+    requestAnimationFrame(() => {
+      returnTarget?.focus()
+    })
   }
 
   const handleSortChange = (field: 'priority' | 'id'): void => {
@@ -77,7 +120,7 @@ export function TasksView(): React.JSX.Element {
       {/* Header with actions */}
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">Tasks</h1>
-        <Button onClick={handleAddTask}>
+        <Button onClick={handleAddTask} data-create-task-trigger="true">
           <Plus className="size-4 mr-2" />
           Add Task
         </Button>
@@ -88,6 +131,7 @@ export function TasksView(): React.JSX.Element {
         value={searchQuery}
         onChange={setSearchQuery}
         placeholder="Search tasks by title or description..."
+        label="Search tasks by title or description"
       />
 
       {/* Filter Bar */}
@@ -104,13 +148,13 @@ export function TasksView(): React.JSX.Element {
       />
 
       {/* Create task dialog */}
-      <CreateTaskDialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} />
+      <CreateTaskDialog open={isCreateDialogOpen} onOpenChange={handleCreateDialogOpenChange} />
 
       {/* Task detail panel */}
       <TaskDetail
         taskId={selectedTaskId}
         open={isDetailOpen}
-        onOpenChange={(open) => !open && handleDetailClose()}
+        onOpenChange={handleDetailOpenChange}
         onTaskChange={setSelectedTaskId}
       />
     </div>

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { DashboardView } from '@renderer/pages/dashboard'
 import { mockApi } from '../mocks/mock-api'
@@ -156,5 +157,37 @@ describe('DashboardView', () => {
 
     const errorMsg = await screen.findByText('Failed to load project data')
     expect(errorMsg).toBeInTheDocument()
+  })
+
+  it('exposes quick actions by role/name and supports keyboard activation', async () => {
+    const user = userEvent.setup()
+    mockApi.project.stats.mockResolvedValue(createStats())
+    mockApi.project.metadata.mockResolvedValue(createMetadata())
+    mockApi.project.validate.mockResolvedValue(createValidationResult())
+    mockApi.deps.graph.mockResolvedValue(createDependencyGraph())
+
+    const { wrapper: Wrapper } = createWrapper()
+
+    render(
+      <Wrapper>
+        <DashboardView />
+      </Wrapper>
+    )
+
+    const addTask = await screen.findByRole('button', { name: 'Add Task' })
+    const viewTasks = screen.getByRole('button', { name: 'View Tasks' })
+    const validate = screen.getByRole('button', { name: 'Validate' })
+
+    expect(addTask).toBeInTheDocument()
+    expect(viewTasks).toBeInTheDocument()
+    expect(validate).toBeInTheDocument()
+
+    viewTasks.focus()
+    await user.keyboard('{Enter}')
+    expect(mockNavigate).toHaveBeenCalledWith('tasks')
+
+    validate.focus()
+    await user.keyboard('{Enter}')
+    expect(mockApi.project.validate).toHaveBeenCalled()
   })
 })

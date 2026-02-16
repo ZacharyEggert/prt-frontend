@@ -70,29 +70,39 @@ describe('TaskList', () => {
     const tasks = [createTask()]
     const onSortChange = vi.fn()
 
-    const { container } = render(
-      <TaskList tasks={tasks} onSortChange={onSortChange} sortBy="priority" sortOrder="asc" />
-    )
+    render(<TaskList tasks={tasks} onSortChange={onSortChange} sortBy="priority" sortOrder="asc" />)
 
-    // The sortable header wraps label in a div with cursor-pointer class on the th
-    const sortableHeaders = container.querySelectorAll('th.cursor-pointer')
-    expect(sortableHeaders.length).toBe(2) // Priority and ID
+    expect(screen.getByRole('button', { name: 'Sort by Priority' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sort by ID' })).toBeInTheDocument()
   })
 
-  it('calls onSortChange with field name when sortable header is clicked', async () => {
+  it('applies aria-sort state to sortable columns', () => {
+    const tasks = [createTask()]
+    const onSortChange = vi.fn()
+
+    render(<TaskList tasks={tasks} onSortChange={onSortChange} sortBy="priority" sortOrder="asc" />)
+
+    const priorityHeader = screen.getByRole('button', { name: 'Sort by Priority' }).closest('th')
+    const idHeader = screen.getByRole('button', { name: 'Sort by ID' }).closest('th')
+
+    expect(priorityHeader).toHaveAttribute('aria-sort', 'ascending')
+    expect(idHeader).toHaveAttribute('aria-sort', 'none')
+  })
+
+  it('calls onSortChange with field name when sortable header is activated', async () => {
     const user = userEvent.setup()
     const onSortChange = vi.fn()
     const tasks = [createTask()]
 
-    const { container } = render(<TaskList tasks={tasks} onSortChange={onSortChange} />)
+    render(<TaskList tasks={tasks} onSortChange={onSortChange} />)
 
-    // Get the sortable headers by their cursor-pointer class
-    const sortableHeaders = container.querySelectorAll('th.cursor-pointer')
-    // First sortable header is Priority, second is ID
-    await user.click(sortableHeaders[0])
+    await user.click(screen.getByRole('button', { name: 'Sort by Priority' }))
     expect(onSortChange).toHaveBeenCalledWith('priority')
 
-    await user.click(sortableHeaders[1])
+    await user.keyboard('{Tab}')
+    await user.keyboard('{Enter}')
+
+    await user.click(screen.getByRole('button', { name: 'Sort by ID' }))
     expect(onSortChange).toHaveBeenCalledWith('id')
   })
 
@@ -102,5 +112,54 @@ describe('TaskList', () => {
     render(<TaskList tasks={tasks} />)
 
     expect(screen.getByText('2')).toBeInTheDocument()
+  })
+
+  it('supports keyboard row navigation with Arrow, Home, and End keys', async () => {
+    const user = userEvent.setup()
+    const tasks = [
+      createTask({ id: 'F-001', title: 'First Task' }),
+      createTask({ id: 'F-002', title: 'Second Task' }),
+      createTask({ id: 'F-003', title: 'Third Task' })
+    ]
+
+    render(<TaskList tasks={tasks} onTaskClick={vi.fn()} />)
+
+    const firstRow = screen.getByLabelText('Open task F-001: First Task')
+    const secondRow = screen.getByLabelText('Open task F-002: Second Task')
+    const thirdRow = screen.getByLabelText('Open task F-003: Third Task')
+
+    expect(firstRow).toHaveAttribute('tabindex', '0')
+    expect(secondRow).toHaveAttribute('tabindex', '-1')
+    expect(thirdRow).toHaveAttribute('tabindex', '-1')
+
+    firstRow.focus()
+    await user.keyboard('{ArrowDown}')
+    expect(secondRow).toHaveFocus()
+
+    await user.keyboard('{ArrowDown}')
+    expect(thirdRow).toHaveFocus()
+
+    await user.keyboard('{Home}')
+    expect(firstRow).toHaveFocus()
+
+    await user.keyboard('{End}')
+    expect(thirdRow).toHaveFocus()
+  })
+
+  it('activates the focused row with Enter and Space', async () => {
+    const user = userEvent.setup()
+    const onTaskClick = vi.fn()
+    const tasks = [createTask({ id: 'F-010', title: 'Keyboard Task' })]
+
+    render(<TaskList tasks={tasks} onTaskClick={onTaskClick} />)
+
+    const row = screen.getByLabelText('Open task F-010: Keyboard Task')
+    row.focus()
+
+    await user.keyboard('{Enter}')
+    await user.keyboard('{Space}')
+
+    expect(onTaskClick).toHaveBeenNthCalledWith(1, 'F-010')
+    expect(onTaskClick).toHaveBeenNthCalledWith(2, 'F-010')
   })
 })

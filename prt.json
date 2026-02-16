@@ -1028,10 +1028,10 @@
       ],
       "details": "Audit all interactive elements: logical tab order, focus rings, dialog focus trapping, arrow key navigation in task list, Escape to close dialogs. Add aria-labels. Verify with VoiceOver.",
       "id": "I-003",
-      "notes": "",
-      "passes-tests": false,
+      "notes": "Implemented renderer-wide a11y pass: semantic sortable headers with aria-sort, keyboard-navigable task rows (arrow/home/end + enter/space), dialog/sheet focus return, labeled icon-only controls, and search input labels. Added/updated tests for task list/filter/search/task detail/tasks page/welcome/dashboard; all required checks passed (typecheck, lint, format, test, build).",
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-11",
         "renderer",
@@ -1039,7 +1039,7 @@
       ],
       "title": "Keyboard navigation and accessibility audit",
       "type": "improvement",
-      "updatedAt": "2026-02-11T00:26:31.397Z"
+      "updatedAt": "2026-02-16T00:52:27.606Z"
     },
     {
       "blocks": [],

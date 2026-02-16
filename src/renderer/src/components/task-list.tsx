@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import type { Task } from 'project-roadmap-tracking/dist/util/types'
 import {
   Table,
@@ -46,24 +47,28 @@ function SortableHeader({
   className
 }: SortableHeaderProps): React.JSX.Element {
   const isActive = currentSort === field
+  const ariaSort = isActive ? (currentOrder === 'asc' ? 'ascending' : 'descending') : 'none'
 
   return (
-    <TableHead
-      className={cn('cursor-pointer hover:bg-muted/50 select-none', className)}
-      onClick={() => onClick(field)}
-    >
-      <div className="flex items-center gap-1">
-        <span className={cn(isActive && 'font-semibold')}>{label}</span>
-        {isActive && (
-          <>
-            {currentOrder === 'asc' ? (
-              <ChevronUp className="size-4" />
-            ) : (
-              <ChevronDown className="size-4" />
-            )}
-          </>
+    <TableHead className={cn('select-none', className)} aria-sort={ariaSort}>
+      <button
+        type="button"
+        className={cn(
+          'flex w-full items-center gap-1 rounded-sm px-1 py-1 text-left hover:bg-muted/50',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+          isActive && 'font-semibold'
         )}
-      </div>
+        onClick={() => onClick(field)}
+        aria-label={`Sort by ${label}`}
+      >
+        <span>{label}</span>
+        {isActive &&
+          (currentOrder === 'asc' ? (
+            <ChevronUp className="size-4" />
+          ) : (
+            <ChevronDown className="size-4" />
+          ))}
+      </button>
     </TableHead>
   )
 }
@@ -76,6 +81,56 @@ export function TaskList({
   sortOrder,
   onSortChange
 }: TaskListProps): React.JSX.Element {
+  const isInteractive = Boolean(onTaskClick)
+  const [focusedRowId, setFocusedRowId] = useState<string | null>(null)
+  const rowRefs = useRef<Array<HTMLTableRowElement | null>>([])
+  const focusedRowIndex = tasks.findIndex((task) => task.id === focusedRowId)
+  const activeRowIndex = focusedRowIndex >= 0 ? focusedRowIndex : 0
+
+  const focusRow = (nextIndex: number): void => {
+    if (!isInteractive || tasks.length === 0) return
+
+    const boundedIndex = Math.min(Math.max(nextIndex, 0), tasks.length - 1)
+    setFocusedRowId(tasks[boundedIndex]?.id ?? null)
+    rowRefs.current[boundedIndex]?.focus()
+  }
+
+  const handleRowKeyDown = (
+    event: React.KeyboardEvent<HTMLTableRowElement>,
+    rowIndex: number,
+    taskId: string
+  ): void => {
+    if (!isInteractive) return
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault()
+        focusRow(rowIndex + 1)
+        break
+      case 'ArrowUp':
+        event.preventDefault()
+        focusRow(rowIndex - 1)
+        break
+      case 'Home':
+        event.preventDefault()
+        focusRow(0)
+        break
+      case 'End':
+        event.preventDefault()
+        focusRow(tasks.length - 1)
+        break
+      case 'Enter':
+      case 'Space':
+      case 'Spacebar':
+      case ' ':
+        event.preventDefault()
+        handleRowClick(taskId)
+        break
+      default:
+        break
+    }
+  }
+
   // Loading state
   if (isLoading) {
     return (
@@ -110,7 +165,9 @@ export function TaskList({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-10"></TableHead>
+            <TableHead className="w-10">
+              <span className="sr-only">Status</span>
+            </TableHead>
             {onSortChange ? (
               <SortableHeader
                 label="Priority"
@@ -142,7 +199,7 @@ export function TaskList({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {tasks.map((task) => {
+          {tasks.map((task, index) => {
             const priorityBadge = getPriorityBadgeProps(task.priority)
             const typeBadge = getTypeBadgeProps(task.type)
             const dependencyCount = task['depends-on']?.length || 0
@@ -150,8 +207,23 @@ export function TaskList({
             return (
               <TableRow
                 key={task.id}
-                className="cursor-pointer hover:bg-muted/70 transition-colors"
-                onClick={() => handleRowClick(task.id)}
+                ref={(row) => {
+                  rowRefs.current[index] = row
+                }}
+                className={cn(
+                  isInteractive && 'cursor-pointer hover:bg-muted/70',
+                  isInteractive &&
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
+                  'transition-colors'
+                )}
+                onClick={isInteractive ? () => handleRowClick(task.id) : undefined}
+                onKeyDown={
+                  isInteractive ? (event) => handleRowKeyDown(event, index, task.id) : undefined
+                }
+                onFocus={isInteractive ? () => setFocusedRowId(task.id) : undefined}
+                tabIndex={isInteractive ? (index === activeRowIndex ? 0 : -1) : undefined}
+                aria-label={isInteractive ? `Open task ${task.id}: ${task.title}` : undefined}
+                data-task-row-id={task.id}
               >
                 {/* Status Icon */}
                 <TableCell>{getStatusIcon(task.status)}</TableCell>

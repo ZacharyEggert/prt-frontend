@@ -106,6 +106,11 @@ export function DashboardView(): React.JSX.Element {
               <div
                 className="h-full bg-primary transition-all duration-300"
                 style={{ width: `${completionPercentage}%` }}
+                role="progressbar"
+                aria-label="Project completion"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={completionPercentage}
               />
             </div>
           </div>

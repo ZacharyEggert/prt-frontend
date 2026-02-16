@@ -53,6 +53,7 @@ interface DependencyItemProps {
   clickable?: boolean
   onRemove?: () => void
   isRemoving?: boolean
+  removeLabel?: string
 }
 
 function DependencyItem({
@@ -60,7 +61,8 @@ function DependencyItem({
   onClick,
   clickable = true,
   onRemove,
-  isRemoving = false
+  isRemoving = false,
+  removeLabel
 }: DependencyItemProps): React.JSX.Element {
   if (clickable && onClick) {
     return (
@@ -68,6 +70,7 @@ function DependencyItem({
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <ArrowRight className="size-3 text-muted-foreground" />
           <Button
+            type="button"
             variant="link"
             size="sm"
             className="h-auto p-0 text-sm truncate"
@@ -78,11 +81,13 @@ function DependencyItem({
         </div>
         {onRemove && (
           <Button
+            type="button"
             variant="ghost"
             size="icon-xs"
             onClick={onRemove}
             disabled={isRemoving}
-            className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+            className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 transition-opacity text-muted-foreground hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            aria-label={removeLabel ?? `Remove relationship with ${task.id}`}
           >
             <X className="size-3" />
           </Button>
@@ -101,11 +106,13 @@ function DependencyItem({
       </div>
       {onRemove && (
         <Button
+          type="button"
           variant="ghost"
           size="icon-xs"
           onClick={onRemove}
           disabled={isRemoving}
-          className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+          className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 transition-opacity text-muted-foreground hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label={removeLabel ?? `Remove relationship with ${task.id}`}
         >
           <X className="size-3" />
         </Button>
@@ -243,6 +250,10 @@ export function TaskDetail({
       <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent>
           <SheetHeader>
+            <SheetTitle className="sr-only">Loading task details</SheetTitle>
+            <SheetDescription className="sr-only">
+              Task details are loading. Please wait.
+            </SheetDescription>
             <Skeleton className="h-8 w-40" />
             <Skeleton className="h-4 w-32" />
           </SheetHeader>
@@ -263,6 +274,9 @@ export function TaskDetail({
         <SheetContent>
           <SheetHeader>
             <SheetTitle>Error Loading Task</SheetTitle>
+            <SheetDescription className="sr-only">
+              The selected task could not be loaded.
+            </SheetDescription>
           </SheetHeader>
           <div className="p-4 space-y-3">
             <div className="flex items-center gap-2 text-destructive">
@@ -285,6 +299,9 @@ export function TaskDetail({
         <SheetContent>
           <SheetHeader>
             <SheetTitle>No Task Selected</SheetTitle>
+            <SheetDescription className="sr-only">
+              No task is selected in the task list.
+            </SheetDescription>
           </SheetHeader>
           <div className="p-4">
             <p className="text-muted-foreground text-sm">
@@ -445,6 +462,7 @@ export function TaskDetail({
                           handleRemoveDependency(depTask.id, depTask.title, 'depends-on')
                         }
                         isRemoving={removeDependency.isPending}
+                        removeLabel={`Remove dependency on ${depTask.id}: ${depTask.title}`}
                       />
                     ))}
                   </div>
@@ -481,6 +499,7 @@ export function TaskDetail({
                           handleRemoveDependency(blockTask.id, blockTask.title, 'blocks')
                         }
                         isRemoving={removeDependency.isPending}
+                        removeLabel={`Remove blocked task ${blockTask.id}: ${blockTask.title}`}
                       />
                     ))}
                   </div>

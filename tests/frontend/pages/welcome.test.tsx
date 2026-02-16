@@ -149,4 +149,29 @@ describe('WelcomeView', () => {
     expect(screen.getByLabelText('Description')).toBeInTheDocument()
     expect(screen.getByText('Create Project')).toBeInTheDocument()
   })
+
+  it('exposes primary actions by role/name and supports keyboard activation', async () => {
+    const user = userEvent.setup()
+    mockApi.project.openDialog.mockResolvedValueOnce(createOpenDialogResult({ canceled: true }))
+    const { wrapper: Wrapper } = createWrapper()
+
+    render(
+      <Wrapper>
+        <WelcomeView />
+      </Wrapper>
+    )
+
+    const browseButton = screen.getByRole('button', { name: 'Browse for Project' })
+    const chooseDirectoryButton = screen.getByRole('button', { name: 'Choose Directory' })
+
+    expect(browseButton).toBeInTheDocument()
+    expect(chooseDirectoryButton).toBeInTheDocument()
+
+    browseButton.focus()
+    await user.keyboard('{Enter}')
+
+    await waitFor(() => {
+      expect(mockApi.project.openDialog).toHaveBeenCalled()
+    })
+  })
 })

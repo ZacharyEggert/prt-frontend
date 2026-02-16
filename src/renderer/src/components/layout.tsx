@@ -37,6 +37,7 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
             {NAV_ITEMS.map((item) => (
               <li key={item.id}>
                 <button
+                  type="button"
                   onClick={() => navigate(item.id)}
                   aria-current={currentView === item.id ? 'page' : undefined}
                   className={cn(

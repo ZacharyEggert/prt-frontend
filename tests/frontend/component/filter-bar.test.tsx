@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { FilterBar } from '@renderer/components/filter-bar'
-import { STATUS } from 'project-roadmap-tracking/dist/util/types'
+import { STATUS, TASK_TYPE, PRIORITY } from 'project-roadmap-tracking/dist/util/types'
 
 describe('FilterBar', () => {
   afterEach(() => {
@@ -73,5 +73,40 @@ describe('FilterBar', () => {
 
     expect(screen.getByText('Active filters:')).toBeInTheDocument()
     expect(screen.getByText(/Status: Not Started/)).toBeInTheDocument()
+  })
+
+  it('renders accessible names for remove-filter controls', () => {
+    const onChange = vi.fn()
+
+    render(
+      <FilterBar
+        value={{
+          status: STATUS.NotStarted,
+          type: TASK_TYPE.Bug,
+          priority: PRIORITY.High
+        }}
+        onChange={onChange}
+      />
+    )
+
+    expect(
+      screen.getByRole('button', { name: 'Remove status filter Not Started' })
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Remove type filter Bug' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Remove priority filter High' })).toBeInTheDocument()
+  })
+
+  it('supports keyboard removal from active filter chips', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+
+    render(<FilterBar value={{ status: STATUS.NotStarted }} onChange={onChange} />)
+
+    const removeButton = screen.getByRole('button', { name: 'Remove status filter Not Started' })
+    removeButton.focus()
+
+    await user.keyboard('{Enter}')
+
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ status: undefined }))
   })
 })

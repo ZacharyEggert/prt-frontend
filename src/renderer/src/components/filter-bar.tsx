@@ -126,7 +126,7 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
           <span className="text-sm font-medium text-muted-foreground">Type:</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
+              <Button type="button" variant="outline" size="sm">
                 <Filter className="size-4 mr-2" />
                 {typeArray.length > 0 ? `${typeArray.length} selected` : 'All types'}
                 <ChevronDown className="size-4 ml-2" />
@@ -174,7 +174,7 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
           <span className="text-sm font-medium text-muted-foreground">Priority:</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
+              <Button type="button" variant="outline" size="sm">
                 <Filter className="size-4 mr-2" />
                 {priorityValue ? formatLabel(priorityValue) : 'All priorities'}
                 <ChevronDown className="size-4 ml-2" />
@@ -207,7 +207,7 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
 
         {/* Clear All Button */}
         {hasActiveFilters && (
-          <Button variant="ghost" size="sm" onClick={clearAllFilters}>
+          <Button type="button" variant="ghost" size="sm" onClick={clearAllFilters}>
             Clear All
           </Button>
         )}
@@ -229,8 +229,10 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
               >
                 Status: {formatLabel(status)}
                 <button
+                  type="button"
                   onClick={() => removeFilter('status', status)}
-                  className="ml-1 hover:bg-black/10 rounded-sm"
+                  className="ml-1 rounded-sm hover:bg-black/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-label={`Remove status filter ${formatLabel(status)}`}
                 >
                   <X className="size-3" />
                 </button>
@@ -249,8 +251,10 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
               >
                 Type: {formatLabel(type)}
                 <button
+                  type="button"
                   onClick={() => removeFilter('type', type)}
-                  className="ml-1 hover:bg-black/10 rounded-sm"
+                  className="ml-1 rounded-sm hover:bg-black/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-label={`Remove type filter ${formatLabel(type)}`}
                 >
                   <X className="size-3" />
                 </button>
@@ -266,8 +270,10 @@ export function FilterBar({ value, onChange }: FilterBarProps): React.JSX.Elemen
             >
               Priority: {formatLabel(priorityValue)}
               <button
+                type="button"
                 onClick={() => removeFilter('priority')}
-                className="ml-1 hover:bg-black/10 rounded-sm"
+                className="ml-1 rounded-sm hover:bg-black/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label={`Remove priority filter ${formatLabel(priorityValue)}`}
               >
                 <X className="size-3" />
               </button>
