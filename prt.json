@@ -1008,9 +1008,9 @@
       "details": "Configure Tailwind dark mode (class strategy). Add toggle to sidebar. Store preference in localStorage. Set up dark CSS variables in globals.css. Verify all shadcn/ui components in both modes.",
       "id": "I-002",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-11",
         "renderer",
@@ -1018,7 +1018,7 @@
       ],
       "title": "Implement dark mode toggle with system preference detection",
       "type": "improvement",
-      "updatedAt": "2026-02-11T00:26:30.992Z"
+      "updatedAt": "2026-02-16T00:34:27.716Z"
     },
     {
       "blocks": [],

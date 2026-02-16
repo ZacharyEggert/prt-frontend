@@ -2,6 +2,7 @@ import { Home, LayoutDashboard, ListTodo, FolderOpen } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardDescription } from '@renderer/components/ui/card'
 import { ScrollArea } from '@renderer/components/ui/scroll-area'
 import { Skeleton } from '@renderer/components/ui/skeleton'
+import { ThemeToggle } from '@renderer/components/theme-toggle'
 import { useProjectStats } from '@renderer/hooks/use-project'
 import { useNavigation } from '@renderer/hooks/use-navigation'
 import { cn } from '@renderer/lib/utils'
@@ -55,7 +56,8 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-sidebar-border">
+        <div className="p-4 space-y-3 border-t border-sidebar-border">
+          <ThemeToggle />
           <p className="text-xs text-sidebar-foreground/60 text-center">PRT Frontend</p>
         </div>
       </aside>

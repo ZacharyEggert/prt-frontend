@@ -1,29 +1,43 @@
-import { useState, useEffect } from 'react'
+import { useCallback } from 'react'
+import { useTheme as useNextTheme } from 'next-themes'
 
-export function useTheme(): { theme: 'light' | 'dark' } {
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window === 'undefined') return 'light'
+export type Theme = 'light' | 'dark' | 'system'
+type ResolvedTheme = 'light' | 'dark'
+
+function resolveFallbackTheme(): ResolvedTheme {
+  if (typeof document !== 'undefined') {
     return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
-  })
+  }
 
-  useEffect(() => {
-    // Monitor changes to the 'dark' class on <html>
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-          const isDark = document.documentElement.classList.contains('dark')
-          setTheme(isDark ? 'dark' : 'light')
-        }
-      })
-    })
+  if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  }
 
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    })
+  return 'light'
+}
 
-    return () => observer.disconnect()
-  }, [])
+export function useTheme(): {
+  theme: Theme
+  resolvedTheme: ResolvedTheme
+  setTheme: (theme: Theme) => void
+} {
+  const { theme, resolvedTheme, setTheme } = useNextTheme()
 
-  return { theme }
+  const normalizedTheme: Theme =
+    theme === 'light' || theme === 'dark' || theme === 'system' ? theme : 'system'
+  const normalizedResolvedTheme: ResolvedTheme =
+    resolvedTheme === 'light' || resolvedTheme === 'dark' ? resolvedTheme : resolveFallbackTheme()
+
+  const setAppTheme = useCallback(
+    (nextTheme: Theme): void => {
+      setTheme(nextTheme)
+    },
+    [setTheme]
+  )
+
+  return {
+    theme: normalizedTheme,
+    resolvedTheme: normalizedResolvedTheme,
+    setTheme: setAppTheme
+  }
 }
