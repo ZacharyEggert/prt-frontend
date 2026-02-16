@@ -128,7 +128,10 @@ describe('useAddTask', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true))
 
-    expect(toast.error).toHaveBeenCalledWith('Failed to create task', 'Failed to create')
+    expect(toast.error).toHaveBeenCalledWith(
+      'Failed to create task',
+      'Please review the form and try again.'
+    )
   })
 })
 
@@ -210,7 +213,10 @@ describe('useUpdateTask', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true))
 
-    expect(toast.error).toHaveBeenCalledWith('Failed to update task', 'Update failed')
+    expect(toast.error).toHaveBeenCalledWith(
+      'Failed to update task',
+      'We could not save your changes. Try again.'
+    )
   })
 })
 
@@ -248,7 +254,10 @@ describe('useCompleteTask', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true))
 
-    expect(toast.error).toHaveBeenCalledWith('Failed to complete task', 'Complete failed')
+    expect(toast.error).toHaveBeenCalledWith(
+      'Failed to complete task',
+      'We could not mark this task as completed. Try again.'
+    )
   })
 })
 
@@ -286,7 +295,10 @@ describe('usePassTest', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true))
 
-    expect(toast.error).toHaveBeenCalledWith('Failed to mark tests as passing', 'Pass test failed')
+    expect(toast.error).toHaveBeenCalledWith(
+      'Failed to mark tests as passing',
+      'We could not update test status. Try again.'
+    )
   })
 })
 
@@ -326,6 +338,9 @@ describe('useDeleteTask', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true))
 
-    expect(toast.error).toHaveBeenCalledWith('Failed to delete task', 'Delete failed')
+    expect(toast.error).toHaveBeenCalledWith(
+      'Failed to delete task',
+      'We could not delete this task. Try again.'
+    )
   })
 })

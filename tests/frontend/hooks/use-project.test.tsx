@@ -138,7 +138,10 @@ describe('useSaveProject', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true))
 
-    expect(toast.error).toHaveBeenCalledWith('Failed to save project', 'Save failed')
+    expect(toast.error).toHaveBeenCalledWith(
+      'Failed to save project',
+      'Your changes were not saved. Try again.'
+    )
   })
 })
 

@@ -38,6 +38,7 @@ import type {
 } from '../../../preload/index'
 import { queryKeys } from '@renderer/lib/query-keys'
 import { toast } from '@renderer/lib/toast'
+import { getErrorCopy } from '@renderer/lib/error-copy'
 
 // ============================================================================
 // Helpers
@@ -219,7 +220,8 @@ export function useOpenProject(
     },
     onError: async (error, projectPath, context, meta) => {
       // Show error toast
-      toast.error('Failed to open project', error.message)
+      const copy = getErrorCopy('projectOpenFailed')
+      toast.error(copy.title, copy.description)
 
       // Call user's onError if provided
       await options?.onError?.(error, projectPath, context, meta)
@@ -282,7 +284,8 @@ export function useOpenProjectDialog(
     },
     onError: async (error, variables, context, meta) => {
       // Show error toast
-      toast.error('Failed to open project', error.message)
+      const copy = getErrorCopy('projectOpenFailed')
+      toast.error(copy.title, copy.description)
 
       // Call user's onError if provided
       await options?.onError?.(error, variables, context, meta)
@@ -386,7 +389,8 @@ export function useInitProject(
     },
     onError: async (error, initOptions, context, meta) => {
       // Show error toast
-      toast.error('Failed to create project', error.message)
+      const copy = getErrorCopy('projectCreateFailed')
+      toast.error(copy.title, copy.description)
 
       // Call user's onError if provided
       await options?.onError?.(error, initOptions, context, meta)
@@ -455,7 +459,8 @@ export function useSaveProject(
     },
     onError: async (error, roadmap, context, meta) => {
       // Show error toast
-      toast.error('Failed to save project', error.message)
+      const copy = getErrorCopy('projectSaveFailed')
+      toast.error(copy.title, copy.description)
 
       // Call user's onError if provided
       await options?.onError?.(error, roadmap, context, meta)

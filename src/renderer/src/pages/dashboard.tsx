@@ -8,6 +8,7 @@ import {
 } from '@renderer/components/ui/card'
 import { Button } from '@renderer/components/ui/button'
 import { Skeleton } from '@renderer/components/ui/skeleton'
+import { FeedbackState } from '@renderer/components/ui/feedback-state'
 import { ProjectStats } from '@renderer/components/project-stats'
 import {
   useProjectStats,
@@ -17,6 +18,7 @@ import {
 import { useNavigation } from '@renderer/hooks/use-navigation'
 import { Plus, List, CheckCircle, AlertCircle } from 'lucide-react'
 import { toast } from '@renderer/lib/toast'
+import { getErrorCopy, RETRY_LABEL } from '@renderer/lib/error-copy'
 import { CreateTaskDialog } from '@renderer/components/create-task-dialog'
 import { ValidationPanel } from '@renderer/components/validation-panel'
 import { DependencyGraph } from '@renderer/components/dependency-graph'
@@ -24,8 +26,18 @@ import type { ProjectValidationResult } from '../../../preload/index'
 
 export function DashboardView(): React.JSX.Element {
   const { navigate } = useNavigation()
-  const { data: stats, isLoading: statsLoading } = useProjectStats()
-  const { data: metadata, isLoading: metadataLoading } = useProjectMetadata()
+  const {
+    data: stats,
+    isLoading: statsLoading,
+    error: statsError,
+    refetch: refetchStats
+  } = useProjectStats()
+  const {
+    data: metadata,
+    isLoading: metadataLoading,
+    error: metadataError,
+    refetch: refetchMetadata
+  } = useProjectMetadata()
   const { refetch: validateProject, isFetching: isValidating } = useProjectValidation()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [validationResult, setValidationResult] = useState<ProjectValidationResult | null>(null)
@@ -39,7 +51,8 @@ export function DashboardView(): React.JSX.Element {
         if (result.data.success) {
           toast.success('Validation Passed', 'Project structure is valid')
         } else if (result.data.errors) {
-          toast.error('Validation Failed', result.data.errors)
+          const copy = getErrorCopy('validationFailedToast')
+          toast.error(copy.title, copy.description)
         }
       }
     })
@@ -65,13 +78,24 @@ export function DashboardView(): React.JSX.Element {
     return <DashboardSkeleton />
   }
 
-  if (!stats || !metadata) {
+  if (statsError || metadataError || !stats || !metadata) {
+    const copy = getErrorCopy('dashboardLoad')
+
     return (
       <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center gap-2 text-destructive">
-          <AlertCircle className="size-5" />
-          <p>Failed to load project data</p>
-        </div>
+        <FeedbackState
+          variant="error"
+          title={copy.title}
+          description={copy.description}
+          icon={<AlertCircle className="size-10" />}
+          primaryAction={{
+            label: RETRY_LABEL,
+            onClick: () => {
+              void refetchStats()
+              void refetchMetadata()
+            }
+          }}
+        />
       </div>
     )
   }
@@ -140,6 +164,7 @@ export function DashboardView(): React.JSX.Element {
               height={500}
               onTaskClick={handleTaskIdClick}
               showIsolatedTasks={false}
+              onCreateTask={handleAddTask}
             />
           </CardContent>
         </Card>

@@ -20,6 +20,7 @@ vi.mock('@renderer/lib/toast', () => ({
     warning: vi.fn()
   }
 }))
+import { toast } from '@renderer/lib/toast'
 
 // Mock navigation
 const mockNavigate = vi.fn()
@@ -142,9 +143,12 @@ describe('DashboardView', () => {
     expect(screen.getByText('Validate')).toBeInTheDocument()
   })
 
-  it('shows error state when stats are unavailable', async () => {
-    mockApi.project.stats.mockRejectedValue(new Error('No project'))
-    mockApi.project.metadata.mockRejectedValue(new Error('No project'))
+  it('shows friendly error state with retry when overview queries fail', async () => {
+    const user = userEvent.setup()
+    mockApi.project.stats.mockRejectedValueOnce(new Error('Raw stats error'))
+    mockApi.project.metadata.mockRejectedValueOnce(new Error('Raw metadata error'))
+    mockApi.project.stats.mockResolvedValueOnce(createStats())
+    mockApi.project.metadata.mockResolvedValueOnce(createMetadata())
     mockApi.project.validate.mockResolvedValue(createValidationResult())
 
     const { wrapper: Wrapper } = createWrapper()
@@ -155,8 +159,16 @@ describe('DashboardView', () => {
       </Wrapper>
     )
 
-    const errorMsg = await screen.findByText('Failed to load project data')
-    expect(errorMsg).toBeInTheDocument()
+    expect(await screen.findByText('Unable to load project overview')).toBeInTheDocument()
+    expect(screen.getByText('Project details are unavailable right now.')).toBeInTheDocument()
+    expect(screen.queryByText('Raw stats error')).not.toBeInTheDocument()
+    expect(screen.queryByText('Raw metadata error')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Try again' }))
+    await screen.findByRole('button', { name: 'Validate' })
+
+    expect(mockApi.project.stats).toHaveBeenCalledTimes(2)
+    expect(mockApi.project.metadata).toHaveBeenCalledTimes(2)
   })
 
   it('exposes quick actions by role/name and supports keyboard activation', async () => {
@@ -189,5 +201,33 @@ describe('DashboardView', () => {
     validate.focus()
     await user.keyboard('{Enter}')
     expect(mockApi.project.validate).toHaveBeenCalled()
+  })
+
+  it('shows generic validation-failed toast copy', async () => {
+    const user = userEvent.setup()
+    mockApi.project.stats.mockResolvedValue(createStats())
+    mockApi.project.metadata.mockResolvedValue(createMetadata())
+    mockApi.project.validate.mockResolvedValue(
+      createValidationResult({
+        success: false,
+        errors: '- Sensitive backend validation details'
+      })
+    )
+    mockApi.deps.graph.mockResolvedValue(createDependencyGraph())
+
+    const { wrapper: Wrapper } = createWrapper()
+
+    render(
+      <Wrapper>
+        <DashboardView />
+      </Wrapper>
+    )
+
+    await user.click(await screen.findByRole('button', { name: 'Validate' }))
+
+    expect(toast.error).toHaveBeenCalledWith(
+      'Validation Failed',
+      'Review validation details below to resolve issues.'
+    )
   })
 })

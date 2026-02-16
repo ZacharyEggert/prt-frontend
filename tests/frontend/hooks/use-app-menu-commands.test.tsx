@@ -137,4 +137,38 @@ describe('useAppMenuCommands', () => {
       )
     })
   })
+
+  it('shows generic toast when directory selection fails from new-project', async () => {
+    mockApi.project.selectDirectory.mockRejectedValueOnce(new Error('Sensitive directory failure'))
+    const { wrapper } = createWrapper()
+    renderHook(() => useAppMenuCommands(), { wrapper })
+
+    act(() => {
+      menuCallback?.('new-project')
+    })
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        'Failed to select directory',
+        'Please try selecting a directory again.'
+      )
+    })
+  })
+
+  it('shows generic toast when save-project fails', async () => {
+    mockApi.project.saveCurrent.mockRejectedValueOnce(new Error('Sensitive save failure'))
+    const { wrapper } = createWrapper()
+    renderHook(() => useAppMenuCommands(), { wrapper })
+
+    act(() => {
+      menuCallback?.('save-project')
+    })
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        'Failed to save project',
+        'Please try saving the project again.'
+      )
+    })
+  })
 })

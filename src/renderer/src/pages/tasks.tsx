@@ -5,7 +5,9 @@ import { FilterBar } from '@renderer/components/filter-bar'
 import { SearchBar } from '@renderer/components/search-bar'
 import { useTasks } from '@renderer/hooks/use-tasks'
 import { Button } from '@renderer/components/ui/button'
-import { Plus } from 'lucide-react'
+import { FeedbackState } from '@renderer/components/ui/feedback-state'
+import { getErrorCopy, RETRY_LABEL } from '@renderer/lib/error-copy'
+import { Plus, AlertCircle } from 'lucide-react'
 import { CreateTaskDialog } from '@renderer/components/create-task-dialog'
 import type { STATUS, TASK_TYPE, PRIORITY } from 'project-roadmap-tracking/dist/util/types'
 import type { ListOptions } from '../../../preload/index'
@@ -37,7 +39,7 @@ export function TasksView(): React.JSX.Element {
     sortOrder
   }
 
-  const { data: tasks, isLoading, error } = useTasks(listOptions)
+  const { data: tasks, isLoading, error, refetch: refetchTasks } = useTasks(listOptions)
 
   const handleAddTask = (): void => {
     const activeElement = document.activeElement
@@ -107,10 +109,18 @@ export function TasksView(): React.JSX.Element {
   }
 
   if (error) {
+    const copy = getErrorCopy('tasksLoad')
+
     return (
       <div className="space-y-6">
         <h1 className="text-3xl font-semibold">Tasks</h1>
-        <div className="text-destructive">Failed to load tasks: {error.message}</div>
+        <FeedbackState
+          variant="error"
+          title={copy.title}
+          description={copy.description}
+          icon={<AlertCircle className="size-10" />}
+          primaryAction={{ label: RETRY_LABEL, onClick: () => void refetchTasks() }}
+        />
       </div>
     )
   }
@@ -145,6 +155,7 @@ export function TasksView(): React.JSX.Element {
         sortBy={sortBy}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
+        onCreateTask={handleAddTask}
       />
 
       {/* Create task dialog */}

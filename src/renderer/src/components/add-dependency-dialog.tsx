@@ -1,5 +1,7 @@
 import { useTasks } from '@renderer/hooks/use-tasks'
 import { useAddDependency } from '@renderer/hooks/use-deps'
+import { FeedbackState } from '@renderer/components/ui/feedback-state'
+import { getErrorCopy, RETRY_LABEL } from '@renderer/lib/error-copy'
 import {
   CommandDialog,
   CommandInput,
@@ -10,6 +12,7 @@ import {
 } from '@renderer/components/ui/command'
 import { Badge } from '@renderer/components/ui/badge'
 import { formatLabel } from '@renderer/lib/task-utils'
+import { AlertCircle, Link2 } from 'lucide-react'
 
 interface AddDependencyDialogProps {
   open: boolean
@@ -26,7 +29,12 @@ export function AddDependencyDialog({
   type,
   existingDependencies
 }: AddDependencyDialogProps): React.JSX.Element {
-  const { data: allTasks } = useTasks()
+  const {
+    data: allTasks,
+    isLoading: isTasksLoading,
+    error: tasksError,
+    refetch: refetchTasks
+  } = useTasks()
   const addDependency = useAddDependency({
     onSuccess: () => {
       onOpenChange(false)
@@ -58,11 +66,54 @@ export function AddDependencyDialog({
   const searchLabel =
     type === 'depends-on' ? 'Search tasks to add as dependencies' : 'Search tasks to add as blocked'
 
+  if (isTasksLoading) {
+    return (
+      <CommandDialog
+        open={open}
+        onOpenChange={onOpenChange}
+        title={title}
+        description={description}
+      >
+        <div className="p-3">
+          <FeedbackState
+            variant="loading"
+            title="Loading available tasks"
+            description="Please wait while we load tasks you can link."
+            icon={<Link2 className="size-10" />}
+          />
+        </div>
+      </CommandDialog>
+    )
+  }
+
+  if (tasksError) {
+    const copy = getErrorCopy('dependencyCandidatesLoad')
+
+    return (
+      <CommandDialog
+        open={open}
+        onOpenChange={onOpenChange}
+        title={title}
+        description={description}
+      >
+        <div className="p-3">
+          <FeedbackState
+            variant="error"
+            title={copy.title}
+            description={copy.description}
+            icon={<AlertCircle className="size-10" />}
+            primaryAction={{ label: RETRY_LABEL, onClick: () => void refetchTasks() }}
+          />
+        </div>
+      </CommandDialog>
+    )
+  }
+
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange} title={title} description={description}>
       <CommandInput placeholder="Search tasks..." aria-label={searchLabel} />
       <CommandList>
-        <CommandEmpty>No tasks found.</CommandEmpty>
+        <CommandEmpty>No matching tasks available.</CommandEmpty>
         <CommandGroup>
           {availableTasks.map((task) => (
             <CommandItem

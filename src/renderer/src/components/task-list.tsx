@@ -10,7 +10,7 @@ import {
 } from '@renderer/components/ui/table'
 import { Badge } from '@renderer/components/ui/badge'
 import { Skeleton } from '@renderer/components/ui/skeleton'
-import { ListTodo, ChevronUp, ChevronDown } from 'lucide-react'
+import { ListTodo, ChevronUp, ChevronDown, Plus } from 'lucide-react'
 import { cn } from '@renderer/lib/utils'
 import {
   getStatusIcon,
@@ -19,11 +19,13 @@ import {
   getTestIcon,
   formatLabel
 } from '@renderer/lib/task-utils'
+import { Button } from '@renderer/components/ui/button'
 
 interface TaskListProps {
   tasks: Task[]
   isLoading?: boolean
   onTaskClick?: (taskId: string) => void
+  onCreateTask?: () => void
   sortBy?: 'created' | 'updated' | 'priority' | 'status' | 'id'
   sortOrder?: 'asc' | 'desc'
   onSortChange?: (field: 'priority' | 'id') => void
@@ -77,6 +79,7 @@ export function TaskList({
   tasks,
   isLoading = false,
   onTaskClick,
+  onCreateTask,
   sortBy,
   sortOrder,
   onSortChange
@@ -149,6 +152,12 @@ export function TaskList({
         <ListTodo className="size-12 text-muted-foreground" />
         <h3 className="text-lg font-semibold">No tasks yet</h3>
         <p className="text-muted-foreground text-sm">Create your first task to get started</p>
+        {onCreateTask ? (
+          <Button type="button" onClick={onCreateTask} className="mt-2">
+            <Plus className="size-4 mr-2" />
+            Create Task
+          </Button>
+        ) : null}
       </div>
     )
   }

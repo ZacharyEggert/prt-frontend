@@ -1050,9 +1050,9 @@
       "details": "Review all pages/components for consistent skeleton loading, friendly error messages with retry buttons, helpful empty states with CTAs. No raw error text shown to users.",
       "id": "I-004",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-11",
         "renderer",
@@ -1060,7 +1060,7 @@
       ],
       "title": "Polish loading, error, and empty states across all views",
       "type": "improvement",
-      "updatedAt": "2026-02-11T00:26:31.797Z"
+      "updatedAt": "2026-02-16T01:29:00.667Z"
     },
     {
       "blocks": [],

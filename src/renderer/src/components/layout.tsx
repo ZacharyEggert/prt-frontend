@@ -2,6 +2,7 @@ import { Home, LayoutDashboard, ListTodo, FolderOpen } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardDescription } from '@renderer/components/ui/card'
 import { ScrollArea } from '@renderer/components/ui/scroll-area'
 import { Skeleton } from '@renderer/components/ui/skeleton'
+import { Button } from '@renderer/components/ui/button'
 import { ThemeToggle } from '@renderer/components/theme-toggle'
 import { useProjectStats } from '@renderer/hooks/use-project'
 import { useNavigation } from '@renderer/hooks/use-navigation'
@@ -28,7 +29,11 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
       <aside className="w-64 flex flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
         {/* Project Indicator */}
         <div className="p-4 border-b border-sidebar-border">
-          {isLoading ? <ProjectIndicatorSkeleton /> : <ProjectIndicator stats={stats} />}
+          {isLoading ? (
+            <ProjectIndicatorSkeleton />
+          ) : (
+            <ProjectIndicator stats={stats} onOpenProject={() => navigate('welcome')} />
+          )}
         </div>
 
         {/* Navigation */}
@@ -73,17 +78,34 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
   )
 }
 
-function ProjectIndicator({ stats }: { stats?: RoadmapStats }): React.JSX.Element {
+function ProjectIndicator({
+  stats,
+  onOpenProject
+}: {
+  stats?: RoadmapStats
+  onOpenProject: () => void
+}): React.JSX.Element {
   if (!stats) {
     return (
       <Card className="bg-sidebar-accent/30 border-sidebar-border">
         <CardHeader className="p-4">
-          <div className="flex items-start gap-3">
-            <FolderOpen className="size-5 text-sidebar-foreground/40 shrink-0 mt-0.5" />
-            <div className="min-w-0 flex-1">
-              <CardTitle className="text-sm text-sidebar-foreground/60">No Project</CardTitle>
-              <CardDescription className="text-xs">Open or create a project</CardDescription>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <FolderOpen className="size-5 text-sidebar-foreground/40 shrink-0 mt-0.5" />
+              <div className="min-w-0 flex-1">
+                <CardTitle className="text-sm text-sidebar-foreground/60">No Project</CardTitle>
+                <CardDescription className="text-xs">Open or create a project</CardDescription>
+              </div>
             </div>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="w-full"
+              onClick={onOpenProject}
+            >
+              Open or Create Project
+            </Button>
           </div>
         </CardHeader>
       </Card>

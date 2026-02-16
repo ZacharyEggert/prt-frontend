@@ -4,7 +4,8 @@ import { useTasks } from '@renderer/hooks/use-tasks'
 import { useViewBox } from '@renderer/hooks/use-view-box'
 import { computeDagreLayout } from '@renderer/lib/graph-utils'
 import { Skeleton } from '@renderer/components/ui/skeleton'
-import { Alert, AlertDescription } from '@renderer/components/ui/alert'
+import { FeedbackState } from '@renderer/components/ui/feedback-state'
+import { getErrorCopy, RETRY_LABEL } from '@renderer/lib/error-copy'
 import { Network, AlertCircle } from 'lucide-react'
 import { Node } from './dependency-graph/node'
 import { Edge } from './dependency-graph/edge'
@@ -19,6 +20,8 @@ export interface DependencyGraphProps {
   height?: number
   /** Whether to show isolated tasks (tasks without dependencies) */
   showIsolatedTasks?: boolean
+  /** Callback for creating a task from empty state */
+  onCreateTask?: () => void
 }
 
 /**
@@ -39,15 +42,26 @@ export function DependencyGraph({
   focusTaskId,
   onTaskClick,
   height = 600,
-  showIsolatedTasks = false
+  showIsolatedTasks = false,
+  onCreateTask
 }: DependencyGraphProps): React.JSX.Element {
-  const { data: graph, isLoading: graphLoading, error: graphError } = useDependencyGraph()
-  const { data: allTasks, isLoading: tasksLoading } = useTasks()
+  const {
+    data: graph,
+    isLoading: graphLoading,
+    error: graphError,
+    refetch: refetchGraph
+  } = useDependencyGraph()
+  const {
+    data: allTasks,
+    isLoading: tasksLoading,
+    error: tasksError,
+    refetch: refetchTasks
+  } = useTasks()
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null)
   const [focusedNodeId, setFocusedNodeId] = useState<string | null>(null)
 
   const isLoading = graphLoading || tasksLoading
-  const error = graphError
+  const error = graphError || tasksError
 
   // Compute graph layout (memoized for performance)
   const computedGraph = useMemo(() => {
@@ -73,23 +87,47 @@ export function DependencyGraph({
 
   // Error state
   if (error) {
+    const copy = getErrorCopy('dependencyGraphLoad')
+
     return (
-      <Alert variant="destructive">
-        <AlertCircle className="size-4" />
-        <AlertDescription>{error.message}</AlertDescription>
-      </Alert>
+      <div className="w-full" style={{ height: `${height}px` }}>
+        <FeedbackState
+          variant="error"
+          title={copy.title}
+          description={copy.description}
+          icon={<AlertCircle className="size-10" />}
+          className="h-full"
+          primaryAction={{
+            label: RETRY_LABEL,
+            onClick: () => {
+              void refetchGraph()
+              void refetchTasks()
+            }
+          }}
+        />
+      </div>
     )
   }
 
   // Empty state - no dependencies to visualize
   if (!computedGraph || computedGraph.nodes.length === 0) {
     return (
-      <div
-        className="flex flex-col items-center justify-center text-muted-foreground"
-        style={{ height: `${height}px` }}
-      >
-        <Network className="size-12 mb-4" />
-        <p className="text-sm">No dependencies to visualize</p>
+      <div className="w-full" style={{ height: `${height}px` }}>
+        <FeedbackState
+          variant="empty"
+          title="No dependencies to visualize"
+          description="Add task dependencies to see how work is connected."
+          icon={<Network className="size-12" />}
+          className="h-full"
+          primaryAction={
+            onCreateTask
+              ? {
+                  label: 'Create Task',
+                  onClick: onCreateTask
+                }
+              : undefined
+          }
+        />
       </div>
     )
   }

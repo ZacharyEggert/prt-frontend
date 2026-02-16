@@ -34,6 +34,7 @@ import type {
 } from '../../../preload/index'
 import { queryKeys } from '@renderer/lib/query-keys'
 import { toast } from '@renderer/lib/toast'
+import { getErrorCopy } from '@renderer/lib/error-copy'
 
 // ============================================================================
 // Read Hooks (useQuery)
@@ -193,7 +194,8 @@ export function useAddTask(
     },
     onError: async (error, variables, context, meta) => {
       // Show error toast
-      toast.error('Failed to create task', error.message)
+      const copy = getErrorCopy('taskCreateFailed')
+      toast.error(copy.title, copy.description)
 
       // Call user's onError if provided
       await options?.onError?.(error, variables, context, meta)
@@ -267,7 +269,8 @@ export function useUpdateTask(
     },
     onError: async (error, variables, context, meta) => {
       // Show error toast
-      toast.error('Failed to update task', error.message)
+      const copy = getErrorCopy('taskUpdateFailed')
+      toast.error(copy.title, copy.description)
 
       // Call user's onError if provided
       await options?.onError?.(error, variables, context, meta)
@@ -332,7 +335,8 @@ export function useCompleteTask(
     },
     onError: async (error, taskId, context, meta) => {
       // Show error toast
-      toast.error('Failed to complete task', error.message)
+      const copy = getErrorCopy('taskCompleteFailed')
+      toast.error(copy.title, copy.description)
 
       // Call user's onError if provided
       await options?.onError?.(error, taskId, context, meta)
@@ -397,7 +401,8 @@ export function usePassTest(
     },
     onError: async (error, taskId, context, meta) => {
       // Show error toast
-      toast.error('Failed to mark tests as passing', error.message)
+      const copy = getErrorCopy('taskPassTestFailed')
+      toast.error(copy.title, copy.description)
 
       // Call user's onError if provided
       await options?.onError?.(error, taskId, context, meta)
@@ -475,7 +480,8 @@ export function useDeleteTask(
     },
     onError: async (error, taskId, context, meta) => {
       // Show error toast
-      toast.error('Failed to delete task', error.message)
+      const copy = getErrorCopy('taskDeleteFailed')
+      toast.error(copy.title, copy.description)
 
       // Call user's onError if provided
       await options?.onError?.(error, taskId, context, meta)

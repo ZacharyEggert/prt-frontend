@@ -2,15 +2,12 @@ import { useCallback, useEffect } from 'react'
 import { useOpenProjectDialog } from '@renderer/hooks/use-project'
 import { useNavigation } from '@renderer/hooks/use-navigation'
 import { toast } from '@renderer/lib/toast'
+import { getErrorCopy } from '@renderer/lib/error-copy'
 import {
   MENU_NEW_PROJECT_DIRECTORY_EVENT,
   type MenuNewProjectDirectoryEventDetail
 } from '@renderer/lib/menu-events'
 import type { MenuCommand } from '../../../preload/index'
-
-function getErrorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error)
-}
 
 export function useAppMenuCommands(): void {
   const { navigate } = useNavigation()
@@ -40,8 +37,9 @@ export function useAppMenuCommands(): void {
               )
               window.dispatchEvent(event)
             }
-          } catch (error) {
-            toast.error('Failed to select directory', getErrorMessage(error))
+          } catch {
+            const copy = getErrorCopy('menuSelectDirectoryFailed')
+            toast.error(copy.title, copy.description)
           }
           return
         }
@@ -50,8 +48,9 @@ export function useAppMenuCommands(): void {
           try {
             const result = await window.api.project.saveCurrent()
             toast.success('Project saved', `Saved to ${result.path}`)
-          } catch (error) {
-            toast.error('Failed to save project', getErrorMessage(error))
+          } catch {
+            const copy = getErrorCopy('menuSaveProjectFailed')
+            toast.error(copy.title, copy.description)
           }
           return
         }

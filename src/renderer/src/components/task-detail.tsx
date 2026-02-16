@@ -26,6 +26,7 @@ import { Button } from '@renderer/components/ui/button'
 import { Separator } from '@renderer/components/ui/separator'
 import { ScrollArea } from '@renderer/components/ui/scroll-area'
 import { Skeleton } from '@renderer/components/ui/skeleton'
+import { FeedbackState } from '@renderer/components/ui/feedback-state'
 import { TaskForm } from '@renderer/components/task-form'
 import { AddDependencyDialog } from '@renderer/components/add-dependency-dialog'
 import { Edit, Check, TestTube, Trash2, AlertCircle, ArrowRight, Lock, Plus, X } from 'lucide-react'
@@ -39,6 +40,7 @@ import {
   formatDateShort
 } from '@renderer/lib/task-utils'
 import { toast } from '@renderer/lib/toast'
+import { getErrorCopy, RETRY_LABEL } from '@renderer/lib/error-copy'
 
 interface TaskDetailProps {
   taskId: string | null
@@ -139,7 +141,12 @@ export function TaskDetail({
   } | null>(null)
 
   // Query hooks
-  const { data: task, isLoading: isTaskLoading, error: taskError } = useTask(taskId || '')
+  const {
+    data: task,
+    isLoading: isTaskLoading,
+    error: taskError,
+    refetch: refetchTask
+  } = useTask(taskId || '')
 
   // Mutation hooks
   const completeTask = useCompleteTask()
@@ -151,13 +158,19 @@ export function TaskDetail({
       setIsRemoveDepDialogOpen(false)
       setDependencyToRemove(null)
     },
-    onError: (error) => {
-      toast.error('Failed to remove dependency', error.message)
+    onError: () => {
+      const copy = getErrorCopy('dependencyRemoveFailed')
+      toast.error(copy.title, copy.description)
     }
   })
 
   // Dependency hooks
-  const { data: deps } = useTaskDeps(taskId || '')
+  const {
+    data: deps,
+    isLoading: isDepsLoading,
+    error: depsError,
+    refetch: refetchDeps
+  } = useTaskDeps(taskId || '')
 
   // Event handlers
   const handleEdit = (): void => {
@@ -269,6 +282,8 @@ export function TaskDetail({
 
   // Error state
   if (taskError && taskId) {
+    const copy = getErrorCopy('taskDetailLoad')
+
     return (
       <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent>
@@ -279,13 +294,14 @@ export function TaskDetail({
             </SheetDescription>
           </SheetHeader>
           <div className="p-4 space-y-3">
-            <div className="flex items-center gap-2 text-destructive">
-              <AlertCircle className="size-4" />
-              <p className="text-sm">{taskError.message}</p>
-            </div>
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Close
-            </Button>
+            <FeedbackState
+              variant="error"
+              title={copy.title}
+              description={copy.description}
+              icon={<AlertCircle className="size-10" />}
+              primaryAction={{ label: RETRY_LABEL, onClick: () => void refetchTask() }}
+              secondaryAction={{ label: 'Close', onClick: () => onOpenChange(false) }}
+            />
           </div>
         </SheetContent>
       </Sheet>
@@ -345,6 +361,8 @@ export function TaskDetail({
     passTest.isPending ||
     deleteTask.isPending ||
     removeDependency.isPending
+  const dependencyErrorCopy = getErrorCopy('dependencyListLoad')
+  const dependenciesReady = Boolean(deps) && !isDepsLoading && !depsError
 
   return (
     <>
@@ -438,19 +456,34 @@ export function TaskDetail({
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold">
-                    Dependencies {deps?.dependsOn?.length ? `(${deps.dependsOn.length})` : '(0)'}
+                    Dependencies {dependenciesReady ? `(${deps?.dependsOn.length ?? 0})` : '(...)'}
                   </h3>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={handleAddDependency}
                     className="h-7 px-2"
+                    disabled={isDepsLoading || Boolean(depsError)}
                   >
                     <Plus className="size-3 mr-1" />
                     Add
                   </Button>
                 </div>
-                {deps?.dependsOn && deps.dependsOn.length > 0 ? (
+                {isDepsLoading ? (
+                  <div className="space-y-2 py-1" aria-live="polite">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                  </div>
+                ) : depsError ? (
+                  <FeedbackState
+                    variant="error"
+                    title={dependencyErrorCopy.title}
+                    description={dependencyErrorCopy.description}
+                    icon={<AlertCircle className="size-8" />}
+                    className="p-4"
+                    primaryAction={{ label: RETRY_LABEL, onClick: () => void refetchDeps() }}
+                  />
+                ) : deps?.dependsOn && deps.dependsOn.length > 0 ? (
                   <div className="space-y-1">
                     {deps.dependsOn.map((depTask) => (
                       <DependencyItem
@@ -476,19 +509,34 @@ export function TaskDetail({
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold">
-                    Blocks {deps?.blocks?.length ? `(${deps.blocks.length})` : '(0)'}
+                    Blocks {dependenciesReady ? `(${deps?.blocks.length ?? 0})` : '(...)'}
                   </h3>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={handleAddBlocked}
                     className="h-7 px-2"
+                    disabled={isDepsLoading || Boolean(depsError)}
                   >
                     <Plus className="size-3 mr-1" />
                     Add
                   </Button>
                 </div>
-                {deps?.blocks && deps.blocks.length > 0 ? (
+                {isDepsLoading ? (
+                  <div className="space-y-2 py-1" aria-live="polite">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                  </div>
+                ) : depsError ? (
+                  <FeedbackState
+                    variant="error"
+                    title={dependencyErrorCopy.title}
+                    description={dependencyErrorCopy.description}
+                    icon={<AlertCircle className="size-8" />}
+                    className="p-4"
+                    primaryAction={{ label: RETRY_LABEL, onClick: () => void refetchDeps() }}
+                  />
+                ) : deps?.blocks && deps.blocks.length > 0 ? (
                   <div className="space-y-1">
                     {deps.blocks.map((blockTask) => (
                       <DependencyItem

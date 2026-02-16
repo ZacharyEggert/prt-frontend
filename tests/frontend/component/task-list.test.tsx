@@ -24,6 +24,18 @@ describe('TaskList', () => {
     expect(screen.getByText('Create your first task to get started')).toBeInTheDocument()
   })
 
+  it('renders create-task CTA in empty state when onCreateTask is provided', async () => {
+    const user = userEvent.setup()
+    const onCreateTask = vi.fn()
+    render(<TaskList tasks={[]} onCreateTask={onCreateTask} />)
+
+    const createButton = screen.getByRole('button', { name: 'Create Task' })
+    expect(createButton).toBeInTheDocument()
+
+    await user.click(createButton)
+    expect(onCreateTask).toHaveBeenCalledOnce()
+  })
+
   it('renders task rows with ID, title, and badges', () => {
     const tasks = [
       createTask({

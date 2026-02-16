@@ -130,8 +130,32 @@ describe('TasksView', () => {
     expect(screen.getByText('Completed')).toBeInTheDocument()
   })
 
-  it('shows error message when task loading fails', async () => {
-    mockApi.task.list.mockRejectedValue(new Error('Failed to load'))
+  it('shows friendly error state with retry when task loading fails', async () => {
+    mockApi.task.list.mockRejectedValueOnce(new Error('Sensitive backend details'))
+    mockApi.task.list.mockResolvedValueOnce([])
+
+    const { wrapper: Wrapper } = createWrapper()
+    const user = userEvent.setup()
+
+    render(
+      <Wrapper>
+        <TasksView />
+      </Wrapper>
+    )
+
+    const errorTitle = await screen.findByText('Unable to load tasks')
+    expect(errorTitle).toBeInTheDocument()
+    expect(screen.getByText('We could not load your task list right now.')).toBeInTheDocument()
+    expect(screen.queryByText('Sensitive backend details')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Try again' }))
+    await screen.findByText('No tasks yet')
+    expect(mockApi.task.list).toHaveBeenCalledTimes(2)
+  })
+
+  it('opens create dialog from task-list empty-state CTA', async () => {
+    const user = userEvent.setup()
+    mockApi.task.list.mockResolvedValue([])
 
     const { wrapper: Wrapper } = createWrapper()
 
@@ -141,8 +165,8 @@ describe('TasksView', () => {
       </Wrapper>
     )
 
-    const errorMsg = await screen.findByText(/Failed to load tasks/)
-    expect(errorMsg).toBeInTheDocument()
+    await user.click(await screen.findByRole('button', { name: 'Create Task' }))
+    expect(await screen.findByRole('heading', { name: 'Create New Task' })).toBeInTheDocument()
   })
 
   it('closes create dialog with Escape and returns focus to Add Task trigger', async () => {
