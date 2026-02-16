@@ -928,16 +928,16 @@
       "details": "Test use-tasks, use-project, use-deps hooks using renderHook with QueryClientProvider wrapper. Assert correct window.api method calls and query invalidation behavior on mutations.",
       "id": "F-037",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-10",
         "testing"
       ],
       "title": "Write query hook tests",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:25.466Z"
+      "updatedAt": "2026-02-16T00:00:28.884Z"
     },
     {
       "blocks": [],
@@ -948,16 +948,16 @@
       "details": "React Testing Library tests for: task-list (render, badges, row click), task-form (fill, submit, validation), task-detail (render, action buttons), filter-bar (toggle, callback payloads), project-stats (stat cards).",
       "id": "F-038",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-10",
         "testing"
       ],
       "title": "Write component tests",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:25.877Z"
+      "updatedAt": "2026-02-16T00:00:29.286Z"
     },
     {
       "blocks": [],
@@ -968,16 +968,16 @@
       "details": "Integration tests for: welcome page (render, open project mock), dashboard (stats cards with mock data), tasks page (render with mock tasks, apply filter, verify filtered results).",
       "id": "F-039",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-10",
         "testing"
       ],
       "title": "Write page integration tests",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:26.285Z"
+      "updatedAt": "2026-02-16T00:00:29.685Z"
     },
     {
       "blocks": [],
@@ -988,16 +988,16 @@
       "details": "Test main process IPC handlers directly (without Electron transport). Mock PRT services. Verify correct service calls and error wrapping for project.ipc, task.ipc, deps.ipc.",
       "id": "F-040",
       "notes": "",
-      "passes-tests": false,
+      "passes-tests": true,
       "priority": "medium",
-      "status": "not-started",
+      "status": "completed",
       "tags": [
         "stage-10",
         "testing"
       ],
       "title": "Write IPC handler unit tests",
       "type": "feature",
-      "updatedAt": "2026-02-11T00:26:26.698Z"
+      "updatedAt": "2026-02-16T00:00:30.087Z"
     },
     {
       "blocks": [],
